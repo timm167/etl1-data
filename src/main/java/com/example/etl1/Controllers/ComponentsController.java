@@ -1,16 +1,23 @@
 package com.example.etl1.Controllers;
 
 import com.example.etl1.Records.*;
+import com.example.etl1.Repositories.CaseRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 @RestController
 public class ComponentsController {
+
+    @Autowired
+    CaseRepository caseRepository;
+
     @GetMapping("/parts")
     public ModelAndView populateComponentsData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -25,6 +32,7 @@ public class ComponentsController {
         ModelAndView modelAndView = new ModelAndView("/parts");
 
         modelAndView.addObject("cpuName", cpus[0].name());
+        caseRepository.saveAll(Arrays.asList(cases));
 
         return modelAndView;
     }
