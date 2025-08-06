@@ -14,20 +14,20 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "CPU_COOLERS")
-public class CPUCooler {
+public class CpuCooler {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private double price;
     @OneToMany(mappedBy = "cpu_cooler")
-    private List<FanRPM> rpm;
+    private List<FanRpm> rpm;
     @OneToMany(mappedBy = "cpu_cooler")
     private List<FanNoiseLevel> noise_level;
     private String color;
     private int size;
 
-    public CPUCooler(String name, double price, List<FanRPM> rpm, List<FanNoiseLevel> noise_level, String color, int size) {
+    public CpuCooler(String name, double price, List<FanRpm> rpm, List<FanNoiseLevel> noise_level, String color, int size) {
         this.name = name;
         this.price = price;
         this.rpm = rpm;

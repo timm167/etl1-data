@@ -12,16 +12,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "FAN_RPM")
-public class FanRPM {
+public class FanRpm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer rpm;
     @ManyToOne
     @JoinColumn(name = "cpu_cooler_id")
-    private CPUCooler cpu_cooler;
+    private CpuCooler cpu_cooler;
 
-    public FanRPM(Integer rpm) {
+    public FanRpm(Integer rpm) {
         this.rpm = rpm;
     }
 }

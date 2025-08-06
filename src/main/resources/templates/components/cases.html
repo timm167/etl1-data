@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cases</title>
+</head>
+<body>
+<ul>
+  <li th:each="case : ${cases}">
+    <p th:text="'Name: ' + ${case.name}"></p>
+    <p th:text="'Price: £' + ${case.price}"></p>
+    <p th:text="'Type: ' + ${case.type}"></p>
+    <p th:text="'Colour: ' + ${case.color}"></p>
+    <p th:text="'Side Panel: ' + ${case.side_panel}"></p>
+    <p th:text="'External Volume: ' + ${case.external_volume} + 'L'"></p>
+    <p th:text="'Internal 3.5-inch Bays: ' + ${case.internal_35_bays}"></p>
+  </li>
+</ul>
+</body>
+</html>

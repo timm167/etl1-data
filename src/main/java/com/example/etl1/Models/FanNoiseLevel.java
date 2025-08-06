@@ -19,7 +19,7 @@ public class FanNoiseLevel {
     private Double noise_level;
     @ManyToOne
     @JoinColumn(name = "cpu_cooler_id")
-    private CPUCooler cpu_cooler;
+    private CpuCooler cpu_cooler;
 
     public FanNoiseLevel(Double noise_level) {
         this.noise_level = noise_level;
