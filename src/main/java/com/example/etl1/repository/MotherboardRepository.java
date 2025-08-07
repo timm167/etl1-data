@@ -1,6 +1,6 @@
-package com.example.etl1.Repositories;
+package com.example.etl1.repository;
 
-import com.example.etl1.Models.Motherboard;
+import com.example.etl1.model.Motherboard;
 import org.springframework.data.repository.CrudRepository;
 
 public interface MotherboardRepository extends CrudRepository<Motherboard, Integer> { }

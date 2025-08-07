@@ -1,6 +1,6 @@
-package com.example.etl1.Repositories;
+package com.example.etl1.repository;
 
-import com.example.etl1.Models.PowerSupply;
+import com.example.etl1.model.PowerSupply;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PowerSupplyRepository extends CrudRepository<PowerSupply, Integer> { }

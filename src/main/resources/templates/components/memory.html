@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CPU Coolers</title>
+</head>
+<body>
+<ul>
+  <li th:each="mem : ${memory}">
+    <p th:text="'Name: ' + ${mem.name}"></p>
+    <p th:text="'Price: £' + ${mem.price}"></p>
+    <p th:text="'Speed: DDR' + ${mem.speed.getFirst().speed} + ' ' + ${mem.speed.getLast().speed} + 'MHz'"></p>
+    <p th:text="'Modules: ' + ${mem.modules.getFirst().module} + ' x ' + ${mem.modules.getLast().module} + 'GB'"></p>
+    <p th:text="'Price per GB: £' + ${mem.price_per_gb}"></p>
+    <p th:text="'Colour: ' + ${mem.color}"></p>
+    <p th:text="'First Word Latency: ' + ${mem.first_word_latency} + 'ns'"></p>
+    <p th:text="'CAS Latency: ' + ${mem.cas_latency} + ' cycles'"></p>
+  </li>
+</ul>
+</body>
+</html>

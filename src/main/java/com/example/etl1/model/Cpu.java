@@ -1,4 +1,4 @@
-package com.example.etl1.Models;
+package com.example.etl1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "CPUS")
-public class CPU {
+public class Cpu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,7 +25,7 @@ public class CPU {
     private int tdp;
     private String graphics;
 
-    public CPU(String name, double price, Integer core_count, double core_clock, double boost_clock, String microarchitecture, int tdp, String graphics) {
+    public Cpu(String name, double price, Integer core_count, double core_clock, double boost_clock, String microarchitecture, int tdp, String graphics) {
         this.name = name;
         this.price = price;
         this.core_count = core_count;

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Motherboards</title>
+</head>
+<body>
+<ul>
+  <li th:each="motherboard : ${motherboards}">
+    <p th:text="'Name: ' + ${motherboard.name}"></p>
+    <p th:text="'Price: £' + ${motherboard.price}"></p>
+    <p th:text="'Socket: ' + ${motherboard.socket}"></p>
+    <p th:text="'Form Factor: ' + ${motherboard.form_factor}"></p>
+    <p th:text="'Max Memory: ' + ${motherboard.max_memory} + 'GB'"></p>
+    <p th:text="'Memory Slots: ' + ${motherboard.memory_slots}"></p>
+    <p th:text="'Colour: ' + ${motherboard.color}"></p>
+  </li>
+</ul>
+</body>
+</html>

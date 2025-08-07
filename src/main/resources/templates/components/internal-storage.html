@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Internal Storage Devices</title>
+</head>
+<body>
+<ul>
+  <li th:each="internal_storage : ${internal_storages}">
+    <p th:text="'Name: ' + ${internal_storage.name}"></p>
+    <p th:text="'Price: £' + ${internal_storage.price}"></p>
+
+    <p>Capacity: <span th:text=" ${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'"></span></p>
+
+    <p th:text="'Price per GB: £' + ${internal_storage.price_per_gb}"></p>
+    <p th:text="'Type: ' + ${internal_storage.type}"></p>
+    <p th:text="'Cache: ' + ${internal_storage.cache} + 'MB'"></p>
+    <p th:text="'Form Factor: ' + ${internal_storage.form_factor}"></p>
+  </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Graphics Cards</title>
+</head>
+<body>
+<ul>
+  <li th:each="graphics_card : ${graphics_cards}">
+    <p th:text="'Name: ' + ${graphics_card.name}"></p>
+    <p th:text="'Price: £' + ${graphics_card.price}"></p>
+    <p th:text="'Chipset: ' + ${graphics_card.chipset}"></p>
+    <p th:text="'Memory: ' + ${graphics_card.memory} + 'GB'"></p>
+    <p th:text="'Core Clock Speed: ' + ${graphics_card.core_clock} + 'MHz'"></p>
+    <p th:text="'Boosted Clock Speed: ' + ${graphics_card.boost_clock} + 'MHz'"></p>
+    <p th:text="'Colour: ' + ${graphics_card.color}"></p>
+    <p th:text="'Length: ' + ${graphics_card.length} + 'mm'"></p>
+  </li>
+</ul>
+</body>
+</html>

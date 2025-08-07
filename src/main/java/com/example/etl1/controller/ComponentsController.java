@@ -1,11 +1,12 @@
-package com.example.etl1.Controllers;
+package com.example.etl1.controller;
 
-import com.example.etl1.Models.*;
-import com.example.etl1.Repositories.*;
+import com.example.etl1.model.*;
+import com.example.etl1.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,13 +21,13 @@ public class ComponentsController {
     CaseRepository caseRepository;
 
     @Autowired
-    CPURepository cpuRepository;
+    CpuRepository cpuRepository;
 
     @Autowired
-    CPUCoolerRepository cpuCoolerRepository;
+    CpuCoolerRepository cpuCoolerRepository;
 
     @Autowired
-    FanRPMRepository fanRPMRepository;
+    FanRpmRepository fanRPMRepository;
 
     @Autowired
     FanNoiseLevelRepository fanNoiseLevelRepository;
@@ -56,8 +57,8 @@ public class ComponentsController {
     public void populateComponentsData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Case[] cases = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/case.json"), Case[].class);
-        CPU[] cpus = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu.json"), CPU[].class);
-        CPUCooler[] cpuCoolers = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu-cooler.json"), CPUCooler[].class);
+        Cpu[] cpus = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu.json"), Cpu[].class);
+        CpuCooler[] cpuCoolers = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu-cooler.json"), CpuCooler[].class);
         GraphicsCard[] graphicsCards = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/graphics-card.json"), GraphicsCard[].class);
         InternalStorage[] internalStorages = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/internal-storage-device.json"), InternalStorage[].class);
         Memory[] memory = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/memory.json"), Memory[].class);
@@ -69,13 +70,13 @@ public class ComponentsController {
 
         cpuCoolerRepository.saveAll(Arrays.asList(cpuCoolers));
 
-        List<FanRPM> allRPMs = new ArrayList<>();
+        List<FanRpm> allRPMs = new ArrayList<>();
         List<FanNoiseLevel> allNoiseLevels = new ArrayList<>();
 
-        for (CPUCooler cpuCooler : cpuCoolers) {
-            List<FanRPM> rpms = cpuCooler.getRpm();
+        for (CpuCooler cpuCooler : cpuCoolers) {
+            List<FanRpm> rpms = cpuCooler.getRpm();
             if (!rpms.isEmpty()) {
-                for (FanRPM rpm : rpms) {
+                for (FanRpm rpm : rpms) {
                     if (rpm != null) {
                         rpm.setCpu_cooler(cpuCooler);
                         allRPMs.add(rpm);
@@ -129,5 +130,61 @@ public class ComponentsController {
 
         motherboardRepository.saveAll(Arrays.asList(motherboards));
         powerSupplyRepository.saveAll(Arrays.asList(powerSupplies));
+    }
+
+    @GetMapping("/components/cases")
+    public ModelAndView viewCases() {
+        ModelAndView modelAndView = new ModelAndView("/components/cases");
+        modelAndView.addObject("cases", caseRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpus")
+    public ModelAndView viewCpus() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        modelAndView.addObject("cpus", cpuRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpu-coolers")
+    public ModelAndView viewCpuCoolers() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
+        modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards")
+    public ModelAndView viewGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/internal-storage")
+    public ModelAndView viewInternalStorage() {
+        ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
+        modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/memory")
+    public ModelAndView viewMemory() {
+        ModelAndView modelAndView = new ModelAndView("/components/memory");
+        modelAndView.addObject("memory", memoryRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/motherboards")
+    public ModelAndView viewMotherboards() {
+        ModelAndView modelAndView = new ModelAndView("/components/motherboards");
+        modelAndView.addObject("motherboards", motherboardRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/power-supplies")
+    public ModelAndView viewPowerSupplies() {
+        ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
+        modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
+        return modelAndView;
     }
 }

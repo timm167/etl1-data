@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CPU Coolers</title>
+</head>
+<body>
+<ul>
+  <li th:each="cpu_cooler : ${cpu_coolers}">
+    <p th:text="'Name: ' + ${cpu_cooler.name}"></p>
+    <p th:text="'Price: £' + ${cpu_cooler.price}"></p>
+    <p>RPM:
+      <th:block th:each="rpm : ${cpu_cooler.rpm}">
+        <span th:text="${rpm.rpm}"></span>
+        <span th:if="${rpm != cpu_cooler.rpm.getLast()}"> - </span>
+      </th:block>
+    </p>
+    <p>Noise Level:
+      <th:block th:each="noise_level : ${cpu_cooler.noise_level}">
+        <span th:text="${noise_level.noise_level}"></span>
+        <span th:if="${noise_level != cpu_cooler.noise_level.getLast()}"> - </span>
+      </th:block>
+      <span th:text="${cpu_cooler.noise_level.isEmpty()} ? 'Silent' : 'dB'"></span>
+    </p>
+    <p th:text="'Colour: ' + ${cpu_cooler.color}"></p>
+    <p>Radiator Size:
+      <span th:text="${cpu_cooler.size == 0} ? 'N/A' : ${cpu_cooler.size} + 'mm'"></span>
+    </p>
+  </li>
+</ul>
+</body>
+</html>

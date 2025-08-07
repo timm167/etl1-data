@@ -1,4 +1,4 @@
-package com.example.etl1.Models;
+package com.example.etl1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -26,10 +26,10 @@ public class Memory {
     private List<MemoryModule> modules;
     private double price_per_gb;
     private String color;
-    private int first_word_latency;
+    private double first_word_latency;
     private int cas_latency;
 
-    public Memory(String name, double price, List<MemorySpeed> speed, List<MemoryModule> modules, double price_per_gb, String color, int first_word_latency, int cas_latency) {
+    public Memory(String name, double price, List<MemorySpeed> speed, List<MemoryModule> modules, double price_per_gb, String color, double first_word_latency, int cas_latency) {
         this.name = name;
         this.price = price;
         this.speed = speed;
