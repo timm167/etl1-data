@@ -3,6 +3,8 @@ package com.example.etl1.service;
 import com.example.etl1.model.Shipper;
 import com.example.etl1.repository.ShipperRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,13 +18,16 @@ public class ShippingService {
     }
 
     public Shipper findClosestShipper(double targetLat, double targetLon) {
-        List<Shipper> allShippers = shipperRepository.findAll();
+        Iterable<Shipper> iterableShippers = shipperRepository.findAll();
+        List<Shipper> allShippers = new ArrayList<>();
+        iterableShippers.forEach(allShippers::add);
 
         return allShippers.stream()
                 .filter(s -> s.getLat() != null && s.getLon() != null)
                 .min(Comparator.comparingDouble(s -> haversine(targetLat, targetLon, s.getLat(), s.getLon())))
                 .orElse(null);
     }
+
 
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371;
