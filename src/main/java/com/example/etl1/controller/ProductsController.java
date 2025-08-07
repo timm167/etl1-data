@@ -5,6 +5,7 @@ import com.example.etl1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -46,7 +47,7 @@ public class ProductsController {
 
 
     @GetMapping("/load-product-data")
-    public void populateProductData() throws IOException {
+    public String populateProductData() throws IOException {
         Integer count = 10;
 
         for (int i = 1; i <= count; i++) {
@@ -102,6 +103,8 @@ public class ProductsController {
             product.setPowerSupplyId(psu.getId());
             productRepository.save(product);
         }
+        return "redirect:/index";
+
     }
 
 }

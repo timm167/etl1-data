@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class ComponentsController {
     PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/load-component-data")
-    public void populateComponentsData() throws IOException {
+    public String populateComponentsData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Case[] cases = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/case.json"), Case[].class);
         Cpu[] cpus = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu.json"), Cpu[].class);
@@ -131,6 +132,8 @@ public class ComponentsController {
 
         motherboardRepository.saveAll(Arrays.asList(motherboards));
         powerSupplyRepository.saveAll(Arrays.asList(powerSupplies));
+
+        return "redirect:/index";
     }
 
     @GetMapping("/components/cases")
