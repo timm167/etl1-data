@@ -3,8 +3,10 @@ package com.example.etl1.controller;
 import com.example.etl1.model.GeoLocation;
 import com.example.etl1.model.Shipper;
 import com.example.etl1.model.ShippingLane;
+import com.example.etl1.repository.ShippingLaneRepository;
 import com.example.etl1.service.GeoLocationService;
 import com.example.etl1.service.ShippingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/lane")
 public class ShippingLaneController {
+
+    @Autowired
+    ShippingLaneRepository shippingLaneRepository;
 
     private final GeoLocationService geoLocationService;
     private final ShippingService shippingService;
@@ -48,6 +53,8 @@ public class ShippingLaneController {
         lane.setDestinationPort(to);
         lane.setOriginShipper(originShipper);
         lane.setDestinationShipper(destinationShipper);
+        shippingLaneRepository.save(lane);
+
 
         return ResponseEntity.ok(lane);
     }
