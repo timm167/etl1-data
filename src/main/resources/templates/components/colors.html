@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Collection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            display: inline-block;
+        }
+        .color-row {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Color Collection</h1>
+
+            <div class="mb-3">
+                <a href="/scrape" class="btn btn-primary">Scrape New Colors</a>
+                <span class="ms-3 text-muted" th:text="'Total: ' + ${totalColors} + ' colors'"></span>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div th:if="${colors.empty}" class="alert alert-info">
+                        No colors found. <a href="/scrape">Start scraping</a> to populate the database.
+                    </div>
+
+                    <table th:unless="${colors.empty}" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>Name</th>
+                            <th>Hex Code</th>
+                            <th>Added</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="color : ${colors}" class="color-row">
+                            <td>
+                                <div class="color-swatch"
+                                     th:style="'background-color: ' + ${color.hexCode}"></div>
+                            </td>
+                            <td th:text="${color.name}"></td>
+                            <td>
+                                <code th:text="${color.hexCode}"></code>
+                            </td>
+                            <td th:text="${#temporals.format(color.createdAt, 'MMM dd, yyyy')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <nav th:if="${totalPages > 1}" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li th:class="'page-item ' + (${currentPage == 0} ? 'disabled' : '')">
+                        <a class="page-link" th:href="@{/colors(page=${currentPage - 1})}">Previous</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:class="'page-item ' + (${i == currentPage} ? 'active' : '')">
+                        <a class="page-link" th:href="@{/colors(page=${i})}" th:text="${i + 1}"></a>
+                    </li>
+
+                    <li th:class="'page-item ' + (${currentPage >= totalPages - 1} ? 'disabled' : '')">
+                        <a class="page-link" th:href="@{/colors(page=${currentPage + 1})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

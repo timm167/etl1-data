@@ -1,20 +1,18 @@
 CREATE TABLE locations (
-    location_id INT PRIMARY KEY AUTO_INCREMENT,
-    location_type ENUM('distribution facility', 'warehouse', 'factory', 'office') NOT NULL,
+    location_id SERIAL PRIMARY KEY,
+    location_type VARCHAR(30) NOT NULL CHECK (location_type IN ('distribution facility', 'warehouse', 'factory', 'office')),
     location_name VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL
 );
 
-
 CREATE TABLE staff (
-    staff_id INT PRIMARY KEY AUTO_INCREMENT,
+    staff_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     job_title VARCHAR(100) NOT NULL,
     location_id INT NOT NULL,
     salary DECIMAL(10,2),
-
     CONSTRAINT fk_staff_location FOREIGN KEY (location_id) REFERENCES locations(location_id)
 );
 
