@@ -5,6 +5,15 @@
     <title>Cases</title>
 </head>
 <body>
+<form th:action="@{components/cases/sort}" method="get">
+  <label for="sort">Sort By</label>
+  <select th:name="${sortBy}" id="sort" size="1">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Size</option>
+  </select>
+  <button type="submit">Search</button>
+</form>
 <ul>
   <li th:each="case : ${cases}">
     <p th:text="'Name: ' + ${case.name}"></p>

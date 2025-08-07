@@ -187,4 +187,42 @@ public class ComponentsController {
         modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
         return modelAndView;
     }
+
+    @GetMapping("/components/graphics-cards/nvidia")
+    public ModelAndView viewNvidiaGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("GeForce"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards/amd")
+    public ModelAndView viewAmdGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("Radeon"));
+        return modelAndView;
+    }
+    @GetMapping("/components/cpus/intel")
+    public ModelAndView viewIntelCpus() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("Intel"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpus/amd")
+    public ModelAndView viewAmdCpus() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("AMD"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cases/sort")
+    public ModelAndView viewSortedCases(String sortBy) {
+        ModelAndView modelAndView = new ModelAndView("/components/cases");
+        List<Case> cases;
+        switch(sortBy) {
+            case "Name":
+        }
+        modelAndView.addObject("cases", caseRepository.findAll());
+        return modelAndView;
+    }
 }
