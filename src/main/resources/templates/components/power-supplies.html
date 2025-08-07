@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Power Supplies</title>
+</head>
+<body>
+<ul>
+  <li th:each="power_supply : ${power_supplies}">
+    <p th:text="'Name: ' + ${power_supply.name}"></p>
+    <p th:text="'Price: £' + ${power_supply.price}"></p>
+    <p th:text="'Type: ' + ${power_supply.type}"></p>
+    <p th:text="'Efficiency: 80+ ' + ${#strings.capitalize(power_supply.efficiency)}"></p>
+    <p th:text="'Wattage: ' + ${power_supply.wattage} + 'W'"></p>
+    <p th:text="'Modular: ' + ${power_supply.modular}"></p>
+    <p th:text="'Colour: ' + ${power_supply.color}"></p>
+  </li>
+</ul>
+</body>
+</html>

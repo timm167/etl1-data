@@ -1,6 +1,6 @@
-package com.example.etl1.Repositories;
+package com.example.etl1.repository;
 
-import com.example.etl1.Models.FanRpm;
+import com.example.etl1.model.FanRpm;
 import org.springframework.data.repository.CrudRepository;
 
 public interface FanRpmRepository extends CrudRepository<FanRpm, Integer> { }

@@ -1,7 +1,7 @@
-package com.example.etl1.Controllers;
+package com.example.etl1.controller;
 
-import com.example.etl1.Models.*;
-import com.example.etl1.Repositories.*;
+import com.example.etl1.model.*;
+import com.example.etl1.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -150,6 +150,41 @@ public class ComponentsController {
     public ModelAndView viewCpuCoolers() {
         ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
         modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards")
+    public ModelAndView viewGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/internal-storage")
+    public ModelAndView viewInternalStorage() {
+        ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
+        modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/memory")
+    public ModelAndView viewMemory() {
+        ModelAndView modelAndView = new ModelAndView("/components/memory");
+        modelAndView.addObject("memory", memoryRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/motherboards")
+    public ModelAndView viewMotherboards() {
+        ModelAndView modelAndView = new ModelAndView("/components/motherboards");
+        modelAndView.addObject("motherboards", motherboardRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/power-supplies")
+    public ModelAndView viewPowerSupplies() {
+        ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
+        modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
         return modelAndView;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.etl1.Models;
+package com.example.etl1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -11,17 +11,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "FAN_RPM")
-public class FanRpm {
+@Table(name = "MEMORY_SPEED")
+public class MemorySpeed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer rpm;
+    private Integer speed;
     @ManyToOne
-    @JoinColumn(name = "cpu_cooler_id")
-    private CpuCooler cpu_cooler;
+    @JoinColumn(name = "memory_id")
+    private Memory memory;
 
-    public FanRpm(Integer rpm) {
-        this.rpm = rpm;
+    public MemorySpeed(Integer speed) {
+        this.speed = speed;
     }
 }

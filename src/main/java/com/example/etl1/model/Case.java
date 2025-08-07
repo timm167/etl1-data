@@ -1,4 +1,4 @@
-package com.example.etl1.Models;
+package com.example.etl1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -11,26 +11,26 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "MOTHERBOARDS")
-public class Motherboard {
+@Table(name = "CASES")
+public class Case {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private double price;
-    private String socket;
-    private String form_factor;
-    private int max_memory;
-    private int memory_slots;
+    private String type;
     private String color;
+    private String side_panel;
+    private double external_volume;
+    private int internal_35_bays;
 
-    public Motherboard(String name, double price, String socket, String form_factor, int max_memory, int memory_slots, String color) {
+    public Case(String name, double price, String type, String color, String side_panel, double external_volume, int internal_35_bays) {
         this.name = name;
         this.price = price;
-        this.socket = socket;
-        this.form_factor = form_factor;
-        this.max_memory = max_memory;
-        this.memory_slots = memory_slots;
+        this.type = type;
         this.color = color;
+        this.side_panel = side_panel;
+        this.external_volume = external_volume;
+        this.internal_35_bays = internal_35_bays;
     }
 }

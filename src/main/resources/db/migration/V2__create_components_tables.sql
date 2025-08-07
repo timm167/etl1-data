@@ -72,7 +72,7 @@ CREATE TABLE memory (
     price DOUBLE PRECISION,
     price_per_gb DOUBLE PRECISION,
     color TEXT,
-    first_word_latency INT,
+    first_word_latency DOUBLE PRECISION,
     cas_latency INT
 );
 
