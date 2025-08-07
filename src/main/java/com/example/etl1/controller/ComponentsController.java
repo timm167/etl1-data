@@ -4,6 +4,7 @@ import com.example.etl1.model.*;
 import com.example.etl1.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -136,6 +137,8 @@ public class ComponentsController {
     public ModelAndView viewCases() {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
         modelAndView.addObject("cases", caseRepository.findAll());
+        modelAndView.addObject("sortBy", "");
+        modelAndView.addObject("order", "");
         return modelAndView;
     }
 
@@ -216,13 +219,26 @@ public class ComponentsController {
     }
 
     @GetMapping("/components/cases/sort")
-    public ModelAndView viewSortedCases(String sortBy) {
+    public ModelAndView viewSortedCases(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
-        List<Case> cases;
-        switch(sortBy) {
-            case "Name":
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
         }
-        modelAndView.addObject("cases", caseRepository.findAll());
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Size" -> "externalVolume";
+            default -> null;
+        };
+
+        List<Case> cases = caseRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("cases", cases);
         return modelAndView;
     }
 }
