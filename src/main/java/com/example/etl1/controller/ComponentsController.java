@@ -4,6 +4,7 @@ import com.example.etl1.model.*;
 import com.example.etl1.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -136,6 +137,8 @@ public class ComponentsController {
     public ModelAndView viewCases() {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
         modelAndView.addObject("cases", caseRepository.findAll());
+        modelAndView.addObject("sortBy", "");
+        modelAndView.addObject("order", "");
         return modelAndView;
     }
 
@@ -185,6 +188,57 @@ public class ComponentsController {
     public ModelAndView viewPowerSupplies() {
         ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
         modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards/nvidia")
+    public ModelAndView viewNvidiaGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("GeForce"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards/amd")
+    public ModelAndView viewAmdGraphicsCards() {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("Radeon"));
+        return modelAndView;
+    }
+    @GetMapping("/components/cpus/intel")
+    public ModelAndView viewIntelCpus() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("Intel"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpus/amd")
+    public ModelAndView viewAmdCpus() {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("AMD"));
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cases/sort")
+    public ModelAndView viewSortedCases(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/cases");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Size" -> "externalVolume";
+            default -> null;
+        };
+
+        List<Case> cases = caseRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("cases", cases);
         return modelAndView;
     }
 }
