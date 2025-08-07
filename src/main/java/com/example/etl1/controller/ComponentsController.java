@@ -146,6 +146,8 @@ public class ComponentsController {
     public ModelAndView viewCpus() {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
         modelAndView.addObject("cpus", cpuRepository.findAll());
+        modelAndView.addObject("sortBy", "");
+        modelAndView.addObject("order", "");
         return modelAndView;
     }
 
@@ -239,6 +241,30 @@ public class ComponentsController {
 
         List<Case> cases = caseRepository.findAll(Sort.by(direction, property));
         modelAndView.addObject("cases", cases);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpus/sort")
+    public ModelAndView viewSortedCpus(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Clock Speed" -> "coreClock";
+            default -> null;
+        };
+
+        List<Cpu> cpus = cpuRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("cpus", cpus);
         return modelAndView;
     }
 }

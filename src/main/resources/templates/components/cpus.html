@@ -5,12 +5,25 @@
     <title>CPUs</title>
 </head>
 <body>
+<form th:action="@{/components/cpus/sort}" method="get">
+  <label for="sortBy">Sort By</label>
+  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Core Clock</option>
+  </select>
+  <select th:value="${order}" name="order" id="order" size="1">
+    <option>Ascending</option>
+    <option>Descending</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 <ul>
   <li th:each="cpu : ${cpus}">
     <p th:text="'Name: ' + ${cpu.name}"></p>
     <p th:text="'Price: £' + ${cpu.price}"></p>
     <p th:text="'Cores: ' + ${cpu.core_count}"></p>
-    <p th:text="'Clock Speed: ' + ${cpu.core_clock} + 'GHz'"></p>
+    <p th:text="'Clock Speed: ' + ${cpu.coreClock} + 'GHz'"></p>
     <p th:text="'Boosted Clock Speed: ' + ${cpu.boost_clock} + 'GHz'"></p>
     <p th:text="'Microarchitecture: ' + ${cpu.microarchitecture}"></p>
     <p th:text="'TDP: ' + ${cpu.tdp} + 'W'"></p>

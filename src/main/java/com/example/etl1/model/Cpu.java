@@ -1,6 +1,7 @@
 package com.example.etl1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,8 @@ public class Cpu {
     private String name;
     private double price;
     private Integer core_count;
-    private double core_clock;
+    @JsonProperty("core_clock")
+    private double coreClock;
     private double boost_clock;
     private String microarchitecture;
     private int tdp;
@@ -29,7 +31,7 @@ public class Cpu {
         this.name = name;
         this.price = price;
         this.core_count = core_count;
-        this.core_clock = core_clock;
+        this.coreClock = core_clock;
         this.boost_clock = boost_clock;
         this.microarchitecture = microarchitecture;
         this.tdp = tdp;
