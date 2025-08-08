@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<form th:action="@{/products/sort}" method="get">
+    <label for="sortBy">Sort By</label>
+    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+        <option>Name</option>
+        <option>Price</option>
+    </select>
+    <select th:value="${order}" name="order" id="order" size="1">
+        <option>Ascending</option>
+        <option>Descending</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
+<ul>
+    <li th:each="product : ${products}" th:if="${product.price > 0.0}">
+        <h2 th:text="${product.name}">Product Name</h2>
+
+        <p th:text="'Cost: £' + ${product.cost}"></p>
+        <p th:text="'Price: £' + ${product.price}"></p>
+
+        <p th:text="'Color: ' + (${product.color != null ? product.color.hex : 'N/A'})"></p>
+        <p th:text="'Case: ' + (${product.caseEntity != null ? product.caseEntity.name : 'N/A'})"></p>
+        <p th:text="'CPU: ' + (${product.cpu != null ? product.cpu.name : 'N/A'})"></p>
+        <p th:text="'CPU Cooler: ' + (${product.cpuCooler != null ? product.cpuCooler.name : 'N/A'})"></p>
+        <p th:text="'Graphics Card: ' + (${product.graphicsCard != null ? product.graphicsCard.name : 'N/A'})"></p>
+        <p th:text="'Internal Storage: ' + (${product.internalStorage != null ? product.internalStorage.name : 'N/A'})"></p>
+        <p th:text="'Memory: ' + (${product.memory != null ? product.memory.name : 'N/A'})"></p>
+        <p th:text="'Motherboard: ' + (${product.motherboard != null ? product.motherboard.name : 'N/A'})"></p>
+        <p th:text="'Power Supply: ' + (${product.powerSupply != null ? product.powerSupply.name : 'N/A'})"></p>
+    </li>
+</ul>
+</body>
+</html>

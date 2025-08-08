@@ -17,8 +17,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -26,8 +27,9 @@ public class Order {
     @Column(precision = 10, scale = 2)
     private BigDecimal value;
 
-    @Column(name = "distribution_channel_id", nullable = false)
-    private Integer distributionChannelId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "distribution_channel_id", nullable = false)
+    private DistributionChannel distributionChannel;
 
     @Column(name = "order_time")
     private LocalDateTime orderTime;
