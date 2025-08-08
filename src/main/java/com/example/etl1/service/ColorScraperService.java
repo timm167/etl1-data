@@ -42,9 +42,7 @@ public class ColorScraperService {
                     .referrer("https://www.google.com/")
                     .timeout(30000)
                     .followRedirects(true)
-                    .ignoreHttpErrors(false)
-                    .get().connection();
-
+                    .ignoreHttpErrors(false);
 
             Connection.Response response = connection.execute();
 

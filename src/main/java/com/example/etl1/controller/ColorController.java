@@ -24,8 +24,11 @@ public class ColorController {
     @GetMapping("/scrape")
     @ResponseBody
     public String scrapeColors() {
-        return scraperService.scrapeColors();
+        String result = scraperService.scrapeColors();
+        System.out.println("[DEBUG] Scrape result: " + result);
+        return result;
     }
+
 
     @GetMapping("/colors")
     public String showColors(
