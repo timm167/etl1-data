@@ -5,16 +5,29 @@
     <title>Internal Storage Devices</title>
 </head>
 <body>
+<form th:action="@{/components/internal-storage/sort}" method="get">
+  <label for="sortBy">Sort By</label>
+  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Capacity</option>
+  </select>
+  <select th:value="${order}" name="order" id="order" size="1">
+    <option>Ascending</option>
+    <option>Descending</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 <ul>
-  <li th:each="internal_storage : ${internal_storages}">
+  <li th:each="internal_storage : ${internal_storages}" th:if="${internal_storage.price > 0.0}">
     <p th:text="'Name: ' + ${internal_storage.name}"></p>
-    <p th:text="'Price: £' + ${internal_storage.price}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(internal_storage.price, 0, 'COMMA', 2, 'POINT')}"></p>
 
     <p>Capacity: <span th:text=" ${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'"></span></p>
 
-    <p th:text="'Price per GB: £' + ${internal_storage.price_per_gb}"></p>
+    <p>Price per GB: <span th:text="${internal_storage.price_per_gb > 0.0} ? '£' + ${internal_storage.price_per_gb} : 'Unavailable'"></span></p>
     <p th:text="'Type: ' + ${internal_storage.type}"></p>
-    <p th:text="'Cache: ' + ${internal_storage.cache} + 'MB'"></p>
+    <p>Cache: <span th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"></span></p>
     <p th:text="'Form Factor: ' + ${internal_storage.form_factor}"></p>
   </li>
 </ul>

@@ -5,15 +5,28 @@
     <title>Power Supplies</title>
 </head>
 <body>
+<form th:action="@{/components/power-supplies/sort}" method="get">
+  <label for="sortBy">Sort By</label>
+  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Wattage</option>
+  </select>
+  <select th:value="${order}" name="order" id="order" size="1">
+    <option>Ascending</option>
+    <option>Descending</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 <ul>
-  <li th:each="power_supply : ${power_supplies}">
+  <li th:each="power_supply : ${power_supplies}" th:if="${power_supply.price > 0.0}">
     <p th:text="'Name: ' + ${power_supply.name}"></p>
-    <p th:text="'Price: £' + ${power_supply.price}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(power_supply.price, 0, 'COMMA', 2, 'POINT')}"></p>
     <p th:text="'Type: ' + ${power_supply.type}"></p>
-    <p th:text="'Efficiency: 80+ ' + ${#strings.capitalize(power_supply.efficiency)}"></p>
+    <p>Efficiency: <span th:text="${power_supply.efficiency != null} ? '80+ ' + ${#strings.capitalize(power_supply.efficiency)} : 'Unavailable'"></span></p>
     <p th:text="'Wattage: ' + ${power_supply.wattage} + 'W'"></p>
     <p th:text="'Modular: ' + ${power_supply.modular}"></p>
-    <p th:text="'Colour: ' + ${power_supply.color}"></p>
+    <p>Colour: <span th:text="${power_supply.color != null} ? ${power_supply.color} : 'N/A'"></span></p>
   </li>
 </ul>
 </body>

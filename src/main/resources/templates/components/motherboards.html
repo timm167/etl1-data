@@ -5,15 +5,27 @@
     <title>Motherboards</title>
 </head>
 <body>
+<form th:action="@{/components/motherboards/sort}" method="get">
+  <label for="sortBy">Sort By</label>
+  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+    <option>Name</option>
+    <option>Price</option>
+  </select>
+  <select th:value="${order}" name="order" id="order" size="1">
+    <option>Ascending</option>
+    <option>Descending</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 <ul>
-  <li th:each="motherboard : ${motherboards}">
+  <li th:each="motherboard : ${motherboards}" th:if="${motherboard.price > 0.0}">
     <p th:text="'Name: ' + ${motherboard.name}"></p>
-    <p th:text="'Price: £' + ${motherboard.price}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(motherboard.price, 0, 'COMMA', 2, 'POINT')}"></p>
     <p th:text="'Socket: ' + ${motherboard.socket}"></p>
     <p th:text="'Form Factor: ' + ${motherboard.form_factor}"></p>
     <p th:text="'Max Memory: ' + ${motherboard.max_memory} + 'GB'"></p>
     <p th:text="'Memory Slots: ' + ${motherboard.memory_slots}"></p>
-    <p th:text="'Colour: ' + ${motherboard.color}"></p>
+    <p>Colour: <span th:text="${motherboard.color != null} ? ${motherboard.color} : 'N/A'"></span></p>
   </li>
 </ul>
 </body>

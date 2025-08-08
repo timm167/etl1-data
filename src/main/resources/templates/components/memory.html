@@ -2,17 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>CPU Coolers</title>
+    <title>Memory</title>
 </head>
 <body>
+<form th:action="@{/components/memory/sort}" method="get">
+  <label for="sortBy">Sort By</label>
+  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Speed</option>
+  </select>
+  <select th:value="${order}" name="order" id="order" size="1">
+    <option>Ascending</option>
+    <option>Descending</option>
+  </select>
+  <button type="submit">Sort</button>
+</form>
 <ul>
-  <li th:each="mem : ${memory}">
+  <li th:each="mem : ${memory}" th:if="${mem.price > 0.0}">
     <p th:text="'Name: ' + ${mem.name}"></p>
-    <p th:text="'Price: £' + ${mem.price}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(mem.price, 0, 'COMMA', 2, 'POINT')}"></p>
     <p th:text="'Speed: DDR' + ${mem.speed.getFirst().speed} + ' ' + ${mem.speed.getLast().speed} + 'MHz'"></p>
     <p th:text="'Modules: ' + ${mem.modules.getFirst().module} + ' x ' + ${mem.modules.getLast().module} + 'GB'"></p>
-    <p th:text="'Price per GB: £' + ${mem.price_per_gb}"></p>
-    <p th:text="'Colour: ' + ${mem.color}"></p>
+    <p>Price per GB: <span th:text="${mem.price_per_gb > 0.0} ? '£' + ${mem.price_per_gb} : 'Unavailable'"></span></p>
+    <p>Colour: <span th:text="${mem.color != null} ? ${mem.color} : 'N/A'"></span></p>
     <p th:text="'First Word Latency: ' + ${mem.first_word_latency} + 'ns'"></p>
     <p th:text="'CAS Latency: ' + ${mem.cas_latency} + ' cycles'"></p>
   </li>

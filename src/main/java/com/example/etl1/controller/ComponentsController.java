@@ -56,6 +56,15 @@ public class ComponentsController {
 
     @GetMapping("/load-component-data")
     public void populateComponentsData() throws IOException {
+        caseRepository.deleteAll();
+        cpuRepository.deleteAll();
+        cpuCoolerRepository.deleteAll();
+        graphicsCardRepository.deleteAll();
+        internalStorageRepository.deleteAll();
+        memoryRepository.deleteAll();
+        motherboardRepository.deleteAll();
+        powerSupplyRepository.deleteAll();
+
         ObjectMapper mapper = new ObjectMapper();
         Case[] cases = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/case.json"), Case[].class);
         Cpu[] cpus = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu.json"), Cpu[].class);
@@ -117,7 +126,7 @@ public class ComponentsController {
 
             List<MemoryModule> memoryModules = mem.getModules();
             if (!memoryModules.isEmpty()) {
-                for (MemoryModule memoryModule: memoryModules) {
+                for (MemoryModule memoryModule : memoryModules) {
                     if (memoryModule != null) {
                         memoryModule.setMemory(mem);
                         allMemoryModules.add(memoryModule);
@@ -206,6 +215,7 @@ public class ComponentsController {
         modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("Radeon"));
         return modelAndView;
     }
+
     @GetMapping("/components/cpus/intel")
     public ModelAndView viewIntelCpus() {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
@@ -259,12 +269,154 @@ public class ComponentsController {
         String property = switch (sortBy) {
             case "Name" -> "name";
             case "Price" -> "price";
-            case "Clock Speed" -> "coreClock";
+            case "Core Clock" -> "coreClock";
             default -> null;
         };
 
         List<Cpu> cpus = cpuRepository.findAll(Sort.by(direction, property));
         modelAndView.addObject("cpus", cpus);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/cpu-coolers/sort")
+    public ModelAndView viewSortedCpuCoolers(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            default -> null;
+        };
+
+        List<CpuCooler> cpuCoolers = cpuCoolerRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("cpu_coolers", cpuCoolers);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/graphics-cards/sort")
+    public ModelAndView viewSortedGraphicsCards(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Core Clock" -> "coreClock";
+            default -> null;
+        };
+
+        List<GraphicsCard> graphicsCards = graphicsCardRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("graphics_cards", graphicsCards);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/internal-storage/sort")
+    public ModelAndView viewSortedInternalStorage(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Capacity" -> "capacity";
+            default -> null;
+        };
+
+        List<InternalStorage> internalStorages = internalStorageRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("internal_storages", internalStorages);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/memory/sort")
+    public ModelAndView viewSortedMemory(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/memory");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Speed" -> "speed.speed";
+            default -> null;
+        };
+
+        List<Memory> memory = memoryRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("memory", memory);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/motherboards/sort")
+    public ModelAndView viewSortedMotherboards(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/motherboards");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            default -> null;
+        };
+
+        List<Motherboard> motherboards = motherboardRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("motherboards", motherboards);
+        return modelAndView;
+    }
+
+    @GetMapping("/components/power-supplies/sort")
+    public ModelAndView viewSortedPowerSupplies(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            case "Wattage" -> "wattage";
+            default -> null;
+        };
+
+        List<PowerSupply> powerSupplies = powerSupplyRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("power_supplies", powerSupplies);
         return modelAndView;
     }
 }
