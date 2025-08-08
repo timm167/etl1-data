@@ -1,5 +1,5 @@
 package com.example.etl1;
-import com.example.etl1.service.Scraping;
+import com.example.etl1.service.ScrapingService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +13,7 @@ public class Etl1Application {
 	}
 
 	@Bean
-	public CommandLineRunner runScrape(Scraping scrape) {
+	public CommandLineRunner runScrape(ScrapingService scrape) {
 		return args -> {
 			scrape.runNeweggProcess();
 		};

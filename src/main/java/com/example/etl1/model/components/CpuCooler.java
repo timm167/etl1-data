@@ -1,4 +1,4 @@
-package com.example.etl1.model;
+package com.example.etl1.model.components;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

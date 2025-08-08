@@ -1,14 +1,13 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.*;
-import com.example.etl1.repository.*;
+import com.example.etl1.model.components.*;
+import com.example.etl1.repository.components.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;

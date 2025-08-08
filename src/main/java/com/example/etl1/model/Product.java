@@ -1,4 +1,5 @@
 package com.example.etl1.model;
+import com.example.etl1.model.components.*;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,21 +1,21 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.Case;
 import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
+import com.example.etl1.repository.components.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController
+@Controller
 public class ProductsController {
 
     @Autowired
@@ -50,7 +50,7 @@ public class ProductsController {
 
 
     @GetMapping("/load-product-data")
-    public String populateProductData() throws IOException {
+    public String populateProductData() {
         Integer count = 10;
 
         for (int i = 1; i <= count; i++) {
@@ -106,7 +106,7 @@ public class ProductsController {
             product.setPowerSupply(psu);
             productRepository.save(product);
         }
-        return "redirect:/index";
+        return "redirect:/";
 
     }
 

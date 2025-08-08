@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class Scraping {
+public class ScrapingService {
     private final NeweggScraper scraper = new NeweggScraper();
     private final PrebuiltPCRepository prebuiltPCRepository;
 
     @Autowired
-    public Scraping(PrebuiltPCRepository prebuiltPCRepository) {
+    public ScrapingService(PrebuiltPCRepository prebuiltPCRepository) {
         this.prebuiltPCRepository = prebuiltPCRepository;
     }
 

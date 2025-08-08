@@ -1,6 +1,5 @@
 package com.example.etl1.service;
 
-import com.example.etl1.controller.DistributionService;
 import com.example.etl1.model.*;
 import com.example.etl1.repository.LocationRepository;
 import com.example.etl1.repository.OrderRepository;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
