@@ -1,10 +1,13 @@
 package com.example.etl1.controller;
 
+import com.example.etl1.model.Case;
 import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
@@ -89,22 +92,54 @@ public class ProductsController {
             );
 
             Product product = new Product();
-            product.setProductName(productNames.get(i-1));
+            product.setName(productNames.get(i-1));
             product.setCost(cost);
             product.setPrice(price);
-            product.setColorId(color.getId());
-            product.setCaseId(casePart.getId());
-            product.setCpuId(cpu.getId());
-            product.setCpuCoolerId(cooler.getId());
-            product.setGraphicsCardId(gpu.getId());
-            product.setInternalStorageId(storage.getId());
-            product.setMemoryId(memory.getId());
-            product.setMotherboardId(mobo.getId());
-            product.setPowerSupplyId(psu.getId());
+            product.setColor(color);
+            product.setCaseEntity(casePart);
+            product.setCpu(cpu);
+            product.setCpuCooler(cooler);
+            product.setGraphicsCard(gpu);
+            product.setInternalStorage(storage);
+            product.setMemory(memory);
+            product.setMotherboard(mobo);
+            product.setPowerSupply(psu);
             productRepository.save(product);
         }
         return "redirect:/index";
 
+    }
+
+    @GetMapping("/products")
+    public ModelAndView viewCases() {
+        ModelAndView modelAndView = new ModelAndView("/products");
+        modelAndView.addObject("products", productRepository.findAll());
+        modelAndView.addObject("sortBy", "");
+        modelAndView.addObject("order", "");
+        return modelAndView;
+    }
+
+    @GetMapping("/products/sort")
+    public ModelAndView viewSortedCases(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/products");
+
+        Sort.Direction direction = null;
+
+        if (order.equals("Descending")) {
+            direction = Sort.Direction.DESC;
+        } else {
+            direction = Sort.Direction.ASC;
+        }
+
+        String property = switch (sortBy) {
+            case "Name" -> "name";
+            case "Price" -> "price";
+            default -> null;
+        };
+
+        List<Product> product = productRepository.findAll(Sort.by(direction, property));
+        modelAndView.addObject("products", product);
+        return modelAndView;
     }
 
 }

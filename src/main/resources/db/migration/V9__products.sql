@@ -1,6 +1,6 @@
 CREATE TABLE products (
       id SERIAL PRIMARY KEY,
-      product_name TEXT NOT NULL,
+      name TEXT NOT NULL,
       cost NUMERIC(10, 2),
       price NUMERIC(10, 2),
       color_id INT,
@@ -12,6 +12,9 @@ CREATE TABLE products (
       memory_id INT,
       motherboard_id INT,
       power_supply_id INT,
+      is_custom BOOLEAN DEFAULT FALSE,
+
+
 
       CONSTRAINT fk_color FOREIGN KEY (color_id) REFERENCES colors(id) ON DELETE SET NULL,
       CONSTRAINT fk_case FOREIGN KEY (case_id) REFERENCES cases(id) ON DELETE SET NULL,

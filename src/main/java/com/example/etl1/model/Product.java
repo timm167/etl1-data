@@ -15,8 +15,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "product_name", nullable = false)
-    private String productName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal cost;
@@ -24,30 +24,43 @@ public class Product {
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "color_id")
-    private Integer colorId;
+    @Column(name = "is_custom", nullable = false)
+    private Boolean isCustom = false;
 
-    @Column(name = "case_id")
-    private Integer caseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
+    private Color color;
 
-    @Column(name = "cpu_id")
-    private Integer cpuId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_id", referencedColumnName = "id")
+    private Case caseEntity;
 
-    @Column(name = "cpu_cooler_id")
-    private Integer cpuCoolerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cpu_id", referencedColumnName = "id")
+    private Cpu cpu;
 
-    @Column(name = "graphics_card_id")
-    private Integer graphicsCardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cpu_cooler_id", referencedColumnName = "id")
+    private CpuCooler cpuCooler;
 
-    @Column(name = "internal_storage_id")
-    private Integer internalStorageId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "graphics_card_id", referencedColumnName = "id")
+    private GraphicsCard graphicsCard;
 
-    @Column(name = "memory_id")
-    private Integer memoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "internal_storage_id", referencedColumnName = "id")
+    private InternalStorage internalStorage;
 
-    @Column(name = "motherboard_id")
-    private Integer motherboardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memory_id", referencedColumnName = "id")
+    private Memory memory;
 
-    @Column(name = "power_supply_id")
-    private Integer powerSupplyId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "motherboard_id", referencedColumnName = "id")
+    private Motherboard motherboard;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "power_supply_id", referencedColumnName = "id")
+    private PowerSupply powerSupply;
+
 }
