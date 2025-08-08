@@ -43,6 +43,11 @@ public class NeweggScraper {
                 List<String> features = featureElements.stream()
                         .map(Element::text)
                         .collect(Collectors.toList());
+                String modelNumber = features.stream()
+                        .filter(f -> f.startsWith("Model #: "))
+                        .map(f -> f.replace("Model #: ", "").trim())
+                        .findFirst()
+                        .orElse(null);
 
                 PreBuiltPC pc = new PreBuiltPC();
                 pc.setName(name);
@@ -50,6 +55,7 @@ public class NeweggScraper {
                 pc.setFeatures(features);
                 pc.setOrigin("Newegg");
                 pc.setScrapeDate(LocalDateTime.now());
+                pc.setModelNumber(modelNumber);
                 pcList.add(pc);
             }
 
