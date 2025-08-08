@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Navbar with Components Dropdown</title>
+</head>
+<body>
+<div th:fragment="navbar">
+
+<nav>
+    <form th:action="@{/load-product-data}" method="get">
+        <button type="submit">Load Product Data</button>
+    </form>
+    <form th:action="@{/load-component-data}" method="get">
+        <button type="submit">Load Component Data</button>
+    </form>
+    <form th:action="@{/products}" method="get">
+        <button type="submit">View Products</button>
+    </form>
+
+
+    <div style="position: relative;">
+        <button class="dropdown-toggle" type="button" onclick="toggleDropdown()">Components ▼</button>
+        <div id="componentsDropdown">
+            <form th:action="@{/components/cases}" method="get">
+                <button type="submit">Cases</button>
+            </form>
+            <form th:action="@{/components/cpus}" method="get">
+                <button type="submit">CPUs</button>
+            </form>
+            <form th:action="@{/components/cpu-coolers}" method="get">
+                <button type="submit">CPU Coolers</button>
+            </form>
+            <form th:action="@{/components/graphics-cards}" method="get">
+                <button type="submit">Graphics Cards</button>
+            </form>
+            <form th:action="@{/components/internal-storage}" method="get">
+                <button type="submit">Internal Storage</button>
+            </form>
+            <form th:action="@{/components/memory}" method="get">
+                <button type="submit">Memory</button>
+            </form>
+            <form th:action="@{/components/motherboards}" method="get">
+                <button type="submit">Motherboards</button>
+            </form>
+            <form th:action="@{/components/power-supplies}" method="get">
+                <button type="submit">Power Supplies</button>
+            </form>
+            <form th:action="@{/components/graphics-cards/nvidia}" method="get">
+                <button type="submit">Nvidia Graphics Cards</button>
+            </form>
+            <form th:action="@{/components/graphics-cards/amd}" method="get">
+                <button type="submit">AMD Graphics Cards</button>
+            </form>
+        </div>
+    </div>
+</nav>
+</div>
+
+<script>
+    function toggleDropdown() {
+        const dropdown = document.getElementById('componentsDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-toggle')) {
+            const dropdown = document.getElementById('componentsDropdown');
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        }
+    };
+</script>
+
+</body>
+</html>

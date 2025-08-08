@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Newegg Price Comparison</title>
+</head>
+<body>
+
+    <h1>Newegg Pre-built PC Prices</h1>
+    <table>
+      <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Features</th>
+            <th>Accurate as of</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr th:each="pc : ${pcs}">
+            <td th:text="${pc.name}">Name</td>
+            <td th:text="'£' + ${pc.price}">Price</td>
+            <td th:text="${pc.features}">Features</td>
+              <td th:text="${#temporals.format(pc.scrapeDate, 'yyyy-MM-dd - HH:mm:ss')}">Accurate as of</td>
+          </tr>
+      </tbody>
+    </table>
+
+</body>
+</html>
