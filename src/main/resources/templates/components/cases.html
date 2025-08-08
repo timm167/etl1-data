@@ -5,7 +5,7 @@
     <title>Cases</title>
 </head>
 <body>
-<form th:action="@{/components/cases/sort}" method="get">
+<form th:action="@{/components/cases}" method="get">
   <label for="sortBy">Sort By</label>
   <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
     <option>Name</option>
@@ -21,11 +21,13 @@
 <ul>
   <li th:each="case : ${cases}" th:if="${case.price > 0.0}">
     <p th:text="'Name: ' + ${case.name}"></p>
-    <p th:text="'Price: £' + ${case.price}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(case.price, 0, 'COMMA', 2, 'POINT')}"></p>
     <p th:text="'Type: ' + ${case.type}"></p>
     <p th:text="'Colour: ' + ${case.color}"></p>
     <p th:text="'Side Panel: ' + ${case.side_panel}"></p>
-    <p th:text="'External Volume: ' + ${case.externalVolume} + 'L'"></p>
+    <p>External Volume:
+      <span th:text="${case.externalVolume > 0.0} ? ${case.externalVolume} + 'L' : 'Unavailable'"></span>
+    </p>
     <p th:text="'Internal 3.5-inch Bays: ' + ${case.internal_35_bays}"></p>
   </li>
 </ul>

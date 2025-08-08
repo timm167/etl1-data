@@ -48,7 +48,7 @@ CREATE TABLE graphics_cards (
     name TEXT,
     price DOUBLE PRECISION,
     chipset TEXT,
-    memory INT,
+    memory DOUBLE PRECISION,
     core_clock INT,
     boost_clock INT,
     color TEXT,

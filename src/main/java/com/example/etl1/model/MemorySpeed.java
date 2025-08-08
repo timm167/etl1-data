@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "MEMORY_SPEED")
-public class MemorySpeed {
+public class MemorySpeed implements Comparable<MemorySpeed> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,5 +23,10 @@ public class MemorySpeed {
 
     public MemorySpeed(Integer speed) {
         this.speed = speed;
+    }
+
+    @Override
+    public int compareTo(MemorySpeed other) {
+        return Integer.compare(this.speed, other.speed);
     }
 }
