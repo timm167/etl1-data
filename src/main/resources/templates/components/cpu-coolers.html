@@ -5,7 +5,7 @@
     <title>CPU Coolers</title>
 </head>
 <body>
-<form th:action="@{/components/cpu-coolers/sort}" method="get">
+<form th:action="@{/components/cpu-coolers}" method="get">
   <label for="sortBy">Sort By</label>
   <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
     <option>Name</option>
