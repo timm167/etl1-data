@@ -29,18 +29,21 @@ public class ColorScraperService {
         try {
             log.info("Starting color scraping from MyPerfectColor.com");
 
-            String url = "https://www.myperfectcolor.com/color-chart";
+            String url = "https://www.myperfectcolor.com/Paint-Colors-By-Hue/3220.htm";
 
 
             Connection connection = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0 Safari/537.36")
-                    .header("Accept-Language", "en-US,en;q=0.9")
-                    .header("Referer", "https://www.myperfectcolor.com/")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                    .header("Accept-Language", "en-US,en;q=0.5")
+                    .header("Accept-Encoding", "gzip, deflate, br")
                     .header("Connection", "keep-alive")
+                    .header("Upgrade-Insecure-Requests", "1")
+                    .referrer("https://www.google.com/")
                     .timeout(30000)
-                    .method(Connection.Method.GET)
-                    .ignoreHttpErrors(true);
+                    .followRedirects(true)
+                    .ignoreHttpErrors(false)
+                    .get().connection();
 
 
             Connection.Response response = connection.execute();
