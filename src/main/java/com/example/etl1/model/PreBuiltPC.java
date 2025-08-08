@@ -17,6 +17,8 @@ public class PreBuiltPC {
     private List<String> features;
     private String origin;
     private LocalDateTime scrapeDate;
+    @Column(unique = true)
+    private String modelNumber;
 
     public Long getId() {
         return id;
@@ -61,6 +63,10 @@ public class PreBuiltPC {
         this.scrapeDate = scrapeDate;
     }
 
+    public String getModelNumber() { return modelNumber; }
+
+    public void setModelNumber(String modelNumber) { this.modelNumber = modelNumber; }
+
     @Override
     public String toString() {
         return "PreBuiltPC{" +
@@ -69,7 +75,8 @@ public class PreBuiltPC {
                 ", price='" + price + '\'' +
                 ", features=" + features + '\'' +
                 ", origin=" + origin + '\'' +
-                ", scrapeDate=" + scrapeDate +
+                ", scrapeDate=" + scrapeDate + '\'' +
+                ", modelNumber=" + modelNumber +
                 '}';
     }
 }
