@@ -142,23 +142,23 @@ public class ComponentsController {
         powerSupplyRepository.saveAll(Arrays.asList(powerSupplies));
     }
 
-    @GetMapping("/components/cases")
-    public ModelAndView viewCases() {
-        ModelAndView modelAndView = new ModelAndView("/components/cases");
-        modelAndView.addObject("cases", caseRepository.findAll());
-        modelAndView.addObject("sortBy", "");
-        modelAndView.addObject("order", "");
-        return modelAndView;
-    }
+//    @GetMapping("/components/cases")
+//    public ModelAndView viewCases() {
+//        ModelAndView modelAndView = new ModelAndView("/components/cases");
+//        modelAndView.addObject("cases", caseRepository.findAll());
+//        modelAndView.addObject("sortBy", "");
+//        modelAndView.addObject("order", "");
+//        return modelAndView;
+//    }
 
-    @GetMapping("/components/cpus")
-    public ModelAndView viewCpus() {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        modelAndView.addObject("cpus", cpuRepository.findAll());
-        modelAndView.addObject("sortBy", "");
-        modelAndView.addObject("order", "");
-        return modelAndView;
-    }
+//    @GetMapping("/components/cpus")
+//    public ModelAndView viewCpus() {
+//        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+//        modelAndView.addObject("cpus", cpuRepository.findAll());
+//        modelAndView.addObject("sortBy", "");
+//        modelAndView.addObject("order", "");
+//        return modelAndView;
+//    }
 
     @GetMapping("/components/cpu-coolers")
     public ModelAndView viewCpuCoolers() {
@@ -230,50 +230,72 @@ public class ComponentsController {
         return modelAndView;
     }
 
-    @GetMapping("/components/cases/sort")
+    @GetMapping("/components/cases")
     public ModelAndView viewSortedCases(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
 
-        Sort.Direction direction = null;
+        Sort.Direction direction;
 
-        if (order.equals("Descending")) {
+        if (order != null && order.equals("Descending")) {
             direction = Sort.Direction.DESC;
         } else {
             direction = Sort.Direction.ASC;
         }
 
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Size" -> "externalVolume";
-            default -> null;
-        };
+        List<Case> cases;
 
-        List<Case> cases = caseRepository.findAll(Sort.by(direction, property));
+        if (sortBy != null) {
+            String property = switch (sortBy) {
+                case "Name" -> "name";
+                case "Price" -> "price";
+                case "Size" -> "externalVolume";
+                default -> null;
+            };
+
+            if (property != null) {
+                cases = caseRepository.findAll(Sort.by(direction, property));
+            } else {
+                cases = (List<Case>) caseRepository.findAll();
+            }
+        } else {
+            cases = (List<Case>) caseRepository.findAll();
+        }
+
         modelAndView.addObject("cases", cases);
         return modelAndView;
     }
 
-    @GetMapping("/components/cpus/sort")
+    @GetMapping("/components/cpus")
     public ModelAndView viewSortedCpus(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
 
-        Sort.Direction direction = null;
+        Sort.Direction direction;
 
-        if (order.equals("Descending")) {
+        if (order != null && order.equals("Descending")) {
             direction = Sort.Direction.DESC;
         } else {
             direction = Sort.Direction.ASC;
         }
 
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Core Clock" -> "coreClock";
-            default -> null;
-        };
+        List<Cpu> cpus;
 
-        List<Cpu> cpus = cpuRepository.findAll(Sort.by(direction, property));
+        if (sortBy != null) {
+            String property = switch (sortBy) {
+                case "Name" -> "name";
+                case "Price" -> "price";
+                case "Core Clock" -> "coreClock";
+                default -> null;
+            };
+
+            if (property != null) {
+                cpus = cpuRepository.findAll(Sort.by(direction, property));
+            } else {
+                cpus = (List<Cpu>) cpuRepository.findAll();
+            }
+        } else {
+            cpus = (List<Cpu>) cpuRepository.findAll();
+        }
+
         modelAndView.addObject("cpus", cpus);
         return modelAndView;
     }
