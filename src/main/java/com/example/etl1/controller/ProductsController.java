@@ -1,21 +1,19 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.Case;
 import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
+import com.example.etl1.repository.components.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
-@RestController
+@Controller
 public class ProductsController {
 
     @Autowired
@@ -50,22 +48,21 @@ public class ProductsController {
 
 
     @GetMapping("/load-product-data")
-    public String populateProductData() throws IOException {
-        Integer count = 10;
+    public String populateProductData() {
+        int count = 10;
 
         for (int i = 1; i <= count; i++) {
-            var color = colorRepository.findById(i).orElseThrow();
-            var casePart = caseRepository.findById(i).orElseThrow();
-            var cpu = cpuRepository.findById(i).orElseThrow();
-            var cooler = cpuCoolerRepository.findById(i).orElseThrow();
-            var gpu = graphicsCardRepository.findById(i).orElseThrow();
-            var storage = internalStorageRepository.findById(i).orElseThrow();
-            var memory = memoryRepository.findById(i).orElseThrow();
-            var mobo = motherboardRepository.findById(i).orElseThrow();
-            var psu = powerSupplyRepository.findById(i).orElseThrow();
+            var color = firstOrNull(colorRepository.findAll());
+            var casePart = firstOrNull(caseRepository.findAll());
+            var cpu = firstOrNull(cpuRepository.findAll());
+            var cooler = firstOrNull(cpuCoolerRepository.findAll());
+            var gpu = firstOrNull(graphicsCardRepository.findAll());
+            var storage = firstOrNull(internalStorageRepository.findAll());
+            var memory = firstOrNull(memoryRepository.findAll());
+            var mobo = firstOrNull(motherboardRepository.findAll());
+            var psu = firstOrNull(powerSupplyRepository.findAll());
 
             BigDecimal cost = BigDecimal.ZERO;
-
             if (casePart != null) cost = cost.add(BigDecimal.valueOf(casePart.getPrice()));
             if (cpu != null) cost = cost.add(BigDecimal.valueOf(cpu.getPrice()));
             if (cooler != null) cost = cost.add(BigDecimal.valueOf(cooler.getPrice()));
@@ -74,7 +71,6 @@ public class ProductsController {
             if (memory != null) cost = cost.add(BigDecimal.valueOf(memory.getPrice()));
             if (mobo != null) cost = cost.add(BigDecimal.valueOf(mobo.getPrice()));
             if (psu != null) cost = cost.add(BigDecimal.valueOf(psu.getPrice()));
-
 
             BigDecimal price = cost.multiply(BigDecimal.valueOf(1.5));
 
@@ -92,7 +88,7 @@ public class ProductsController {
             );
 
             Product product = new Product();
-            product.setName(productNames.get(i-1));
+            product.setName(productNames.get(i - 1));
             product.setCost(cost);
             product.setPrice(price);
             product.setColor(color);
@@ -104,10 +100,16 @@ public class ProductsController {
             product.setMemory(memory);
             product.setMotherboard(mobo);
             product.setPowerSupply(psu);
+
             productRepository.save(product);
         }
-        return "redirect:/index";
+        return "redirect:/";
+    }
 
+    private <T> T firstOrNull(Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .findFirst()
+                .orElse(null);
     }
 
     @GetMapping("/products")

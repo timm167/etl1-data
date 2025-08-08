@@ -1,10 +1,9 @@
 package com.example.etl1.service;
 
-import com.example.etl1.model.GeoLocation;
+import com.example.etl1.model.logistics.GeoLocation;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 

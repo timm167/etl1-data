@@ -1,7 +1,7 @@
 package com.example.etl1.service;
 
-import com.example.etl1.model.Shipper;
-import com.example.etl1.repository.ShipperRepository;
+import com.example.etl1.model.logistics.Shipper;
+import com.example.etl1.repository.logistics.ShipperRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

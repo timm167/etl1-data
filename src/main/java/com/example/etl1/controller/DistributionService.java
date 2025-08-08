@@ -1,10 +1,9 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.DistributionChannel;
-import com.example.etl1.model.Location;
-import com.example.etl1.model.ShippingLane;
-import com.example.etl1.repository.DistributionChannelRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.etl1.model.logistics.DistributionChannel;
+import com.example.etl1.model.logistics.Location;
+import com.example.etl1.model.logistics.ShippingLane;
+import com.example.etl1.repository.logistics.DistributionChannelRepository;
 import org.springframework.stereotype.Service;
 
 @Service

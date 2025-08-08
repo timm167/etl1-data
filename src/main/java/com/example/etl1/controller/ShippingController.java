@@ -1,6 +1,6 @@
 package com.example.etl1.controller;
-import com.example.etl1.model.GeoLocation;
-import com.example.etl1.model.Shipper;
+import com.example.etl1.model.logistics.GeoLocation;
+import com.example.etl1.model.logistics.Shipper;
 import com.example.etl1.service.GeoLocationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,14 +1,14 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.*;
-import com.example.etl1.repository.*;
+import com.example.etl1.model.components.*;
+import com.example.etl1.repository.components.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController
+@Controller
 public class ComponentsController {
 
     @Autowired
@@ -56,7 +56,7 @@ public class ComponentsController {
     PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/load-component-data")
-    public void populateComponentsData() throws IOException {
+    public String populateComponentsData() throws IOException {
         caseRepository.deleteAll();
         cpuRepository.deleteAll();
         cpuCoolerRepository.deleteAll();
@@ -142,7 +142,7 @@ public class ComponentsController {
         motherboardRepository.saveAll(Arrays.asList(motherboards));
         powerSupplyRepository.saveAll(Arrays.asList(powerSupplies));
 
-        return "redirect:/index";
+        return "redirect:/";
     }
 
 //    @GetMapping("/components/cases")

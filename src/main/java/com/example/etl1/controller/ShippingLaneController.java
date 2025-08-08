@@ -1,9 +1,9 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.GeoLocation;
-import com.example.etl1.model.Shipper;
-import com.example.etl1.model.ShippingLane;
-import com.example.etl1.repository.ShippingLaneRepository;
+import com.example.etl1.model.logistics.GeoLocation;
+import com.example.etl1.model.logistics.Shipper;
+import com.example.etl1.model.logistics.ShippingLane;
+import com.example.etl1.repository.logistics.ShippingLaneRepository;
 import com.example.etl1.service.GeoLocationService;
 import com.example.etl1.service.ShippingService;
 import org.springframework.beans.factory.annotation.Autowired;
