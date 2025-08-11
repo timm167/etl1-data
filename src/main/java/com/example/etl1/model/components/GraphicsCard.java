@@ -13,12 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "GRAPHICS_CARDS")
-public class GraphicsCard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class GraphicsCard extends Component {
     private String chipset;
     private double memory;
     @JsonProperty("core_clock")
