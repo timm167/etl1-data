@@ -63,8 +63,12 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
-        loadComponentData();
-        loadProductData();
+        if (caseRepository.count() == 0) {
+            loadComponentData();
+        }
+        if (productRepository.count() == 0) {
+            loadProductData();
+        }
     }
 
     private void loadComponentData() throws IOException {
@@ -167,15 +171,16 @@ public class DataLoader implements CommandLineRunner {
         int count = 10;
 
         for (int i = 1; i <= count; i++) {
-            var color = firstOrNull(colorRepository.findAll());
-            var casePart = firstOrNull(caseRepository.findAll());
-            var cpu = firstOrNull(cpuRepository.findAll());
-            var cooler = firstOrNull(cpuCoolerRepository.findAll());
-            var gpu = firstOrNull(graphicsCardRepository.findAll());
-            var storage = firstOrNull(internalStorageRepository.findAll());
-            var memory = firstOrNull(memoryRepository.findAll());
-            var mobo = firstOrNull(motherboardRepository.findAll());
-            var psu = firstOrNull(powerSupplyRepository.findAll());
+            var color = colorRepository.findById(i).orElse(null);
+            var casePart = caseRepository.findById(i).orElse(null);
+            var cpu = cpuRepository.findById(i).orElse(null);
+            var cooler = cpuCoolerRepository.findById(i).orElse(null);
+            var gpu = graphicsCardRepository.findById(i).orElse(null);
+            var storage = internalStorageRepository.findById(i).orElse(null);
+            var memory = memoryRepository.findById(i).orElse(null);
+            var mobo = motherboardRepository.findById(i).orElse(null);
+            var psu = powerSupplyRepository.findById(i).orElse(null);
+
 
             BigDecimal cost = BigDecimal.ZERO;
             if (casePart != null) cost = cost.add(BigDecimal.valueOf(casePart.getPrice()));
