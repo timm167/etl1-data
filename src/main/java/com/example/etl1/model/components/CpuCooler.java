@@ -14,12 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "CPU_COOLERS")
-public class CpuCooler {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class CpuCooler extends Component{
     @OneToMany(mappedBy = "cpu_cooler")
     private List<FanRpm> rpm;
     @OneToMany(mappedBy = "cpu_cooler")

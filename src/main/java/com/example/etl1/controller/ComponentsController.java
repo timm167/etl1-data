@@ -75,6 +75,15 @@ public class ComponentsController {
         Motherboard[] motherboards = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/motherboard.json"), Motherboard[].class);
         PowerSupply[] powerSupplies = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/power-supply.json"), PowerSupply[].class);
 
+        convertComponentPriceToPounds(cases);
+        convertComponentPriceToPounds(cpus);
+        convertComponentPriceToPounds(cpuCoolers);
+        convertComponentPriceToPounds(graphicsCards);
+        convertComponentPriceToPounds(internalStorages);
+        convertComponentPriceToPounds(memory);
+        convertComponentPriceToPounds(motherboards);
+        convertComponentPriceToPounds(powerSupplies);
+
         caseRepository.saveAll(Arrays.asList(cases));
         cpuRepository.saveAll(Arrays.asList(cpus));
 
@@ -147,7 +156,7 @@ public class ComponentsController {
     @GetMapping("/components/cases")
     public ModelAndView viewCases(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("cases", caseRepository.findAll(sort));
@@ -161,7 +170,7 @@ public class ComponentsController {
     @GetMapping("/components/cpus")
     public ModelAndView viewCpus(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("cpus", cpuRepository.findAll(sort));
@@ -175,7 +184,7 @@ public class ComponentsController {
     @GetMapping("/components/cpu-coolers")
     public ModelAndView viewCpuCoolers(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll(sort));
@@ -189,7 +198,7 @@ public class ComponentsController {
     @GetMapping("/components/graphics-cards")
     public ModelAndView viewGraphicsCards(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll(sort));
@@ -203,7 +212,7 @@ public class ComponentsController {
     @GetMapping("/components/internal-storage")
     public ModelAndView viewInternalStorage(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("internal_storages", internalStorageRepository.findAll(sort));
@@ -217,7 +226,7 @@ public class ComponentsController {
     @GetMapping("/components/memory")
     public ModelAndView viewMemory(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/memory");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("memory", memoryRepository.findAll(sort));
@@ -231,7 +240,7 @@ public class ComponentsController {
     @GetMapping("/components/motherboards")
     public ModelAndView viewMotherboards(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/motherboards");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("motherboards", motherboardRepository.findAll(sort));
@@ -245,7 +254,7 @@ public class ComponentsController {
     @GetMapping("/components/power-supplies")
     public ModelAndView viewPowerSupplies(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
-        Sort sort = getSortMethod(sortBy, order);
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             modelAndView.addObject("power_supplies", powerSupplyRepository.findAll(sort));
@@ -284,32 +293,9 @@ public class ComponentsController {
         return modelAndView;
     }
 
-    private Sort getSortMethod(String sortBy, String order) {
-        Sort.Direction direction;
-
-        if (sortBy != null) {
-            if (order != null && order.equals("Descending")) {
-                direction = Sort.Direction.DESC;
-            } else {
-                direction = Sort.Direction.ASC;
-            }
-
-            String property = switch (sortBy) {
-                case "Name" -> "name";
-                case "Price" -> "price";
-                case "Size" -> "externalVolume";
-                case "Core Clock" -> "coreClock";
-                case "Capacity" -> "capacity";
-                case "Speed" -> "speed.speed";
-                case "Wattage" -> "wattage";
-                default -> null;
-            };
-
-            if (property != null) {
-                return Sort.by(direction, property);
-            }
+    private void convertComponentPriceToPounds(Component[] components) {
+        for (Component component : components) {
+            component.setPrice(component.getPrice() * 0.75);
         }
-
-        return null;
     }
 }

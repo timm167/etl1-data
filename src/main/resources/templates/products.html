@@ -5,7 +5,7 @@
     <title>Products</title>
 </head>
 <body>
-<form th:action="@{/products/sort}" method="get">
+<form th:action="@{/products}" method="get">
     <label for="sortBy">Sort By</label>
     <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
         <option>Name</option>

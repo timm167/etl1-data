@@ -14,12 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "MEMORY")
-public class Memory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class Memory extends Component {
     @OneToMany(mappedBy = "memory")
     private List<MemorySpeed> speed;
     @OneToMany(mappedBy = "memory")

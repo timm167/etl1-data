@@ -13,12 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "CPUS")
-public class Cpu {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class Cpu extends Component{
     private Integer core_count;
     @JsonProperty("core_clock")
     private double coreClock;

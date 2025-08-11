@@ -113,35 +113,16 @@ public class ProductsController {
     }
 
     @GetMapping("/products")
-    public ModelAndView viewCases() {
+    public ModelAndView viewProducts(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/products");
-        modelAndView.addObject("products", productRepository.findAll());
-        modelAndView.addObject("sortBy", "");
-        modelAndView.addObject("order", "");
-        return modelAndView;
-    }
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
-    @GetMapping("/products/sort")
-    public ModelAndView viewSortedCases(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/products");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
+        if (sort != null) {
+            modelAndView.addObject("products", productRepository.findAll(sort));
         } else {
-            direction = Sort.Direction.ASC;
+            modelAndView.addObject("products", productRepository.findAll());
         }
 
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            default -> null;
-        };
-
-        List<Product> product = productRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("products", product);
         return modelAndView;
     }
-
 }
