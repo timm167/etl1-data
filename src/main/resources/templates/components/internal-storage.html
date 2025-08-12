@@ -29,6 +29,10 @@
     <p th:text="'Type: ' + ${internal_storage.type}"></p>
     <p>Cache: <span th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"></span></p>
     <p th:text="'Form Factor: ' + ${internal_storage.form_factor}"></p>
+    <form th:action="@{/products/create}" method="get" th:object="${componentIds}" th:if="${componentIds != null}">
+      <input type="hidden" th:value="${internal_storage.id}" name="internalStorageId">
+      <button>Select</button>
+    </form>
   </li>
 </ul>
 </body>

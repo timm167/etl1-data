@@ -1,6 +1,7 @@
 package com.example.etl1.controller;
 
 import com.example.etl1.repository.components.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,7 @@ public class ComponentsController {
     PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/components/cases")
-    public ModelAndView viewCases(String sortBy, String order) {
+    public ModelAndView viewCases(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/cases");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -45,11 +46,13 @@ public class ComponentsController {
             modelAndView.addObject("cases", caseRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/cpus")
-    public ModelAndView viewCpus(String sortBy, String order) {
+    public ModelAndView viewCpus(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -59,11 +62,13 @@ public class ComponentsController {
             modelAndView.addObject("cpus", cpuRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/cpu-coolers")
-    public ModelAndView viewCpuCoolers(String sortBy, String order) {
+    public ModelAndView viewCpuCoolers(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -73,11 +78,13 @@ public class ComponentsController {
             modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/graphics-cards")
-    public ModelAndView viewGraphicsCards(String sortBy, String order) {
+    public ModelAndView viewGraphicsCards(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -87,11 +94,13 @@ public class ComponentsController {
             modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/internal-storage")
-    public ModelAndView viewInternalStorage(String sortBy, String order) {
+    public ModelAndView viewInternalStorage(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -101,11 +110,13 @@ public class ComponentsController {
             modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/memory")
-    public ModelAndView viewMemory(String sortBy, String order) {
+    public ModelAndView viewMemory(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/memory");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -115,11 +126,13 @@ public class ComponentsController {
             modelAndView.addObject("memory", memoryRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/motherboards")
-    public ModelAndView viewMotherboards(String sortBy, String order) {
+    public ModelAndView viewMotherboards(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/motherboards");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -129,11 +142,13 @@ public class ComponentsController {
             modelAndView.addObject("motherboards", motherboardRepository.findAll());
         }
 
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/power-supplies")
-    public ModelAndView viewPowerSupplies(String sortBy, String order) {
+    public ModelAndView viewPowerSupplies(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
@@ -142,6 +157,8 @@ public class ComponentsController {
         } else {
             modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
         }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
 
         return modelAndView;
     }

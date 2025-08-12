@@ -28,6 +28,10 @@
     <p>Colour: <span th:text="${mem.color != null} ? ${mem.color} : 'N/A'"></span></p>
     <p th:text="'First Word Latency: ' + ${mem.first_word_latency} + 'ns'"></p>
     <p th:text="'CAS Latency: ' + ${mem.cas_latency} + ' cycles'"></p>
+    <form th:action="@{/products/create}" method="get" th:object="${componentIds}" th:if="${componentIds != null}">
+      <input type="hidden" th:value="${mem.id}" name="memoryId">
+      <button>Select</button>
+    </form>
   </li>
 </ul>
 </body>

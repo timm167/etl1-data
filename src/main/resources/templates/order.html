@@ -16,7 +16,7 @@
         <select id="productId" name="productId" required>
             <option th:each="product : ${products}"
                     th:value="${product.id}"
-                    th:text="${product.productName}">
+                    th:text="${product.name}">
             </option>
         </select>
     </div>
