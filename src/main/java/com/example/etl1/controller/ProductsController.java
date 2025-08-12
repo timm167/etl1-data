@@ -1,9 +1,10 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.Product;
+import com.example.etl1.model.Product;  // Changed from entity to model
 import com.example.etl1.repository.*;
 import com.example.etl1.repository.components.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import java.util.stream.StreamSupport;
 public class ProductsController {
 
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository productRepository;  // Now works with model.Product
 
     @Autowired
     ColorRepository colorRepository;
@@ -45,7 +46,6 @@ public class ProductsController {
 
     @Autowired
     PowerSupplyRepository powerSupplyRepository;
-
 
     @GetMapping("/load-product-data")
     public String populateProductData() {
@@ -87,10 +87,11 @@ public class ProductsController {
                     "MegaSync CPU"
             );
 
-            Product product = new Product();
+            Product product = new Product();  // Now creates model.Product
             product.setName(productNames.get(i - 1));
-            product.setCost(cost);
+            product.setCost(cost);  // This method exists on model.Product
             product.setPrice(price);
+            product.setIsCustom(true);  // Set this since it's a custom build
             product.setColor(color);
             product.setCaseEntity(casePart);
             product.setCpu(cpu);
@@ -139,9 +140,8 @@ public class ProductsController {
             default -> null;
         };
 
-        List<Product> product = productRepository.findAll(Sort.by(direction, property));
+        List<Product> product = productRepository.findAll();  // Returns model.Product
         modelAndView.addObject("products", product);
         return modelAndView;
     }
-
 }

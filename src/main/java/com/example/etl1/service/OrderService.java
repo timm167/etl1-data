@@ -1,7 +1,7 @@
 package com.example.etl1.service;
 
 import com.example.etl1.controller.DistributionService;
-import com.example.etl1.model.*;
+import com.example.etl1.model.Product;
 import com.example.etl1.model.logistics.GeoLocation;
 import com.example.etl1.model.logistics.Location;
 import com.example.etl1.model.logistics.Order;
@@ -24,8 +24,9 @@ public class OrderService {
     private final ShippingService shippingService;
     private final DistributionService distributionService;
 
-
-    public OrderService(OrderRepository orderRepository, LocationRepository locationRepository, DistributionService distributionService, ProductService productService, GeoLocationService geoLocationService, ShippingService shippingService) {
+    public OrderService(OrderRepository orderRepository, LocationRepository locationRepository,
+                        DistributionService distributionService, ProductService productService,
+                        GeoLocationService geoLocationService, ShippingService shippingService) {
         this.orderRepository = orderRepository;
         this.locationRepository = locationRepository;
         this.productService = productService;
@@ -35,10 +36,9 @@ public class OrderService {
     }
 
     public void createOrder(String address, Integer productId, Integer quantity) {
-        Product product = productService.getProductById(productId);
-        if (product == null) {
-            throw new IllegalArgumentException("Invalid product ID");
-        }
+        // Get the custom PC product (model.Product with all components)
+        Product product = productService.getProductById(productId.longValue())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
         GeoLocation geoLocation = geoLocationService.getTopGeoLocation(address);
 
@@ -56,7 +56,6 @@ public class OrderService {
                 closestDistributionFacility.getLat().doubleValue(),
                 closestDistributionFacility.getLon().doubleValue());
 
-
         // Notes to self (Tim)
         // distributionService.createIfNotExists()
         // Needs data for create if not exists
@@ -65,18 +64,15 @@ public class OrderService {
         // extract distance logic to dry code
         // remove logic from here to put into distribution service i.e. closest shipper/warehouse
 
-
         Order order = new Order();
-        order.setProduct(product);
+        order.setProduct(product);  // Now using model.Product directly
         order.setQuantity(quantity);
 
         BigDecimal value = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         order.setValue(value);
 
         order.setOrderTime(LocalDateTime.now());
-
         order.setExpectedDeliveryTime(order.getOrderTime().plusDays(15));
-
         order.setIsOpen(true);
 
         orderRepository.save(order);
