@@ -13,9 +13,11 @@ public class PreBuiltPC {
     private Long id;
     private String name;
     private String price;
-    @Convert(converter = StringListConverter.class)
-    private List<String> features;
     private String origin;
+    private String gpu;
+    private String cpu;
+    private String memory;
+    private String ssd;
     private LocalDateTime scrapeDate;
     @Column(unique = true)
     private String modelNumber;
@@ -40,12 +42,6 @@ public class PreBuiltPC {
     public void setPrice(String price) {
         this.price = price;
     }
-    public List<String> getFeatures() {
-        return features;
-    }
-    public void setFeatures(List<String> features) {
-        this.features = features;
-    }
 
     public String getOrigin() {
         return origin;
@@ -54,6 +50,22 @@ public class PreBuiltPC {
     public void setOrigin(String origin) {
         this.origin = origin;
     }
+
+    public String getGpu() { return gpu; }
+
+    public void setGpu(String gpu) { this.gpu = gpu; };
+
+    public String getCpu() { return cpu; }
+
+    public void setCpu(String cpu) { this.cpu = cpu; }
+
+    public String getMemory() { return memory; }
+
+    public void setMemory(String memory) { this.memory = memory; }
+
+    public String getSsd() { return ssd; }
+
+    public void setSsd(String ssd) { this.ssd = ssd; }
 
     public LocalDateTime getScrapeDate() {
         return scrapeDate;
@@ -73,8 +85,11 @@ public class PreBuiltPC {
                 "id=" + id +
                 "name='" + name + '\'' +
                 ", price='" + price + '\'' +
-                ", features=" + features + '\'' +
                 ", origin=" + origin + '\'' +
+                ", gpu=" + gpu + '\'' +
+                ", cpu=" + cpu + '\'' +
+                ", memory=" + memory + '\'' +
+                ", ssd=" + ssd + '\'' +
                 ", scrapeDate=" + scrapeDate + '\'' +
                 ", modelNumber=" + modelNumber +
                 '}';

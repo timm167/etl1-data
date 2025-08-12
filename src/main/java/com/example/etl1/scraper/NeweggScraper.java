@@ -9,14 +9,33 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class NeweggScraper {
-    private static final String newegg_Url = "https://www.newegg.com/global/uk-en/p/pl?d=prebuilt&PageSize=96";
+    private static final String newegg_Url = "https://www.newegg.com/global/uk-en/p/pl?d=prebuilt&PageSize=96&page=%d";
     private static final String user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36";
 
-    public List<PreBuiltPC> scrapePrebuiltPCs() throws IOException {
-        Document doc = Jsoup.connect(newegg_Url)
+    private Optional<String> getFeature(Elements features, String label) {
+        for (Element feature : features) {
+            Element strongTag = feature.selectFirst("strong");
+            if (strongTag != null && strongTag.text().equals(label)) {
+                return Optional.of(feature.ownText().trim());
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<PreBuiltPC> scrapeAll() throws IOException {
+        List<PreBuiltPC> allPcs = new ArrayList<>();
+        allPcs.addAll(scrapePage(1));
+        allPcs.addAll(scrapePage(2));
+        return allPcs;
+    }
+
+    public List<PreBuiltPC> scrapePage(int page) throws IOException {
+        String url = String.format(newegg_Url, page);
+        Document doc = Jsoup.connect(url)
                 .userAgent(user_agent)
                 .header("Accept-Language", "en-US,en;q=0.9")
                 .header("Referer", "https://www.google.com")
@@ -30,6 +49,11 @@ public class NeweggScraper {
             Element nameElement = container.selectFirst("a.item-title");
             Element priceElement = container.selectFirst("li.price-current");
             Elements featureElements = container.select("ul.item-features li");
+
+            Optional<String> gpuOptional = getFeature(featureElements, "GPU/VGA Type:");
+            Optional<String> cpuOptional = getFeature(featureElements, "CPU Name:");
+            Optional<String> memoryOptional = getFeature(featureElements, "Memory Capacity:");
+            Optional<String> ssdOptional = getFeature(featureElements, "SSD:");
 
             if (nameElement != null && priceElement != null) {
                 String name = nameElement.text().trim();
@@ -49,14 +73,19 @@ public class NeweggScraper {
                         .findFirst()
                         .orElse(null);
 
-                PreBuiltPC pc = new PreBuiltPC();
-                pc.setName(name);
-                pc.setPrice(price);
-                pc.setFeatures(features);
-                pc.setOrigin("Newegg");
-                pc.setScrapeDate(LocalDateTime.now());
-                pc.setModelNumber(modelNumber);
-                pcList.add(pc);
+                if (gpuOptional.isPresent() && cpuOptional.isPresent() && memoryOptional.isPresent() && ssdOptional.isPresent()) {
+                    PreBuiltPC pc = new PreBuiltPC();
+                    pc.setName(name);
+                    pc.setPrice(price);
+                    pc.setOrigin("Newegg");
+                    pc.setScrapeDate(LocalDateTime.now());
+                    pc.setModelNumber(modelNumber);
+                    pc.setGpu(gpuOptional.get());
+                    pc.setCpu(cpuOptional.get());
+                    pc.setMemory(memoryOptional.get());
+                    pc.setSsd(ssdOptional.get());
+                    pcList.add(pc);
+                }
             }
 
         }
