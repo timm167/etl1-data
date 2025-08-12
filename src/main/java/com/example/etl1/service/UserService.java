@@ -14,30 +14,24 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // OAuth2 users are always customers
-    public User createOrUpdateOAuth2User(OAuth2User oauth2User) {
-        String email = oauth2User.getAttribute("email");
-        String name = oauth2User.getAttribute("name");
+public User createOrUpdateOAuth2User(String displayName, String email) {
+    // Look for existing user by email first
+    Optional<User> existingUser = userRepository.findByEmail(email);
 
-        if (email == null || name == null) {
-            throw new IllegalArgumentException("OAuth2 user missing required fields");
+    if (existingUser.isPresent()) {
+        User user = existingUser.get();
+        // Update name if it has changed
+        if (!user.getName().equals(displayName)) {
+            user.setName(displayName);
+            return userRepository.save(user);
         }
-
-        Optional<User> existingUser = userRepository.findByEmail(email);
-
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            if (!user.getName().equals(name)) {
-                user.setName(name);
-                return userRepository.save(user);
-            }
-            return user;
-        } else {
-            // OAuth2 users are always customers
-            User newUser = new User(name, email, User.Role.CUSTOMER);
-            return userRepository.save(newUser);
-        }
+        return user;
+    } else {
+        // Create new user with CUSTOMER role by default
+        User newUser = new User(displayName, email, User.Role.CUSTOMER);
+        return userRepository.save(newUser);
     }
+}
 
     // Method required by SecurityConfig
     public String getUserRole(String userEmail) {
@@ -51,15 +45,11 @@ public class UserService {
 
     // Separate method for creating staff accounts
     public User createStaffAccount(String name, String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("User with email already exists: " + email);
+        if (!userRepository.existsByEmail(email)) {
+            User staffUser = new User(name, email, User.Role.STAFF);
+            return userRepository.save(staffUser);
         }
-        if (userRepository.existsByName(name)) {
-            throw new IllegalArgumentException("User with name already exists: " + name);
-        }
-
-        User staffUser = new User(name, email, User.Role.STAFF);
-        return userRepository.save(staffUser);
+        return null;
     }
 
     // Bootstrap method to create initial admin

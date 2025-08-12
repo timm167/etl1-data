@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<div th:replace="fragments/logout :: logout-button"></div>
+<p>Logged in as: <span th:text="${userName}"></span></p>
+<div th:replace="~{fragments/login-logout :: login-logout}"></div>
 </body>
 </html>

@@ -1,13 +1,15 @@
 package com.example.etl1.controller;
 
+import com.example.etl1.model.Staff;
 import com.example.etl1.model.users.User;
+import com.example.etl1.repository.StaffRepository;
 import com.example.etl1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -19,22 +21,53 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/after-login")
-    public String afterLogin(@AuthenticationPrincipal OAuth2User oauth2User, Model model) {
-        if (oauth2User != null) {
-            User user = userService.createOrUpdateOAuth2User(oauth2User);
-            model.addAttribute("user", user);
+    @Autowired
+    private StaffRepository staffRepository;
 
-            if (user.getRole() == User.Role.STAFF) {
-                return "redirect:/staff/dashboard";
+    // Customer dashboard - GlobalControllerAdvice handles user data
+    @GetMapping("/customer/dashboard")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
+    public String customerDashboard() {
+        return "customer/dashboard";
+    }
+
+    // Staff dashboard - GlobalControllerAdvice handles user data
+    @GetMapping("/staff/dashboard")
+    @PreAuthorize("hasAuthority('STAFF')")
+    public String staffDashboard() {
+        return "staff/dashboard";
+    }
+
+    @GetMapping("/after-login")
+    public String afterLogin(@AuthenticationPrincipal OAuth2User oauth2User) {
+        if (oauth2User != null) {
+            // User is already created/updated by CustomOAuth2UserService
+            // Just get the user from database and redirect based on role
+
+            String email = (String) oauth2User.getAttributes().get("email");
+            String username = oauth2User.getName();
+            Optional<Staff> staff = staffRepository.findByEmail(email);
+
+            if (staff.isPresent()) {
+                userService.createStaffAccount(username, email);
             } else {
-                return "redirect:/customer/dashboard";
+                userService.createOrUpdateOAuth2User(username, email);
+            }
+
+            Optional<User> userOpt = userService.findByEmail(email);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                if (user.getRole() == User.Role.STAFF) {
+                    return "redirect:/users/staff/dashboard";
+                } else {
+                    return "redirect:/users/customer/dashboard";
+                }
             }
         }
         return "redirect:/";
     }
 
-    // API endpoints for checking user data
+    // Endpoints for checking user data
     @GetMapping("/{name}")
     public ResponseEntity<User> getUserByName(@PathVariable String name) {
         Optional<User> user = userService.findByName(name);
