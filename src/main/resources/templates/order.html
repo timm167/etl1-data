@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <title>Place Order</title>
+    <link rel="stylesheet" th:href="@{/navbar.css}" href="/navbar.css">
+
 </head>
 <body>
+<div th:replace="navbar :: navbar"></div>
 <h1>Place a New Order</h1>
-<form th:action="@{/orders/create}" method="post">
+<form th:action="@{/orders/create_order}" method="post">
     <div>
         <label for="address">Delivery Address:</label>
         <input type="text" id="address" name="address" required />
@@ -16,8 +19,7 @@
         <select id="productId" name="productId" required>
             <option th:each="product : ${products}"
                     th:value="${product.id}"
-                    th:text="${product.productName}">
-            </option>
+                    th:text="${product.name}">Product</option>
         </select>
     </div>
     <div>
@@ -29,4 +31,24 @@
     </div>
 </form>
 </body>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('.dropdown-toggle');
+        const dropdown = document.getElementById('componentsDropdown');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+</script>
 </html>

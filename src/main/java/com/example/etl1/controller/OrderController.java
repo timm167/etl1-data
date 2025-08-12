@@ -21,15 +21,15 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/create")
+    @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
         List<Product> products = productService.getAllProducts();
-        ModelAndView mav = new ModelAndView("orderForm");  // assuming template name orderForm.html
+        ModelAndView mav = new ModelAndView("order");
         mav.addObject("products", products);
         return mav;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create_order")
     public ModelAndView submitOrder(
             @RequestParam String address,
             @RequestParam Integer productId,
@@ -37,7 +37,7 @@ public class OrderController {
     ) {
         orderService.createOrder(address, productId, quantity);
 
-        ModelAndView mav = new ModelAndView("orderSuccess"); // a success page
+        ModelAndView mav = new ModelAndView("orderSuccess");
         mav.addObject("message", "Order placed successfully!");
         return mav;
     }
