@@ -1,11 +1,7 @@
 package com.example.etl1.service;
 
-import com.example.etl1.controller.DistributionService;
 import com.example.etl1.model.*;
-import com.example.etl1.model.logistics.GeoLocation;
-import com.example.etl1.model.logistics.Location;
-import com.example.etl1.model.logistics.Order;
-import com.example.etl1.model.logistics.Shipper;
+import com.example.etl1.model.logistics.*;
 import com.example.etl1.repository.logistics.LocationRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -40,31 +36,30 @@ public class OrderService {
             throw new IllegalArgumentException("Invalid product ID");
         }
 
-        GeoLocation geoLocation = geoLocationService.getTopGeoLocation(address);
+        GeoLocation deliveryLocation = geoLocationService.getTopGeoLocation(address);
 
-        double lat = Double.parseDouble(geoLocation.getLat());
-        double lon = Double.parseDouble(geoLocation.getLon());
-
-        Location closestDistributionFacility = findClosestByType(lat, lon, Location.LocationTypeEnum.DISTRIBUTION_FACILITY);
+        Location closestDistributionFacility = findClosestByType(
+                deliveryLocation.getLat().doubleValue(),
+                deliveryLocation.getLon().doubleValue(),
+                Location.LocationTypeEnum.DISTRIBUTION_FACILITY);
 
         Location closestWarehouse = findClosestByType(
                 closestDistributionFacility.getLat().doubleValue(),
                 closestDistributionFacility.getLon().doubleValue(),
                 Location.LocationTypeEnum.WAREHOUSE);
 
-        Shipper closestShipper = shippingService.findClosestShipper(
+        Shipper closestStartShipper = shippingService.findClosestShipper(
                 closestDistributionFacility.getLat().doubleValue(),
                 closestDistributionFacility.getLon().doubleValue());
 
+        Shipper closestEndShipper = shippingService.findClosestShipper(
+                deliveryLocation.getLat().doubleValue(),
+                deliveryLocation.getLon().doubleValue());
 
-        // Notes to self (Tim)
-        // distributionService.createIfNotExists()
-        // Needs data for create if not exists
-        // requires shipping lane to be made first
-        // build shipping lane service for this
-        // extract distance logic to dry code
-        // remove logic from here to put into distribution service i.e. closest shipper/warehouse
+        String channelName = formatRoute(closestStartShipper, closestEndShipper);
 
+        DistributionChannel distributionChannel = distributionService.createIfNotExists(
+                channelName, closestWarehouse, closestDistributionFacility, closestStartShipper, closestEndShipper);
 
         Order order = new Order();
         order.setProduct(product);
@@ -72,6 +67,8 @@ public class OrderService {
 
         BigDecimal value = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         order.setValue(value);
+
+        order.setDistributionChannel(distributionChannel);
 
         order.setOrderTime(LocalDateTime.now());
 
@@ -94,7 +91,7 @@ public class OrderService {
     }
 
     public Location findClosestByType(double userLat, double userLon, Location.LocationTypeEnum type) {
-        List<Location> locations = locationRepository.findByLocationType(type);
+        List<Location> locations = locationRepository.findByLocationType(type.name());
         Location closest = null;
         double minDistance = Double.MAX_VALUE;
 
@@ -107,5 +104,11 @@ public class OrderService {
         }
 
         return closest;
+    }
+
+    public static String formatRoute(Shipper start, Shipper end) {
+        return String.format("%.6f, %.6f - %.6f, %.6f",
+                start.getLat(), start.getLon(),
+                end.getLat(), end.getLon());
     }
 }

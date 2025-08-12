@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" th:href="@{/navbar.css}" href="/navbar.css">
+
 </head>
 <body>
 
@@ -12,4 +14,24 @@
 <p>We put the 'you' in CPU</p>
 
 </body>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('.dropdown-toggle');
+        const dropdown = document.getElementById('componentsDropdown');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+</script>
 </html>

@@ -1,0 +1,68 @@
+/* Navbar container */
+nav {
+    background-color: #1e3a8a;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+/* Navbar buttons */
+nav form button,
+nav .dropdown-toggle {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+nav form button:hover,
+nav .dropdown-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+/* Dropdown container */
+.dropdown-toggle {
+    position: relative; /* anchor point for dropdown */
+}
+
+#componentsDropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.25rem 0;
+    z-index: 1000;
+    min-width: 220px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Dropdown form layout */
+#componentsDropdown form {
+    margin: 0;
+}
+
+/* Dropdown buttons */
+#componentsDropdown button {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease;
+}
+
+#componentsDropdown button:hover {
+    background-color: #f1f5f9;
+}

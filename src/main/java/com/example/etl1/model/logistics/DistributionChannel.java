@@ -28,8 +28,12 @@ public class DistributionChannel {
     private Location distributionFacility;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipping_lane_id", foreignKey = @ForeignKey(name = "fk_shipping_lane"))
-    private ShippingLane shippingLane;
+    @JoinColumn(name = "start_shipper_id", foreignKey = @ForeignKey(name = "fk_shipper"))
+    private Shipper startShipper;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "end_shipper_id", foreignKey = @ForeignKey(name = "fk_shipper"))
+    private Shipper endShipper;
 
     @Column(nullable = false)
     private Boolean active = true;

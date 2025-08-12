@@ -2,17 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Navbar with Components Dropdown</title>
+    <title>Navbar</title>
 </head>
 <body>
 <div th:fragment="navbar">
 
+
 <nav>
-    <form th:action="@{/load-product-data}" method="get">
-        <button type="submit">Load Product Data</button>
-    </form>
-    <form th:action="@{/load-component-data}" method="get">
-        <button type="submit">Load Component Data</button>
+    <form th:action="@{/orders/order_form}" method="get">
+        <button type="submit">Order Product</button>
     </form>
     <form th:action="@{/products}" method="get">
         <button type="submit">View Products</button>
@@ -24,7 +22,7 @@
 
 
     <div style="position: relative;">
-        <button class="dropdown-toggle" type="button" onclick="toggleDropdown()">Components ▼</button>
+        <button class="dropdown-toggle" type="button">Components ▼</button>
         <div id="componentsDropdown">
             <form th:action="@{/components/cases}" method="get">
                 <button type="submit">Cases</button>
@@ -61,21 +59,27 @@
 </nav>
 </div>
 
-<script>
-    function toggleDropdown() {
-        const dropdown = document.getElementById('componentsDropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    }
+</body>
 
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-toggle')) {
-            const dropdown = document.getElementById('componentsDropdown');
-            if (dropdown.style.display === 'block') {
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('.dropdown-toggle');
+        const dropdown = document.getElementById('componentsDropdown');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.style.display = 'none';
             }
-        }
-    };
-</script>
+        });
+    });
 
-</body>
+
+
+</script>
 </html>
