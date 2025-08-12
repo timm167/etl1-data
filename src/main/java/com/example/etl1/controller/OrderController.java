@@ -24,7 +24,7 @@ public class OrderController {
     @GetMapping("/create")
     public ModelAndView showOrderForm() {
         List<Product> products = productService.getAllProducts();
-        ModelAndView mav = new ModelAndView("orderForm");  // assuming template name orderForm.html
+        ModelAndView mav = new ModelAndView("order");  // assuming template name orderForm.html
         mav.addObject("products", products);
         return mav;
     }
