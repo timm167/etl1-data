@@ -7,14 +7,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NeweggScraper {
     private static final String newegg_Url = "https://www.newegg.com/global/uk-en/p/pl?d=prebuilt&PageSize=96&page=%d";
-    private static final String user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36";
+    private static final List<String> user_agents = Arrays.asList(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"
+    );
+    private final Random random = new Random();
 
     private Optional<String> getFeature(Elements features, String label) {
         for (Element feature : features) {
@@ -35,8 +39,10 @@ public class NeweggScraper {
 
     public List<PreBuiltPC> scrapePage(int page) throws IOException {
         String url = String.format(newegg_Url, page);
+        String randomUserAgent = user_agents.get(random.nextInt(user_agents.size()));
+
         Document doc = Jsoup.connect(url)
-                .userAgent(user_agent)
+                .userAgent(randomUserAgent)
                 .header("Accept-Language", "en-US,en;q=0.9")
                 .header("Referer", "https://www.google.com")
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
