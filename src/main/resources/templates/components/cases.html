@@ -29,7 +29,7 @@
       <span th:text="${case.externalVolume > 0.0} ? ${case.externalVolume} + 'L' : 'Unavailable'"></span>
     </p>
     <p th:text="'Internal 3.5-inch Bays: ' + ${case.internal_35_bays}"></p>
-    <form th:action="@{/products/create}" method="get" th:object="${componentIds}" th:if="${componentIds != null}">
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
       <input type="hidden" th:value="${case.id}" name="caseId">
       <button>Select</button>
     </form>

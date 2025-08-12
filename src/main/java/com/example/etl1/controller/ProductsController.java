@@ -3,7 +3,6 @@ package com.example.etl1.controller;
 import com.example.etl1.model.ComponentIdCarrier;
 import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
-import com.example.etl1.repository.components.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -19,30 +18,6 @@ public class ProductsController {
 
     @Autowired
     ProductRepository productRepository;
-
-    @Autowired
-    CaseRepository caseRepository;
-
-    @Autowired
-    CpuRepository cpuRepository;
-
-    @Autowired
-    CpuCoolerRepository cpuCoolerRepository;
-
-    @Autowired
-    GraphicsCardRepository graphicsCardRepository;
-
-    @Autowired
-    InternalStorageRepository internalStorageRepository;
-
-    @Autowired
-    MemoryRepository memoryRepository;
-
-    @Autowired
-    MotherboardRepository motherboardRepository;
-
-    @Autowired
-    PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/products")
     public ModelAndView viewProducts(String sortBy, String order) {
@@ -68,40 +43,6 @@ public class ProductsController {
 
         if (session.getAttribute("customPc") == null) {
             session.setAttribute("customPc", new Product());
-        } else {
-            Product customPc = (Product) session.getAttribute("customPc");
-            if (componentIds.getCaseId() != null) {
-                caseRepository.findById(componentIds.getCaseId()).ifPresent(customPc::setCaseEntity);
-            }
-
-            if (componentIds.getCpuId() != null) {
-                cpuRepository.findById(componentIds.getCpuId()).ifPresent(customPc::setCpu);
-            }
-
-            if (componentIds.getCpuCoolerId() != null) {
-                cpuCoolerRepository.findById(componentIds.getCpuCoolerId()).ifPresent(customPc::setCpuCooler);
-            }
-
-            if (componentIds.getGraphicsCardId() != null) {
-                graphicsCardRepository.findById(componentIds.getGraphicsCardId()).ifPresent(customPc::setGraphicsCard);
-            }
-
-            if (componentIds.getInternalStorageId() != null) {
-                internalStorageRepository.findById(componentIds.getInternalStorageId()).ifPresent(customPc::setInternalStorage);
-            }
-            if (componentIds.getMemoryId() != null) {
-                memoryRepository.findById(componentIds.getMemoryId()).ifPresent(customPc::setMemory);
-            }
-            if (componentIds.getMotherboardId() != null) {
-                motherboardRepository.findById(componentIds.getMotherboardId()).ifPresent(customPc::setMotherboard);
-            }
-            if (componentIds.getPowerSupplyId() != null) {
-                powerSupplyRepository.findById(componentIds.getPowerSupplyId()).ifPresent(customPc::setPowerSupply);
-            }
-
-
-            session.setAttribute("componentIds", componentIds);
-            session.setAttribute("customPc", customPc);
         }
 
         modelAndView.addObject("customPc", session.getAttribute("customPc"));

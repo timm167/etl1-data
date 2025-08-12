@@ -32,7 +32,7 @@
     <p>Integrated Graphics:
       <span th:text="${cpu.graphics != null} ? ${cpu.graphics} : 'None'"></span>
     </p>
-    <form th:action="@{/products/create}" method="get" th:object="${componentIds}" th:if="${componentIds != null}">
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
       <input type="hidden" th:value="${cpu.id}" name="cpuId">
       <button>Select</button>
     </form>

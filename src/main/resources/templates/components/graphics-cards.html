@@ -36,7 +36,7 @@
     <p>Length:
       <span th:text="${graphics_card.length > 0} ? ${graphics_card.length} + 'mm' : 'Unavailable'"></span>
     </p>
-    <form th:action="@{/products/create}" method="get" th:object="${componentIds}" th:if="${componentIds != null}">
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
       <input type="hidden" th:value="${graphics_card.id}" name="graphicsCardId">
       <button>Select</button>
     </form>

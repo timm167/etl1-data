@@ -1,11 +1,14 @@
 package com.example.etl1.controller;
 
+import com.example.etl1.model.ComponentIdCarrier;
+import com.example.etl1.model.Product;
 import com.example.etl1.repository.components.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -189,5 +192,45 @@ public class ComponentsController {
         ModelAndView modelAndView = new ModelAndView("/components/cpus");
         modelAndView.addObject("cpus", cpuRepository.findByNameContaining("AMD"));
         return modelAndView;
+    }
+
+    @PostMapping("/components/add-to-product")
+    public String addComponentToCustomProduct(HttpSession session, ComponentIdCarrier componentIds) {
+        Product customPc = (Product) session.getAttribute("customPc");
+
+        if (customPc != null) {
+            if (componentIds.getCaseId() != null) {
+                caseRepository.findById(componentIds.getCaseId()).ifPresent(customPc::setCaseEntity);
+            }
+
+            if (componentIds.getCpuId() != null) {
+                cpuRepository.findById(componentIds.getCpuId()).ifPresent(customPc::setCpu);
+            }
+
+            if (componentIds.getCpuCoolerId() != null) {
+                cpuCoolerRepository.findById(componentIds.getCpuCoolerId()).ifPresent(customPc::setCpuCooler);
+            }
+
+            if (componentIds.getGraphicsCardId() != null) {
+                graphicsCardRepository.findById(componentIds.getGraphicsCardId()).ifPresent(customPc::setGraphicsCard);
+            }
+
+            if (componentIds.getInternalStorageId() != null) {
+                internalStorageRepository.findById(componentIds.getInternalStorageId()).ifPresent(customPc::setInternalStorage);
+            }
+            if (componentIds.getMemoryId() != null) {
+                memoryRepository.findById(componentIds.getMemoryId()).ifPresent(customPc::setMemory);
+            }
+            if (componentIds.getMotherboardId() != null) {
+                motherboardRepository.findById(componentIds.getMotherboardId()).ifPresent(customPc::setMotherboard);
+            }
+            if (componentIds.getPowerSupplyId() != null) {
+                powerSupplyRepository.findById(componentIds.getPowerSupplyId()).ifPresent(customPc::setPowerSupply);
+            }
+
+            session.setAttribute("customPc", customPc);
+        }
+
+        return "redirect:/products/create";
     }
 }
