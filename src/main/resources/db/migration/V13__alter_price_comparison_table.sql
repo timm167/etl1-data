@@ -1,0 +1,8 @@
+ALTER TABLE price_comparison
+ADD COLUMN gpu VARCHAR(255),
+ADD COLUMN cpu VARCHAR(255),
+ADD COLUMN memory VARCHAR(255),
+ADD COLUMN ssd VARCHAR(255);
+
+ALTER TABLE price_comparison
+DROP COLUMN features;

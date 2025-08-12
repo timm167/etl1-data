@@ -21,7 +21,7 @@ public class Scraping {
 
     public void runNeweggProcess() {
         try {
-            List<PreBuiltPC> pcs = scraper.scrapePrebuiltPCs();
+            List<PreBuiltPC> pcs = scraper.scrapeAll();
 
             if (pcs.isEmpty()) {
                 System.out.println("No data found");

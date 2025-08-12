@@ -12,7 +12,12 @@
           <tr>
             <th>Name</th>
             <th>Price</th>
-            <th>Features</th>
+            <th>GPU</th>
+              <th>CPU</th>
+              <th>Memory</th>
+              <th>SSD</th>
+              <th>Model #</th>
+              <th>Origin</th>
             <th>Accurate as of</th>
           </tr>
       </thead>
@@ -20,7 +25,12 @@
           <tr th:each="pc : ${pcs}">
             <td th:text="${pc.name}">Name</td>
             <td th:text="'£' + ${pc.price}">Price</td>
-            <td th:text="${pc.features}">Features</td>
+            <td th:text="${pc.gpu}"></td>
+              <td th:text="${pc.cpu}"></td>
+              <td th:text="${pc.memory}"></td>
+              <td th:text="${pc.ssd}"></td>
+              <td th:text="${pc.modelNumber}"></td>
+              <td th:text="${pc.origin}"></td>
               <td th:text="${#temporals.format(pc.scrapeDate, 'yyyy-MM-dd - HH:mm:ss')}">Accurate as of</td>
           </tr>
       </tbody>
