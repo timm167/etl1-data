@@ -27,6 +27,10 @@
     <p th:text="'Wattage: ' + ${power_supply.wattage} + 'W'"></p>
     <p th:text="'Modular: ' + ${power_supply.modular}"></p>
     <p>Colour: <span th:text="${power_supply.color != null} ? ${power_supply.color} : 'N/A'"></span></p>
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
+      <input type="hidden" th:value="${power_supply.id}" name="powerSupplyId">
+      <button>Select</button>
+    </form>
   </li>
 </ul>
 </body>

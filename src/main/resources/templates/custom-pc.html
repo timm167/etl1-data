@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom PC</title>
+</head>
+<body>
+    <form th:action="@{/products}" method="post" th:object="${customPc}">
+        <p>
+            <label for="cpuName">CPU:</label>
+            <input type="text" th:field="*{cpu.name}" id="cpuName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/cpus}">Choose</a></button>
+        </p>
+        <p>
+            <label for="graphicsCardName">Graphics Card:</label>
+            <input type="text" th:field="*{graphicsCard.name}" id="graphicsCardName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/graphics-cards}">Choose</a></button>
+        </p>
+        <p>
+            <label for="memoryName">Memory:</label>
+            <input type="text" th:field="*{memory.name}" id="memoryName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/memory}">Choose</a></button>
+        </p>
+        <p>
+            <label for="internalStorageName">Storage:</label>
+            <input type="text" th:field="*{internalStorage.name}" id="internalStorageName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/internal-storage}">Choose</a></button>
+        </p>
+        <p>
+            <label for="motherboardName">Motherboard:</label>
+            <input type="text" th:field="*{motherboard.name}" id="motherboardName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/motherboards}">Choose</a></button>
+        </p>
+        <p>
+            <label for="powerSupplyName">Power Supply:</label>
+            <input type="text" th:field="*{powerSupply.name}" id="powerSupplyName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/power-supplies}">Choose</a></button>
+        </p>
+        <p>
+            <label for="cpuCoolerName">CPU Cooler:</label>
+            <input type="text" th:field="*{cpuCooler.name}" id="cpuCoolerName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/cpu-coolers}">Choose</a></button>
+        </p>
+        <p>
+            <label for="caseName">Case:</label>
+            <input type="text" th:field="*{caseEntity.name}" id="caseName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
+            <button><a th:href="@{/components/cases}">Choose</a></button>
+        </p>
+        <p>
+            <label th:for="productName">Name your build:</label>
+            <input type="text" th:value="${productName}" name="productName" id="productName" required>
+        </p>
+        <p><button type="submit">Submit</button></p>
+    </form>
+</body>
+</html>
