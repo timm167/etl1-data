@@ -5,7 +5,7 @@
     <title>CPU Coolers</title>
 </head>
 <body>
-<form th:action="@{/components/cpu-coolers/sort}" method="get">
+<form th:action="@{/components/cpu-coolers}" method="get">
   <label for="sortBy">Sort By</label>
   <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
     <option>Name</option>
@@ -39,6 +39,10 @@
     <p>Radiator Size:
       <span th:text="${cpu_cooler.size == 0} ? 'N/A' : ${cpu_cooler.size} + 'mm'"></span>
     </p>
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
+      <input type="hidden" th:value="${cpu_cooler.id}" name="cpuCoolerId">
+      <button>Select</button>
+    </form>
   </li>
 </ul>
 </body>

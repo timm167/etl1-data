@@ -12,12 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "MOTHERBOARDS")
-public class Motherboard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class Motherboard extends Component {
     private String socket;
     private String form_factor;
     private int max_memory;

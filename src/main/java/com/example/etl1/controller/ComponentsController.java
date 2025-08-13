@@ -1,20 +1,15 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.components.*;
+import com.example.etl1.model.ComponentIdCarrier;
+import com.example.etl1.model.Product;
 import com.example.etl1.repository.components.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class ComponentsController {
@@ -29,12 +24,6 @@ public class ComponentsController {
     CpuCoolerRepository cpuCoolerRepository;
 
     @Autowired
-    FanRpmRepository fanRPMRepository;
-
-    @Autowired
-    FanNoiseLevelRepository fanNoiseLevelRepository;
-
-    @Autowired
     GraphicsCardRepository graphicsCardRepository;
 
     @Autowired
@@ -44,164 +33,136 @@ public class ComponentsController {
     MemoryRepository memoryRepository;
 
     @Autowired
-    MemorySpeedRepository memorySpeedRepository;
-
-    @Autowired
-    MemoryModuleRepository memoryModuleRepository;
-
-    @Autowired
     MotherboardRepository motherboardRepository;
 
     @Autowired
     PowerSupplyRepository powerSupplyRepository;
 
-    @GetMapping("/load-component-data")
-    public String populateComponentsData() throws IOException {
-        caseRepository.deleteAll();
-        cpuRepository.deleteAll();
-        cpuCoolerRepository.deleteAll();
-        graphicsCardRepository.deleteAll();
-        internalStorageRepository.deleteAll();
-        memoryRepository.deleteAll();
-        motherboardRepository.deleteAll();
-        powerSupplyRepository.deleteAll();
+    @GetMapping("/components/cases")
+    public ModelAndView viewCases(String sortBy, String order, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("/components/cases");
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
-        ObjectMapper mapper = new ObjectMapper();
-        Case[] cases = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/case.json"), Case[].class);
-        Cpu[] cpus = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu.json"), Cpu[].class);
-        CpuCooler[] cpuCoolers = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/cpu-cooler.json"), CpuCooler[].class);
-        GraphicsCard[] graphicsCards = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/graphics-card.json"), GraphicsCard[].class);
-        InternalStorage[] internalStorages = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/internal-storage-device.json"), InternalStorage[].class);
-        Memory[] memory = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/memory.json"), Memory[].class);
-        Motherboard[] motherboards = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/motherboard.json"), Motherboard[].class);
-        PowerSupply[] powerSupplies = mapper.readValue(new File(System.getProperty("user.dir") + "/src/main/resources/PC_Components_Data/power-supply.json"), PowerSupply[].class);
-
-        caseRepository.saveAll(Arrays.asList(cases));
-        cpuRepository.saveAll(Arrays.asList(cpus));
-
-        cpuCoolerRepository.saveAll(Arrays.asList(cpuCoolers));
-
-        List<FanRpm> allRPMs = new ArrayList<>();
-        List<FanNoiseLevel> allNoiseLevels = new ArrayList<>();
-
-        for (CpuCooler cpuCooler : cpuCoolers) {
-            List<FanRpm> rpms = cpuCooler.getRpm();
-            if (!rpms.isEmpty()) {
-                for (FanRpm rpm : rpms) {
-                    if (rpm != null) {
-                        rpm.setCpu_cooler(cpuCooler);
-                        allRPMs.add(rpm);
-                    }
-                }
-            }
-            List<FanNoiseLevel> noiseLevels = cpuCooler.getNoise_level();
-            if (!noiseLevels.isEmpty()) {
-                for (FanNoiseLevel noiseLevel : noiseLevels) {
-                    if (noiseLevel != null) {
-                        noiseLevel.setCpu_cooler(cpuCooler);
-                        allNoiseLevels.add(noiseLevel);
-                    }
-                }
-            }
+        if (sort != null) {
+            modelAndView.addObject("cases", caseRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("cases", caseRepository.findAll());
         }
 
-        fanRPMRepository.saveAll(allRPMs);
-        fanNoiseLevelRepository.saveAll(allNoiseLevels);
-        graphicsCardRepository.saveAll(Arrays.asList(graphicsCards));
-        internalStorageRepository.saveAll(Arrays.asList(internalStorages));
-        memoryRepository.saveAll(Arrays.asList(memory));
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
 
-        List<MemorySpeed> allMemorySpeeds = new ArrayList<>();
-        List<MemoryModule> allMemoryModules = new ArrayList<>();
-
-        for (Memory mem : memory) {
-            List<MemorySpeed> memorySpeeds = mem.getSpeed();
-            if (!memorySpeeds.isEmpty()) {
-                for (MemorySpeed memorySpeed : memorySpeeds) {
-                    if (memorySpeed != null) {
-                        memorySpeed.setMemory(mem);
-                        allMemorySpeeds.add(memorySpeed);
-                    }
-                }
-            }
-
-            List<MemoryModule> memoryModules = mem.getModules();
-            if (!memoryModules.isEmpty()) {
-                for (MemoryModule memoryModule : memoryModules) {
-                    if (memoryModule != null) {
-                        memoryModule.setMemory(mem);
-                        allMemoryModules.add(memoryModule);
-                    }
-                }
-            }
-        }
-
-        memorySpeedRepository.saveAll(allMemorySpeeds);
-        memoryModuleRepository.saveAll(allMemoryModules);
-
-        motherboardRepository.saveAll(Arrays.asList(motherboards));
-        powerSupplyRepository.saveAll(Arrays.asList(powerSupplies));
-
-        return "redirect:/";
+        return modelAndView;
     }
 
-//    @GetMapping("/components/cases")
-//    public ModelAndView viewCases() {
-//        ModelAndView modelAndView = new ModelAndView("/components/cases");
-//        modelAndView.addObject("cases", caseRepository.findAll());
-//        modelAndView.addObject("sortBy", "");
-//        modelAndView.addObject("order", "");
-//        return modelAndView;
-//    }
+    @GetMapping("/components/cpus")
+    public ModelAndView viewCpus(String sortBy, String order, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("/components/cpus");
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
-//    @GetMapping("/components/cpus")
-//    public ModelAndView viewCpus() {
-//        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-//        modelAndView.addObject("cpus", cpuRepository.findAll());
-//        modelAndView.addObject("sortBy", "");
-//        modelAndView.addObject("order", "");
-//        return modelAndView;
-//    }
+        if (sort != null) {
+            modelAndView.addObject("cpus", cpuRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("cpus", cpuRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
+        return modelAndView;
+    }
 
     @GetMapping("/components/cpu-coolers")
-    public ModelAndView viewCpuCoolers() {
+    public ModelAndView viewCpuCoolers(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
-        modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/graphics-cards")
-    public ModelAndView viewGraphicsCards() {
+    public ModelAndView viewGraphicsCards(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/internal-storage")
-    public ModelAndView viewInternalStorage() {
+    public ModelAndView viewInternalStorage(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
-        modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("internal_storages", internalStorageRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/memory")
-    public ModelAndView viewMemory() {
+    public ModelAndView viewMemory(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/memory");
-        modelAndView.addObject("memory", memoryRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("memory", memoryRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("memory", memoryRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/motherboards")
-    public ModelAndView viewMotherboards() {
+    public ModelAndView viewMotherboards(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/motherboards");
-        modelAndView.addObject("motherboards", motherboardRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("motherboards", motherboardRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("motherboards", motherboardRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
     @GetMapping("/components/power-supplies")
-    public ModelAndView viewPowerSupplies() {
+    public ModelAndView viewPowerSupplies(String sortBy, String order, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
-        modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            modelAndView.addObject("power_supplies", powerSupplyRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
         return modelAndView;
     }
 
@@ -233,215 +194,43 @@ public class ComponentsController {
         return modelAndView;
     }
 
-    @GetMapping("/components/cases")
-    public ModelAndView viewSortedCases(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/cases");
+    @PostMapping("/components/add-to-product")
+    public String addComponentToCustomProduct(HttpSession session, ComponentIdCarrier componentIds) {
+        Product customPc = (Product) session.getAttribute("customPc");
 
-        Sort.Direction direction;
-
-        if (order != null && order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        List<Case> cases;
-
-        if (sortBy != null) {
-            String property = switch (sortBy) {
-                case "Name" -> "name";
-                case "Price" -> "price";
-                case "Size" -> "externalVolume";
-                default -> null;
-            };
-
-            if (property != null) {
-                cases = caseRepository.findAll(Sort.by(direction, property));
-            } else {
-                cases = (List<Case>) caseRepository.findAll();
+        if (customPc != null) {
+            if (componentIds.getCaseId() != null) {
+                caseRepository.findById(componentIds.getCaseId()).ifPresent(customPc::setCaseEntity);
             }
-        } else {
-            cases = (List<Case>) caseRepository.findAll();
-        }
 
-        modelAndView.addObject("cases", cases);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus")
-    public ModelAndView viewSortedCpus(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-
-        Sort.Direction direction;
-
-        if (order != null && order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        List<Cpu> cpus;
-
-        if (sortBy != null) {
-            String property = switch (sortBy) {
-                case "Name" -> "name";
-                case "Price" -> "price";
-                case "Core Clock" -> "coreClock";
-                default -> null;
-            };
-
-            if (property != null) {
-                cpus = cpuRepository.findAll(Sort.by(direction, property));
-            } else {
-                cpus = (List<Cpu>) cpuRepository.findAll();
+            if (componentIds.getCpuId() != null) {
+                cpuRepository.findById(componentIds.getCpuId()).ifPresent(customPc::setCpu);
             }
-        } else {
-            cpus = (List<Cpu>) cpuRepository.findAll();
+
+            if (componentIds.getCpuCoolerId() != null) {
+                cpuCoolerRepository.findById(componentIds.getCpuCoolerId()).ifPresent(customPc::setCpuCooler);
+            }
+
+            if (componentIds.getGraphicsCardId() != null) {
+                graphicsCardRepository.findById(componentIds.getGraphicsCardId()).ifPresent(customPc::setGraphicsCard);
+            }
+
+            if (componentIds.getInternalStorageId() != null) {
+                internalStorageRepository.findById(componentIds.getInternalStorageId()).ifPresent(customPc::setInternalStorage);
+            }
+            if (componentIds.getMemoryId() != null) {
+                memoryRepository.findById(componentIds.getMemoryId()).ifPresent(customPc::setMemory);
+            }
+            if (componentIds.getMotherboardId() != null) {
+                motherboardRepository.findById(componentIds.getMotherboardId()).ifPresent(customPc::setMotherboard);
+            }
+            if (componentIds.getPowerSupplyId() != null) {
+                powerSupplyRepository.findById(componentIds.getPowerSupplyId()).ifPresent(customPc::setPowerSupply);
+            }
+
+            session.setAttribute("customPc", customPc);
         }
 
-        modelAndView.addObject("cpus", cpus);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpu-coolers/sort")
-    public ModelAndView viewSortedCpuCoolers(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            default -> null;
-        };
-
-        List<CpuCooler> cpuCoolers = cpuCoolerRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("cpu_coolers", cpuCoolers);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/graphics-cards/sort")
-    public ModelAndView viewSortedGraphicsCards(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Core Clock" -> "coreClock";
-            default -> null;
-        };
-
-        List<GraphicsCard> graphicsCards = graphicsCardRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("graphics_cards", graphicsCards);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/internal-storage/sort")
-    public ModelAndView viewSortedInternalStorage(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Capacity" -> "capacity";
-            default -> null;
-        };
-
-        List<InternalStorage> internalStorages = internalStorageRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("internal_storages", internalStorages);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/memory/sort")
-    public ModelAndView viewSortedMemory(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/memory");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Speed" -> "speed.speed";
-            default -> null;
-        };
-
-        List<Memory> memory = memoryRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("memory", memory);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/motherboards/sort")
-    public ModelAndView viewSortedMotherboards(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/motherboards");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            default -> null;
-        };
-
-        List<Motherboard> motherboards = motherboardRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("motherboards", motherboards);
-        return modelAndView;
-    }
-
-    @GetMapping("/components/power-supplies/sort")
-    public ModelAndView viewSortedPowerSupplies(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            case "Wattage" -> "wattage";
-            default -> null;
-        };
-
-        List<PowerSupply> powerSupplies = powerSupplyRepository.findAll(Sort.by(direction, property));
-        modelAndView.addObject("power_supplies", powerSupplies);
-        return modelAndView;
+        return "redirect:/products/create";
     }
 }

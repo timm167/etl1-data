@@ -19,14 +19,25 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/products")
-    public List<Product> getAllProducts() {  // Now expects entity.Product
-        return productService.getAllProducts();
+    @GetMapping("/order_form")
+    public ModelAndView showOrderForm() {
+        List<Product> products = productService.getAllProducts();
+        ModelAndView mav = new ModelAndView("order");
+        mav.addObject("products", products);
+        return mav;
     }
 
-    @GetMapping("/products/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {  // Now expects entity.Product
-        return productService.getProductById(id);
+    @PostMapping("/create_order")
+    public ModelAndView submitOrder(
+            @RequestParam String address,
+            @RequestParam Integer productId,
+            @RequestParam Integer quantity
+    ) {
+        orderService.createOrder(address, productId, quantity);
+
+        ModelAndView mav = new ModelAndView("orderSuccess");
+        mav.addObject("message", "Order placed successfully!");
+        return mav;
     }
 
 

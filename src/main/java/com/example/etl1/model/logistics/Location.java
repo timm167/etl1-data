@@ -16,7 +16,6 @@ public class Location {
 
     public enum LocationTypeEnum {
         DISTRIBUTION_FACILITY,
-        PORT,
         WAREHOUSE,
         FACTORY,
         OFFICE

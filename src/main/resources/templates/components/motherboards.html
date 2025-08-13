@@ -5,7 +5,7 @@
     <title>Motherboards</title>
 </head>
 <body>
-<form th:action="@{/components/motherboards/sort}" method="get">
+<form th:action="@{/components/motherboards}" method="get">
   <label for="sortBy">Sort By</label>
   <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
     <option>Name</option>
@@ -26,6 +26,10 @@
     <p th:text="'Max Memory: ' + ${motherboard.max_memory} + 'GB'"></p>
     <p th:text="'Memory Slots: ' + ${motherboard.memory_slots}"></p>
     <p>Colour: <span th:text="${motherboard.color != null} ? ${motherboard.color} : 'N/A'"></span></p>
+    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
+      <input type="hidden" th:value="${motherboard.id}" name="motherboardId">
+      <button>Select</button>
+    </form>
   </li>
 </ul>
 </body>

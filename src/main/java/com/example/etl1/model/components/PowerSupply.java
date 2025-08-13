@@ -12,12 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "POWER_SUPPLIES")
-public class PowerSupply {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class PowerSupply extends Component {
     private String type;
     private String efficiency;
     private int wattage;

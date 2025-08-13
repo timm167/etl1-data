@@ -1,9 +1,8 @@
 CREATE TYPE location_type_enum AS ENUM (
-    'distribution facility',
-    'port',
-    'warehouse',
-    'factory',
-    'office'
+  'DISTRIBUTION_FACILITY',
+  'WAREHOUSE',
+  'FACTORY',
+  'OFFICE'
 );
 
 CREATE TABLE locations (
@@ -31,33 +30,26 @@ CREATE TABLE staff (
 
 
 INSERT INTO locations (location_type, location_name, country, lat, lon) VALUES
-    -- Offices
-    ('office', 'Head Office London', 'United Kingdom', 51.507351, -0.127758),
-    ('office', 'Regional Office Berlin', 'Germany', 52.520008, 13.404954),
+    ('OFFICE', 'Head Office London', 'United Kingdom', 51.507351, -0.127758),
 
-    -- Distribution Facilities (7)
-    ('distribution facility', 'Distribution Facility London East', 'United Kingdom', 51.515, -0.070),
-    ('distribution facility', 'Distribution Facility Manchester', 'United Kingdom', 53.480, -2.240),
-    ('distribution facility', 'Distribution Facility Berlin West', 'Germany', 52.500, 13.350),
-    ('distribution facility', 'Distribution Facility Munich', 'Germany', 48.130, 11.570),
-    ('distribution facility', 'Distribution Facility Paris', 'France', 48.860, 2.350),
-    ('distribution facility', 'Distribution Facility Lyon', 'France', 45.750, 4.850),
-    ('distribution facility', 'Distribution Facility Hamburg', 'Germany', 53.560, 9.970),
+    ('DISTRIBUTION_FACILITY', 'Distribution Facility London East', 'United Kingdom', 51.515, -0.070),
+    ('DISTRIBUTION_FACILITY', 'Distribution Facility Manchester', 'United Kingdom', 53.480, -2.240),
+    ('DISTRIBUTION_FACILITY', 'Distribution Facility Birmingham', 'United Kingdom', 52.4862, -1.8904),
+    ('DISTRIBUTION_FACILITY', 'Distribution Facility Glasgow', 'United Kingdom', 55.8642, -4.2518),
+    ('DISTRIBUTION_FACILITY', 'Distribution Facility Newcastle', 'United Kingdom', 54.9784, -1.6174),
 
-    -- Warehouses paired near distribution facilities (7)
-    ('warehouse', 'Warehouse London East', 'United Kingdom', 51.517, -0.072),
-    ('warehouse', 'Warehouse Manchester', 'United Kingdom', 53.482, -2.235),
-    ('warehouse', 'Warehouse Berlin West', 'Germany', 52.502, 13.348),
-    ('warehouse', 'Warehouse Munich', 'Germany', 48.128, 11.573),
-    ('warehouse', 'Warehouse Paris', 'France', 48.859, 2.349),
-    ('warehouse', 'Warehouse Lyon', 'France', 45.752, 4.849),
-    ('warehouse', 'Warehouse Hamburg', 'Germany', 53.562, 9.973),
+    ('WAREHOUSE', 'Warehouse London East', 'United Kingdom', 51.517, -0.072),
+    ('WAREHOUSE', 'Warehouse Manchester', 'United Kingdom', 53.482, -2.235),
+    ('WAREHOUSE', 'Warehouse Birmingham', 'United Kingdom', 52.4862, -1.8904),
+    ('WAREHOUSE', 'Warehouse Glasgow', 'United Kingdom', 55.8609, -4.2514),
+    ('WAREHOUSE', 'Warehouse Newcastle', 'United Kingdom', 54.9783, -1.6174),
 
-    -- Factories (4)
-    ('factory', 'Factory Birmingham', 'United Kingdom', 52.480, -1.900),
-    ('factory', 'Factory Stuttgart', 'Germany', 48.780, 9.180),
-    ('factory', 'Factory Marseille', 'France', 43.310, 5.370),
-    ('factory', 'Factory Lyon', 'France', 45.760, 4.840);
+    ('FACTORY', 'Factory Birmingham', 'United Kingdom', 52.480, -1.900),
+    ('FACTORY', 'Factory Sheffield', 'United Kingdom', 53.3811, -1.4701),
+    ('FACTORY', 'Factory Liverpool', 'United Kingdom', 53.4084, -2.9916),
+    ('FACTORY', 'Factory Cardiff', 'United Kingdom', 51.4816, -3.1791),
+    ('FACTORY', 'Factory Belfast', 'United Kingdom', 54.5973, -5.9301);
+
 
 -- SAMPLE DATA --
 INSERT INTO staff (first_name, last_name, email, job_title, location_id, salary) VALUES

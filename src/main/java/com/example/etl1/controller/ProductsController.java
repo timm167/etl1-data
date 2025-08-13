@@ -1,18 +1,18 @@
 package com.example.etl1.controller;
 
-import com.example.etl1.model.Product;  // Changed from entity to model
+import com.example.etl1.model.ComponentIdCarrier;
+import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
-import com.example.etl1.repository.components.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.StreamSupport;
 
 @Controller
 public class ProductsController {
@@ -20,134 +20,70 @@ public class ProductsController {
     @Autowired
     ProductRepository productRepository;  // Now works with model.Product
 
-    @Autowired
-    ColorRepository colorRepository;
+    @GetMapping("/products")
+    public ModelAndView viewProducts(String sortBy, String order) {
+        ModelAndView modelAndView = new ModelAndView("/products");
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
-    @Autowired
-    CaseRepository caseRepository;
-
-    @Autowired
-    CpuRepository cpuRepository;
-
-    @Autowired
-    CpuCoolerRepository cpuCoolerRepository;
-
-    @Autowired
-    GraphicsCardRepository graphicsCardRepository;
-
-    @Autowired
-    InternalStorageRepository internalStorageRepository;
-
-    @Autowired
-    MemoryRepository memoryRepository;
-
-    @Autowired
-    MotherboardRepository motherboardRepository;
-
-    @Autowired
-    PowerSupplyRepository powerSupplyRepository;
-
-    @GetMapping("/load-product-data")
-    public String populateProductData() {
-        int count = 10;
-
-        for (int i = 1; i <= count; i++) {
-            var color = firstOrNull(colorRepository.findAll());
-            var casePart = firstOrNull(caseRepository.findAll());
-            var cpu = firstOrNull(cpuRepository.findAll());
-            var cooler = firstOrNull(cpuCoolerRepository.findAll());
-            var gpu = firstOrNull(graphicsCardRepository.findAll());
-            var storage = firstOrNull(internalStorageRepository.findAll());
-            var memory = firstOrNull(memoryRepository.findAll());
-            var mobo = firstOrNull(motherboardRepository.findAll());
-            var psu = firstOrNull(powerSupplyRepository.findAll());
-
-            BigDecimal cost = BigDecimal.ZERO;
-            if (casePart != null) cost = cost.add(BigDecimal.valueOf(casePart.getPrice()));
-            if (cpu != null) cost = cost.add(BigDecimal.valueOf(cpu.getPrice()));
-            if (cooler != null) cost = cost.add(BigDecimal.valueOf(cooler.getPrice()));
-            if (gpu != null) cost = cost.add(BigDecimal.valueOf(gpu.getPrice()));
-            if (storage != null) cost = cost.add(BigDecimal.valueOf(storage.getPrice()));
-            if (memory != null) cost = cost.add(BigDecimal.valueOf(memory.getPrice()));
-            if (mobo != null) cost = cost.add(BigDecimal.valueOf(mobo.getPrice()));
-            if (psu != null) cost = cost.add(BigDecimal.valueOf(psu.getPrice()));
-
-            BigDecimal price = cost.multiply(BigDecimal.valueOf(1.5));
-
-            List<String> productNames = Arrays.asList(
-                    "Carboniser 2000 CPU",
-                    "TurboMax Desktop",
-                    "NeonWave CPU",
-                    "PixelPro CPU",
-                    "VoltEdge Desktop",
-                    "CosmoTech CPU",
-                    "ByteStream Tower",
-                    "QuantumFlex CPU",
-                    "HyperCore Desktop",
-                    "MegaSync CPU"
-            );
-
-            Product product = new Product();  // Now creates model.Product
-            product.setName(productNames.get(i - 1));
-            product.setCost(cost);  // This method exists on model.Product
-            product.setPrice(price);
-            product.setIsCustom(true);  // Set this since it's a custom build
-            product.setColor(color);
-            product.setCaseEntity(casePart);
-            product.setCpu(cpu);
-            product.setCpuCooler(cooler);
-            product.setGraphicsCard(gpu);
-            product.setInternalStorage(storage);
-            product.setMemory(memory);
-            product.setMotherboard(mobo);
-            product.setPowerSupply(psu);
-
-            productRepository.save(product);
+        if (sort != null) {
+            modelAndView.addObject("products", productRepository.findAll(sort));
+        } else {
+            modelAndView.addObject("products", productRepository.findAll());
         }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/products/create")
+    public ModelAndView createCustomPc(HttpSession session, @ModelAttribute("componentIds") ComponentIdCarrier componentIds) {
+        ModelAndView modelAndView = new ModelAndView("/custom-pc");
+
+        if (session.getAttribute("componentIds") == null) {
+            session.setAttribute("componentIds", new ComponentIdCarrier());
+        }
+
+        if (session.getAttribute("customPc") == null) {
+            session.setAttribute("customPc", new Product());
+        }
+
+        modelAndView.addObject("customPc", session.getAttribute("customPc"));
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+        modelAndView.addObject("name", "");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/products")
+    public String postCustomPc(HttpSession session, String productName) {
+        Product customPc = (Product) session.getAttribute("customPc");
+
+        BigDecimal cost = BigDecimal.ZERO;
+        if (customPc.getCaseEntity() != null) cost = cost.add(BigDecimal.valueOf(customPc.getCaseEntity().getPrice()));
+        if (customPc.getCpu() != null) cost = cost.add(BigDecimal.valueOf(customPc.getCpu().getPrice()));
+        if (customPc.getCpuCooler() != null) cost = cost.add(BigDecimal.valueOf(customPc.getCpuCooler().getPrice()));
+        if (customPc.getGraphicsCard() != null) cost = cost.add(BigDecimal.valueOf(customPc.getGraphicsCard().getPrice()));
+        if (customPc.getInternalStorage() != null) cost = cost.add(BigDecimal.valueOf(customPc.getInternalStorage().getPrice()));
+        if (customPc.getMemory() != null) cost = cost.add(BigDecimal.valueOf(customPc.getMemory().getPrice()));
+        if (customPc.getMotherboard() != null) cost = cost.add(BigDecimal.valueOf(customPc.getMotherboard() .getPrice()));
+        if (customPc.getPowerSupply() != null) cost = cost.add(BigDecimal.valueOf(customPc.getPowerSupply().getPrice()));
+
+        BigDecimal price = cost.multiply(BigDecimal.valueOf(1.5));
+        customPc.setCost(cost);
+        customPc.setPrice(price);
+        customPc.setIsCustom(true);
+        customPc.setName(productName);
+
+        productRepository.save(customPc);
+
+        session.setAttribute("customPc", null);
+        session.setAttribute("componentIds", null);
+
         return "redirect:/";
     }
-
-    private <T> T firstOrNull(Iterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false)
-                .findFirst()
-                .orElse(null);
-    }
-
-    @GetMapping("/products")
-    public ModelAndView viewCases() {
-        ModelAndView modelAndView = new ModelAndView("/products");
-        modelAndView.addObject("products", productRepository.findAll());
-        modelAndView.addObject("sortBy", "");
-        modelAndView.addObject("order", "");
-        return modelAndView;
-    }
-
-    @GetMapping("/products/sort")
-    public ModelAndView viewSortedCases(String sortBy, String order) {
-        ModelAndView modelAndView = new ModelAndView("/products");
-
-        Sort.Direction direction = null;
-
-        if (order.equals("Descending")) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
-
-        String property = switch (sortBy) {
-            case "Name" -> "name";
-            case "Price" -> "price";
-            default -> null;
-        };
-
-        List<Product> product = productRepository.findAll();  // Returns model.Product
-        modelAndView.addObject("products", product);
-        return modelAndView;
-    }
-
+  
     @GetMapping("/basket")
-    public ModelAndView viewBasket() {
-        ModelAndView modelAndView = new ModelAndView("/basket");
-        return modelAndView;
+      public ModelAndView viewBasket() {
+          ModelAndView modelAndView = new ModelAndView("/basket");
+          return modelAndView;
     }
 }

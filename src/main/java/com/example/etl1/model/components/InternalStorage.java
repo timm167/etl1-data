@@ -12,12 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "INTERNAL_STORAGE")
-public class InternalStorage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class InternalStorage extends Component {
     private int capacity;
     private double price_per_gb;
     private String type;

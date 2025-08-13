@@ -27,8 +27,7 @@ public class ShippingController {
         }
 
         Shipper closest = shippingService.findClosestShipper(
-                Double.parseDouble(geoLocation.getLat()),
-                Double.parseDouble(geoLocation.getLon())
+            geoLocation.getLat().doubleValue(), geoLocation.getLon().doubleValue()
         );
 
         if (closest == null) {

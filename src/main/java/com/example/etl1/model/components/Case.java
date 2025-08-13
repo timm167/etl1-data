@@ -13,12 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "CASES")
-public class Case {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private double price;
+public class Case extends Component {
     private String type;
     private String color;
     private String side_panel;
