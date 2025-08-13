@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Staff Dashboard</title>
+</head>
+<body>
+<h1>Welcome to your Staff Dashboard</h1>
+<p>Logged in as: <span th:text="${userName}"></span></p>
+<div th:replace="~{fragments/login-logout :: login-logout}"></div>
+</body>
+</html>

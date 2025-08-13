@@ -56,6 +56,13 @@
             </form>
         </div>
     </div>
+
+    <!-- Only show user info if authenticated -->
+    <div th:if="${isAuthenticated}">
+        <p>Logged in as: <span th:text="${userName}"></span></p>
+    </div>
+    <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+
 </nav>
 </div>
 
