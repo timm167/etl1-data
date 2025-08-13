@@ -144,4 +144,10 @@ public class ProductsController {
         modelAndView.addObject("products", product);
         return modelAndView;
     }
+
+    @GetMapping("/basket")
+    public ModelAndView viewBasket() {
+        ModelAndView modelAndView = new ModelAndView("/basket");
+        return modelAndView;
+    }
 }
