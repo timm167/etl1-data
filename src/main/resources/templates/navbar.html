@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Navbar with Components Dropdown</title>
+    <link rel="stylesheet" href="main.css"/>
 </head>
 <body>
 <div th:fragment="navbar">
@@ -19,7 +20,7 @@
     </form>
 
 
-    <div style="position: relative;">
+    <div class="dropdown-container">
         <button class="dropdown-toggle" type="button" onclick="toggleDropdown()">Components ▼</button>
         <div id="componentsDropdown">
             <form th:action="@{/components/cases}" method="get">
@@ -55,7 +56,6 @@
         </div>
     </div>
 </nav>
-</div>
 
 <script>
     function toggleDropdown() {
@@ -72,6 +72,7 @@
         }
     };
 </script>
+</div>
 
 </body>
 </html>
