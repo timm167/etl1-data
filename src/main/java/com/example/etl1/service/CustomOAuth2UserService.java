@@ -28,10 +28,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oauth2User.getAttribute("email");
         String name = oauth2User.getAttribute("name");
 
-        // Auth0 fallbacks
-        if (name == null) name = oauth2User.getAttribute("name");
-        if (name == null) name = email;
-
         // Create/update user in database with extracted String parameters
         User user = userService.createOrUpdateOAuth2User(name, email);
 
