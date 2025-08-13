@@ -6,17 +6,36 @@
 </head>
 <body>
 <form th:action="@{/components/cases}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Size</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
+  <p>
+    <label for="sortBy">Sort By</label>
+    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+      <option>Name</option>
+      <option>Price</option>
+      <option>Volume</option>
+    </select>
+    <select th:value="${order}" name="order" id="order" size="1">
+      <option>Ascending</option>
+      <option>Descending</option>
+    </select>
+  </p>
+  <p>
+    <label for="filterBy">Filter</label>
+    <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+      <option>(No filter)</option>
+      <option>Price</option>
+      <option>Volume</option>
+    </select>
+    <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+      <option>at least</option>
+      <option>at most</option>
+    </select>
+    <label id="priceFilterLabel" for="numberFilter">£</label>
+    <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+    <label id="caseSizeFilterLabel" for="numberFilter">L</label>
+  </p>
+  <p>
+    <button type="submit">Go</button>
+  </p>
 </form>
 <ul>
   <li th:each="case : ${cases}" th:if="${case.price > 0.0}">
@@ -36,4 +55,5 @@
   </li>
 </ul>
 </body>
+<script th:src="@{/js/filterDisplay.js}"></script>
 </html>

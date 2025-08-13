@@ -16,7 +16,7 @@ public class DataSortHelper {
             String property = switch (sortBy) {
                 case "Name" -> "name";
                 case "Price" -> "price";
-                case "Size" -> "externalVolume";
+                case "Volume" -> "externalVolume";
                 case "Core Clock" -> "coreClock";
                 case "Capacity" -> "capacity";
                 case "Speed" -> "speed.speed";
