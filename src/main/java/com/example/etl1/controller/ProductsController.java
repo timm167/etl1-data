@@ -5,6 +5,7 @@ import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 public class ProductsController {
 
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository productRepository;  // Now works with model.Product
 
     @GetMapping("/products")
     public ModelAndView viewProducts(String sortBy, String order) {
@@ -78,5 +79,11 @@ public class ProductsController {
         session.setAttribute("componentIds", null);
 
         return "redirect:/";
+    }
+  
+    @GetMapping("/basket")
+      public ModelAndView viewBasket() {
+          ModelAndView modelAndView = new ModelAndView("/basket");
+          return modelAndView;
     }
 }
