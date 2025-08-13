@@ -28,10 +28,8 @@ public class User {
         CUSTOMER, STAFF
     }
 
-    // Default constructor
     public User() {}
 
-    // Constructor without password
     public User(String name, String email, Role role) {
         this.name = name;
         this.email = email;
