@@ -1,25 +1,23 @@
 package com.example.etl1.controller;
 
 import com.example.etl1.model.Product;
-import com.example.etl1.service.OrderService;
 import com.example.etl1.service.ProductService;
-import org.springframework.stereotype.Controller;
+import com.example.etl1.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
-@Controller
-@RequestMapping("/orders")
+@RestController
+@RequestMapping("/api/orders")
 public class OrderController {
 
-    private final ProductService productService;
-    private final OrderService orderService;
+    @Autowired
+    private ProductService productService;
 
-    public OrderController(ProductService productService, OrderService orderService) {
-        this.productService = productService;
-        this.orderService = orderService;
-    }
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
@@ -41,5 +39,6 @@ public class OrderController {
         mav.addObject("message", "Order placed successfully!");
         return mav;
     }
-}
 
+
+}

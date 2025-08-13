@@ -20,8 +20,9 @@ public class OrderService {
     private final ShippingService shippingService;
     private final DistributionService distributionService;
 
-
-    public OrderService(OrderRepository orderRepository, LocationRepository locationRepository, DistributionService distributionService, ProductService productService, GeoLocationService geoLocationService, ShippingService shippingService) {
+    public OrderService(OrderRepository orderRepository, LocationRepository locationRepository,
+                        DistributionService distributionService, ProductService productService,
+                        GeoLocationService geoLocationService, ShippingService shippingService) {
         this.orderRepository = orderRepository;
         this.locationRepository = locationRepository;
         this.productService = productService;
@@ -31,10 +32,9 @@ public class OrderService {
     }
 
     public void createOrder(String address, Integer productId, Integer quantity) {
-        Product product = productService.getProductById(productId);
-        if (product == null) {
-            throw new IllegalArgumentException("Invalid product ID");
-        }
+        // Get the custom PC product (model.Product with all components)
+        Product product = productService.getProductById(productId.longValue())
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
         GeoLocation deliveryLocation = geoLocationService.getTopGeoLocation(address);
 
@@ -62,7 +62,7 @@ public class OrderService {
                 channelName, closestWarehouse, closestDistributionFacility, closestStartShipper, closestEndShipper);
 
         Order order = new Order();
-        order.setProduct(product);
+        order.setProduct(product);  // Now using model.Product directly
         order.setQuantity(quantity);
 
         BigDecimal value = product.getPrice().multiply(BigDecimal.valueOf(quantity));
@@ -71,9 +71,7 @@ public class OrderService {
         order.setDistributionChannel(distributionChannel);
 
         order.setOrderTime(LocalDateTime.now());
-
         order.setExpectedDeliveryTime(order.getOrderTime().plusDays(15));
-
         order.setIsOpen(true);
 
         orderRepository.save(order);
