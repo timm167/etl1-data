@@ -10,16 +10,37 @@
 <div th:replace="navbar :: navbar"></div>
 
 <form th:action="@{/products}" method="get">
-    <label for="sortBy">Sort By</label>
-    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-        <option>Name</option>
-        <option>Price</option>
-    </select>
-    <select th:value="${order}" name="order" id="order" size="1">
-        <option>Ascending</option>
-        <option>Descending</option>
-    </select>
-    <button type="submit">Sort</button>
+    <p>
+        <label for="sortBy">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+            <option>Name</option>
+            <option>Price</option>
+        </select>
+        <select th:value="${order}" name="order" id="order" size="1">
+            <option>Ascending</option>
+            <option>Descending</option>
+        </select>
+    </p>
+    <p>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+            <option>(No filter)</option>
+            <option>Price</option>
+            <option>CPU clock speed</option>
+            <option>GPU clock speed</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+            <option>at least</option>
+            <option>at most</option>
+        </select>
+        <label id="priceFilterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+        <label id="cpuClockFilterLabel" for="numberFilter">GHz</label>
+        <label id="gpuClockFilterLabel" for="numberFilter">MHz</label>
+    </p>
+    <p>
+        <button type="submit">Go</button>
+    </p>
 </form>
 <ul>
     <li th:each="product : ${products}" th:if="${product.price > 0.0}">
@@ -58,6 +79,49 @@
             }
         });
     });
+
+    window.onload = function() {
+        document.getElementById("filterBy").dispatchEvent(new Event("change"));
+    }
+
+    function checkFilterBy(filterBySelect) {
+        filterByOption = document.getElementById("filterBy").value;
+
+        switch (filterByOption) {
+            case "Price":
+                document.getElementById("filterOp").style.display = "";
+                document.getElementById("numberFilter").style.display = "";
+                document.getElementById("numberFilter").required = true;
+                document.getElementById("priceFilterLabel").style.display = "";
+                document.getElementById("cpuClockFilterLabel").style.display = "none";
+                document.getElementById("gpuClockFilterLabel").style.display = "none";
+                break;
+            case "CPU clock speed":
+                document.getElementById("filterOp").style.display = "";
+                document.getElementById("numberFilter").style.display = "";
+                document.getElementById("numberFilter").required = true;
+                document.getElementById("priceFilterLabel").style.display = "none";
+                document.getElementById("cpuClockFilterLabel").style.display = "";
+                document.getElementById("gpuClockFilterLabel").style.display = "none";
+                break;
+            case "GPU clock speed":
+                document.getElementById("filterOp").style.display = "";
+                document.getElementById("numberFilter").style.display = "";
+                document.getElementById("numberFilter").required = true;
+                document.getElementById("priceFilterLabel").style.display = "none";
+                document.getElementById("cpuClockFilterLabel").style.display = "none";
+                document.getElementById("gpuClockFilterLabel").style.display = "";
+                break;
+            default:
+                document.getElementById("filterOp").style.display = "none";
+                document.getElementById("numberFilter").style.display = "none";
+                document.getElementById("numberFilter").required = false;
+                document.getElementById("priceFilterLabel").style.display = "none";
+                document.getElementById("cpuClockFilterLabel").style.display = "none";
+                document.getElementById("gpuClockFilterLabel").style.display = "none";
+                break;
+        }
+    }
 
 </script>
 </html>
