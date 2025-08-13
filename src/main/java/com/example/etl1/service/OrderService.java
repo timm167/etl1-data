@@ -2,13 +2,19 @@ package com.example.etl1.service;
 
 import com.example.etl1.model.*;
 import com.example.etl1.model.logistics.*;
+import com.example.etl1.model.users.User;
 import com.example.etl1.repository.logistics.LocationRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
+import com.example.etl1.repository.users.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
+import com.example.etl1.repository.users.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -19,15 +25,17 @@ public class OrderService {
     private final GeoLocationService geoLocationService;
     private final ShippingService shippingService;
     private final DistributionService distributionService;
+    private final UserRepository userRepository;
 
 
-    public OrderService(OrderRepository orderRepository, LocationRepository locationRepository, DistributionService distributionService, ProductService productService, GeoLocationService geoLocationService, ShippingService shippingService) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, LocationRepository locationRepository, DistributionService distributionService, ProductService productService, GeoLocationService geoLocationService, ShippingService shippingService) {
         this.orderRepository = orderRepository;
         this.locationRepository = locationRepository;
         this.productService = productService;
         this.geoLocationService = geoLocationService;
         this.shippingService = shippingService;
         this.distributionService = distributionService;
+        this.userRepository = userRepository;
     }
 
     public void createOrder(String address, Integer productId, Integer quantity) {
@@ -75,6 +83,16 @@ public class OrderService {
         order.setExpectedDeliveryTime(order.getOrderTime().plusDays(15));
 
         order.setIsOpen(true);
+
+        DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        String email = (String) principal.getAttributes().get("email");
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        order.setUser(user.orElse(null));
 
         orderRepository.save(order);
     }
