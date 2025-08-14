@@ -24,6 +24,9 @@ public class Review {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "content", nullable = false)
     private String content;
 

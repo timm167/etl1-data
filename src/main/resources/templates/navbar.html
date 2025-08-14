@@ -18,19 +18,6 @@
     <form th:action="@{/products/create}" method="get">
         <button type="submit">Custom PC</button>
     </form>
-    <form th:action="@{/orders/view}" method="get">
-        <button type="submit">View Orders</button>
-    </form>
-    <form th:if="${userRole} == 'STAFF'" th:action="@{/orders/manage}" method="get">
-        <button type="submit">Manage Orders</button>
-    </form>
-
-    <form th:action="@{/toggle-staff}" method="post">
-        <button type="submit"
-                th:text="${userRole} == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'">
-        </button>
-    </form>
-
 
     <div style="position: relative;">
         <button class="dropdown-toggle" type="button">Components ▼</button>
@@ -67,7 +54,6 @@
         <p>Logged in as: <span th:text="${userName}"></span></p>
     </div>
     <div th:replace="~{fragments/login-logout :: login-logout}"></div>
-
 </nav>
 
 </div>
