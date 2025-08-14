@@ -92,47 +92,28 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Sort Products</button>
+                        <label for="filterBy" class="form-label">Filter</label>
+                        <select th:value="${filterBy}" name="filterBy" id="filterBy" class="form-select" size="1" onchange="checkFilterBy(this);">
+                            <option>(No filter)</option>
+                            <option>Price</option>
+                            <option>CPU clock speed</option>
+                            <option>GPU clock speed</option>
+                        </select>
+                        <select th:value="${filterOp}" name="filterOp" id="filterOp" class="form-select" size="1">
+                            <option>at least</option>
+                            <option>at most</option>
+                        </select>
+                        <label id="priceFilterLabel" for="numberFilter" class="form-label filterLabel">£</label>
+                        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+                        <label id="cpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">GHz</label>
+                        <label id="gpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">MHz</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Go</button>
                     </div>
                 </form>
             </div>
         </div>
-<form th:action="@{/products}" method="get">
-    <p>
-        <label for="sortBy">Sort By</label>
-        <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-            <option>Name</option>
-            <option>Price</option>
-        </select>
-        <select th:value="${order}" name="order" id="order" size="1">
-            <option>Ascending</option>
-            <option>Descending</option>
-        </select>
-    </p>
-    <p>
-        <label for="filterBy">Filter</label>
-        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
-            <option>(No filter)</option>
-            <option>Price</option>
-            <option>CPU clock speed</option>
-            <option>GPU clock speed</option>
-        </select>
-        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
-            <option>at least</option>
-            <option>at most</option>
-        </select>
-        <label id="priceFilterLabel" for="numberFilter">£</label>
-        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-        <label id="cpuClockFilterLabel" for="numberFilter">GHz</label>
-        <label id="gpuClockFilterLabel" for="numberFilter">MHz</label>
-    </p>
-    <p>
-        <button type="submit">Go</button>
-    </p>
-</form>
-<ul>
-    <li th:each="product : ${products}" th:if="${product.price > 0.0}">
-        <h2 th:text="${product.name}">Product Name</h2>
 
         <!-- Products Grid -->
         <div class="grid grid-2">
@@ -192,48 +173,38 @@
                         🛒 Add to Basket
                     </button>
                 </div>
+
+                <!-- Reviews section -->
+                <div class="reviews">
+                    <h3>Reviews</h3>
+
+                    <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
+                    <div th:if="${reviewsByProductId != null}">
+                        <ul>
+                            <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
+                            <li th:each="r : ${reviewsByProductId[product.id]}">
+                                <strong th:text="${r.email}">email</strong>:
+                                <span th:text="${r.content}">content</span>
+                                <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h4>Add a review</h4>
+                    <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
+                        <label>
+                            Review
+                            <textarea name="content" rows="3" cols="40" required></textarea>
+                        </label>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-        <p th:text="'Color: ' + (${product.color != null ? product.color.hex : 'N/A'})"></p>
-        <p th:text="'Case: ' + (${product.caseEntity != null ? product.caseEntity.name : 'N/A'})"></p>
-        <p th:text="'CPU: ' + (${product.cpu != null ? product.cpu.name : 'N/A'})"></p>
-        <p th:text="'CPU Cooler: ' + (${product.cpuCooler != null ? product.cpuCooler.name : 'N/A'})"></p>
-        <p th:text="'Graphics Card: ' + (${product.graphicsCard != null ? product.graphicsCard.name : 'N/A'})"></p>
-        <p th:text="'Internal Storage: ' + (${product.internalStorage != null ? product.internalStorage.name : 'N/A'})"></p>
-        <p th:text="'Memory: ' + (${product.memory != null ? product.memory.name : 'N/A'})"></p>
-        <p th:text="'Motherboard: ' + (${product.motherboard != null ? product.motherboard.name : 'N/A'})"></p>
-        <p th:text="'Power Supply: ' + (${product.powerSupply != null ? product.powerSupply.name : 'N/A'})"></p>
 
-        <!-- Reviews section -->
-        <div class="reviews">
-            <h3>Reviews</h3>
-
-            <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
-            <div th:if="${reviewsByProductId != null}">
-                <ul>
-                    <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
-                    <li th:each="r : ${reviewsByProductId[product.id]}">
-                        <strong th:text="${r.name}">name</strong>:
-                        <span th:text="${r.content}">content</span>
-                        <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
-                    </li>
-                </ul>
-            </div>
-
-            <h4>Add a review</h4>
-            <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
-                <label>
-                    Review
-                    <textarea name="content" rows="3" cols="40" required></textarea>
-                </label>
-                <br>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </li>
-</ul>
 </body>
 
 <!-- JavaScript for Add to Basket functionality -->
