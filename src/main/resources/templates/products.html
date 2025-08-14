@@ -215,7 +215,7 @@
                 <ul>
                     <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
                     <li th:each="r : ${reviewsByProductId[product.id]}">
-                        <strong th:text="${r.email}">email</strong>:
+                        <strong th:text="${r.name}">name</strong>:
                         <span th:text="${r.content}">content</span>
                         <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
                     </li>

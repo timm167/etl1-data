@@ -1,6 +1,7 @@
 CREATE TABLE product_reviews (
   id SERIAL PRIMARY KEY,
   product_id INT NOT NULL,
+  name TEXT NOT NULL DEFAULT '',
   email TEXT NOT NULL,
   content TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
