@@ -174,6 +174,10 @@ public class ProductsController {
             model.addAttribute("error", "Unable to load basket: " + e.getMessage());
             return "basket";
         }
+
+
+    }
+
     public ModelAndView viewBasket() {
         ModelAndView modelAndView = new ModelAndView("/basket");
         return modelAndView;
