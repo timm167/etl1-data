@@ -76,8 +76,11 @@
 
         <!-- User section -->
         <div class="user-section">
-            <div th:if="${isAuthenticated}">
-                <span>Welcome, <strong th:text="${userName}">User</strong></span>
+            <div sec:authorize="isAuthenticated()">
+                <p>Logged in as: <span th:text="${userName}"></span></p>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <span>Welcome, Guest</span>
             </div>
             <div th:replace="~{fragments/login-logout :: login-logout}"></div>
         </div>

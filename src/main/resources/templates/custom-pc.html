@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom PC Builder - PC Store</title>
-
-    <!-- CSS Files -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
 
@@ -39,11 +37,9 @@
         }
     </style>
     <title>Custom PC</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
 <body>
-
-<div th:replace="~{navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container">
     <div class="section">

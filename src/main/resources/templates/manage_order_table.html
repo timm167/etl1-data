@@ -3,11 +3,11 @@
 <head>
   <title>Orders</title>
   <link rel="stylesheet" href="/css/order_table.css">
-  <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
 
 </head>
 <body>
-<div th:replace="navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <h1>Orders</h1>
 

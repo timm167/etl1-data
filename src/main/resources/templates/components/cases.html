@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Cases</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-<div th:replace="~{navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <form th:action="@{/components/cases}" method="get">
   <p>
     <label for="sortBy">Sort By</label>
