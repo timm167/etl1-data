@@ -8,13 +8,20 @@
 <div th:fragment="navbar">
     <nav>
         <form th:action="@{/orders/order_form}" method="get">
-            <button type="submit">📋 Orders</button>
+            <button type="submit">📋 Order</button>
         </form>
         <form th:action="@{/products}" method="get">
             <button type="submit">🖥️ Products</button>
         </form>
         <form th:action="@{/products/create}" method="get">
             <button type="submit">⚙️ Custom PC</button>
+        </form>
+        <form th:if="${userRole} != 'STAFF'" th:action="@{/orders/view}" method="get">
+            <button type="submit">View Orders</button>
+        </form>
+
+        <form th:if="${userRole} == 'STAFF'" th:action="@{/orders/manage}" method="get">
+            <button type="submit">Manage Orders</button>
         </form>
 
         <!-- Basket Button -->
