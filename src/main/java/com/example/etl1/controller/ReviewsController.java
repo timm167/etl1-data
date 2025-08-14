@@ -42,11 +42,12 @@ public class ReviewsController {
         Optional<User> user = userRepository.findById(userId);
 
         String email = user.get().getEmail();
-
+        String name = user.get().getName();
         if (!reviewRepository.existsByProductIdAndEmail(productId, email)) {
             Review r = new Review();
             r.setProductId(productId);
             r.setEmail(email);
+            r.setName(name);
             r.setContent(content);
             reviewRepository.save(r);
         }
