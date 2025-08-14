@@ -2,10 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Customer Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
 <body>
+
+<div th:replace="~{navbar :: navbar}"></div>
+
     <h1>Welcome to your Dashboard</h1>
     <p>Logged in as: <span th:text="${userName}"></span></p>
     <div th:replace="~{fragments/login-logout :: login-logout}"></div>
 </body>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('.dropdown-toggle');
+        const dropdown = document.getElementById('componentsDropdown');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+</script>
 </html>

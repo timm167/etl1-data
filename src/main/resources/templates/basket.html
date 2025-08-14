@@ -3,10 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Basket</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
 <body>
+
+<div th:replace="~{navbar :: navbar}"></div>
+
 <h1>Your Shopping Basket</h1>
 <p>This is the basket page!</p>
 <a href="/products">Back to Products</a>
 </body>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('.dropdown-toggle');
+        const dropdown = document.getElementById('componentsDropdown');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    });
+
+</script>
 </html>
