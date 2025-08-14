@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Navbar</title>
+</head>
+<body>
+<div th:fragment="navbar">
+
+
+<nav>
+    <form th:action="@{/orders/order_form}" method="get">
+        <button type="submit">Order Product</button>
+    </form>
+    <form th:action="@{/products}" method="get">
+        <button type="submit">View Products</button>
+    </form>
+    <form th:action="@{/products/create}" method="get">
+        <button type="submit">Custom PC</button>
+    </form>
+    <form th:action="@{/orders/view}" method="get">
+        <button type="submit">View Orders</button>
+    </form>
+    <form th:if="${userRole} == 'STAFF'" th:action="@{/orders/manage}" method="get">
+        <button type="submit">Manage Orders</button>
+    </form>
+
+    <form th:action="@{/toggle-staff}" method="post">
+        <button type="submit"
+                th:text="${userRole} == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'">
+        </button>
+    </form>
+
+
+    <div style="position: relative;">
+        <button class="dropdown-toggle" type="button">Components ▼</button>
+        <div id="componentsDropdown">
+            <form th:action="@{/components/cases}" method="get">
+                <button type="submit">Cases</button>
+            </form>
+            <form th:action="@{/components/cpus}" method="get">
+                <button type="submit">CPUs</button>
+            </form>
+            <form th:action="@{/components/cpu-coolers}" method="get">
+                <button type="submit">CPU Coolers</button>
+            </form>
+            <form th:action="@{/components/graphics-cards}" method="get">
+                <button type="submit">Graphics Cards</button>
+            </form>
+            <form th:action="@{/components/internal-storage}" method="get">
+                <button type="submit">Internal Storage</button>
+            </form>
+            <form th:action="@{/components/memory}" method="get">
+                <button type="submit">Memory</button>
+            </form>
+            <form th:action="@{/components/motherboards}" method="get">
+                <button type="submit">Motherboards</button>
+            </form>
+            <form th:action="@{/components/power-supplies}" method="get">
+                <button type="submit">Power Supplies</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Only show user info if authenticated -->
+    <div th:if="${isAuthenticated}">
+        <p>Logged in as: <span th:text="${userName}"></span></p>
+    </div>
+    <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+
+</nav>
+
+</div>
+
+</body>
+
+</html>

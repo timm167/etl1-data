@@ -8,6 +8,7 @@
     <!-- CSS Files -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <meta charset="utf-8" />
 </head>
 <body>
 <!-- Include navbar -->
@@ -24,6 +25,10 @@
                 <p th:text="${message}" style="font-size: 1.2rem; color: var(--dark-blue);">
                     Order placed successfully!
                 </p>
+<div th:replace="~{navbar :: navbar}"></div>
+
+<h1>Order Status</h1>
+<p th:text="${message}">Order placed successfully!</p>
 
                 <div style="margin-top: var(--spacing-xl);">
                     <a th:href="@{/orders/order_form}" class="btn btn-primary">

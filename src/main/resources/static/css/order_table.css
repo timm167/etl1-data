@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f2f7;
+}
+
+/* Add spacing below the nav */
+main {
+    padding-top: 80px; /* space between nav and page content */
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 40px; /* space between heading and table */
+}
+
+table {
+    width: 80%;
+    margin: 0 auto; /* center horizontally */
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0; /* Soft border */
+}
+
+thead {
+    background-color: #3182ce; /* Medium blue — distinct from nav */
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #edf2f7; /* Light gray-blue hover */
+}
+
+.status-pending {
+    background-color: #fef3c7; /* Light amber */
+    color: #92400e;            /* Dark amber text */
+    font-weight: bold;
+    text-align: center;         /* Center text */
+}
+
+.status-delivered {
+    background-color: #d1fae5; /* Light green */
+    color: #065f46;            /* Dark green text */
+    font-weight: bold;
+    text-align: center;         /* Center text */
+}
+
