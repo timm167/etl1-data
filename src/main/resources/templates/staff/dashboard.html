@@ -1,11 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Staff Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-<h1>Welcome to your Staff Dashboard</h1>
-<p>Logged in as: <span th:text="${userName}"></span></p>
-<div th:replace="~{fragments/login-logout :: login-logout}"></div>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="section">
+        <div class="card">
+            <div class="card-header">
+                <h1>👨‍💼 Staff Dashboard</h1>
+            </div>
+            <div class="card-body text-center">
+                <div style="font-size: 3rem; margin-bottom: var(--spacing-lg);">🎯</div>
+                <h2>Welcome to your Staff Dashboard</h2>
+                <p style="font-size: 1.1rem; margin-bottom: var(--spacing-lg);">
+                    Logged in as: <strong th:text="${userName}" style="color: var(--primary-orange);">Staff Member</strong>
+                </p>
+
+                <div class="grid grid-3 mt-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3>📊 Analytics</h3>
+                            <p>View sales reports and metrics</p>
+                            <a href="#" class="btn btn-primary">View Reports</a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3>📋 Orders</h3>
+                            <p>Manage customer orders</p>
+                            <a href="/orders/order_form" class="btn btn-primary">Manage Orders</a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3>🛠️ Inventory</h3>
+                            <p>Update product inventory</p>
+                            <a href="/products" class="btn btn-primary">View Products</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

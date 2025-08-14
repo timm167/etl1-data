@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Navbar</title>
+</head>
+<body>
+<div th:fragment="navbar">
+    <nav>
+        <form th:action="@{/orders/order_form}" method="get">
+            <button type="submit">📋 Orders</button>
+        </form>
+        <form th:action="@{/products}" method="get">
+            <button type="submit">🖥️ Products</button>
+        </form>
+        <form th:action="@{/products/create}" method="get">
+            <button type="submit">⚙️ Custom PC</button>
+        </form>
+
+        <!-- Basket Button -->
+        <form th:action="@{/basket}" method="get">
+            <button type="submit" class="basket-button">
+                <span class="basket-icon">🛒</span>
+                <span>Basket</span>
+            </button>
+        </form>
+
+        <!-- Components Dropdown -->
+        <div class="dropdown-container">
+            <button class="dropdown-toggle" type="button" id="componentsToggle">
+                🔧 Components ▼
+            </button>
+            <div id="componentsDropdown" class="dropdown-menu" style="display: none;">
+                <form th:action="@{/components/cases}" method="get">
+                    <button type="submit">💻 Cases</button>
+                </form>
+                <form th:action="@{/components/cpus}" method="get">
+                    <button type="submit">🧠 CPUs</button>
+                </form>
+                <form th:action="@{/components/cpu-coolers}" method="get">
+                    <button type="submit">❄️ CPU Coolers</button>
+                </form>
+                <form th:action="@{/components/graphics-cards}" method="get">
+                    <button type="submit">🎮 Graphics Cards</button>
+                </form>
+                <form th:action="@{/components/internal-storage}" method="get">
+                    <button type="submit">💾 Storage</button>
+                </form>
+                <form th:action="@{/components/memory}" method="get">
+                    <button type="submit">🧮 Memory</button>
+                </form>
+                <form th:action="@{/components/motherboards}" method="get">
+                    <button type="submit">🔌 Motherboards</button>
+                </form>
+                <form th:action="@{/components/power-supplies}" method="get">
+                    <button type="submit">⚡ Power Supplies</button>
+                </form>
+                <form th:action="@{/components/graphics-cards/nvidia}" method="get">
+                    <button type="submit">💚 NVIDIA GPUs</button>
+                </form>
+                <form th:action="@{/components/graphics-cards/amd}" method="get">
+                    <button type="submit">❤️ AMD GPUs</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- User section -->
+        <div class="user-section">
+            <div th:if="${isAuthenticated}">
+                <span>Welcome, <strong th:text="${userName}">User</strong></span>
+            </div>
+            <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+        </div>
+    </nav>
+
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+
+        setTimeout(function() {
+            console.log('Navbar dropdown script loaded');
+
+            var toggleButton = document.getElementById('componentsToggle');
+            var dropdown = document.getElementById('componentsDropdown');
+
+            if (toggleButton && dropdown) {
+                console.log('Dropdown elements found');
+
+
+                toggleButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var isVisible = dropdown.style.display === 'block';
+                    dropdown.style.display = isVisible ? 'none' : 'block';
+
+                    console.log('Dropdown toggled:', !isVisible);
+                });
+
+
+                document.addEventListener('click', function(event) {
+                    if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+
+
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        dropdown.style.display = 'none';
+                    }
+                });
+
+            } else {
+                console.error('Dropdown elements not found');
+            }
+        }, 100);
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>
