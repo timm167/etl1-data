@@ -6,37 +6,60 @@
 </head>
 <body>
 <form th:action="@{/components/cpus}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Core Clock</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
+    <p>
+        <label for="sortBy">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+            <option>Name</option>
+            <option>Price</option>
+            <option>Core Clock</option>
+        </select>
+        <select th:value="${order}" name="order" id="order" size="1">
+            <option>Ascending</option>
+            <option>Descending</option>
+        </select>
+    </p>
+    <p>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+            <option>(No filter)</option>
+            <option>Price</option>
+            <option value="CPU clock speed">Core clock speed</option>
+            <option value="CPU brand">Brand</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+            <option class="numberFilterOption">at least</option>
+            <option class="numberFilterOption">at most</option>
+            <option class="brandFilterOption">Intel</option>
+            <option class="brandFilterOption">AMD</option>
+        </select>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+        <label id="cpuClockFilterLabel" class="filterLabel" for="numberFilter">GHz</label>
+    </p>
+    <p>
+        <button type="submit">Go</button>
+    </p>
 </form>
 <ul>
-  <li th:each="cpu : ${cpus}" th:if="${cpu.price > 0.0}">
-    <p th:text="'Name: ' + ${cpu.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(cpu.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Cores: ' + ${cpu.core_count}"></p>
-    <p th:text="'Clock Speed: ' + ${cpu.coreClock} + 'GHz'"></p>
-    <p>Boosted Clock Speed:
-      <span th:text="${cpu.boost_clock > 0.0} ? ${cpu.boost_clock} + 'GHz' : 'N/A'"></span>
-    </p>
-    <p th:text="'Microarchitecture: ' + ${cpu.microarchitecture}"></p>
-    <p th:text="'TDP: ' + ${cpu.tdp} + 'W'"></p>
-    <p>Integrated Graphics:
-      <span th:text="${cpu.graphics != null} ? ${cpu.graphics} : 'None'"></span>
-    </p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${cpu.id}" name="cpuId">
-      <button>Select</button>
-    </form>
-  </li>
+    <li th:each="cpu : ${cpus}" th:if="${cpu.price > 0.0}">
+        <p th:text="'Name: ' + ${cpu.name}"></p>
+        <p th:text="'Price: £' + ${#numbers.formatDecimal(cpu.price, 0, 'COMMA', 2, 'POINT')}"></p>
+        <p th:text="'Cores: ' + ${cpu.core_count}"></p>
+        <p th:text="'Clock Speed: ' + ${cpu.coreClock} + 'GHz'"></p>
+        <p>Boosted Clock Speed:
+            <span th:text="${cpu.boost_clock > 0.0} ? ${cpu.boost_clock} + 'GHz' : 'N/A'"></span>
+        </p>
+        <p th:text="'Microarchitecture: ' + ${cpu.microarchitecture}"></p>
+        <p th:text="'TDP: ' + ${cpu.tdp} + 'W'"></p>
+        <p>Integrated Graphics:
+            <span th:text="${cpu.graphics != null} ? ${cpu.graphics} : 'None'"></span>
+        </p>
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
+            <input type="hidden" th:value="${cpu.id}" name="cpuId">
+            <button>Select</button>
+        </form>
+    </li>
 </ul>
 </body>
+<script th:src="@{/js/filterDisplay.js}"></script>
 </html>
