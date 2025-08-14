@@ -3,19 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Motherboards</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
 <body>
+<div th:replace="~{navbar :: navbar}"></div>
 <form th:action="@{/components/motherboards}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
+  <p>
+    <label for="sortBy">Sort By</label>
+    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
+      <option>Name</option>
+      <option>Price</option>
+    </select>
+    <select th:value="${order}" name="order" id="order" size="1">
+      <option>Ascending</option>
+      <option>Descending</option>
+    </select>
+  </p>
+  <p>
+    <label for="filterBy">Filter</label>
+    <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+      <option>(No filter)</option>
+      <option>Price</option>
+    </select>
+    <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+      <option>at least</option>
+      <option>at most</option>
+    </select>
+    <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+    <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+  </p>
+  <p>
+    <button type="submit">Go</button>
+  </p>
 </form>
 <ul>
   <li th:each="motherboard : ${motherboards}" th:if="${motherboard.price > 0.0}">
@@ -33,4 +52,5 @@
   </li>
 </ul>
 </body>
+<script th:src="@{/js/filterDisplay.js}"></script>
 </html>

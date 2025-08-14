@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductsController {
@@ -24,13 +28,16 @@ public class ProductsController {
     ReviewRepository reviewRepository;
 
     @GetMapping("/products")
-    public ModelAndView viewProducts(String sortBy, String order) {
+    public ModelAndView viewProducts(String sortBy, String order, String filterBy, String filterOp, Double numberFilter) {
         ModelAndView modelAndView = new ModelAndView("/products");
 
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
-            modelAndView.addObject("products", productRepository.findAll(sort));
+            List<Product> sortedProducts = productRepository.findAll(sort);
+            List<Product> filteredProducts = getFilteredProducts(sortedProducts, filterBy, filterOp, numberFilter);
+
+            modelAndView.addObject("products", filteredProducts);
         } else {
             modelAndView.addObject("products", productRepository.findAll());
         }
@@ -102,10 +109,38 @@ public class ProductsController {
 
         return "redirect:/";
     }
-  
+
+    private List<Product> getFilteredProducts(List<Product> products, String filterBy, String filterOp, Double numberFilter) {
+        Predicate<Double> compareForFilter;
+
+        if (filterOp.equals("at least")) {
+            compareForFilter = value -> value >= numberFilter;
+        } else {
+            compareForFilter = value -> value <= numberFilter;
+        }
+
+        Predicate<Product> filterFunction;
+
+        switch (filterBy) {
+            case "Price":
+                filterFunction = product -> compareForFilter.test(product.getPrice().doubleValue());
+                break;
+            case "CPU clock speed":
+                filterFunction = product -> compareForFilter.test(product.getCpu().getCoreClock());
+                break;
+            case "GPU clock speed":
+                filterFunction = product -> compareForFilter.test((double) product.getGraphicsCard().getCoreClock());
+                break;
+            default:
+                return products;
+        }
+
+        return products.stream().filter(filterFunction).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     @GetMapping("/basket")
-      public ModelAndView viewBasket() {
-          ModelAndView modelAndView = new ModelAndView("/basket");
-          return modelAndView;
+    public ModelAndView viewBasket() {
+        ModelAndView modelAndView = new ModelAndView("/basket");
+        return modelAndView;
     }
 }

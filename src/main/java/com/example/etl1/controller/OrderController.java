@@ -1,7 +1,7 @@
 package com.example.etl1.controller;
 
 import com.example.etl1.model.Product;
-import com.example.etl1.model.logistics.DistributionChannel;
+
 import com.example.etl1.repository.logistics.DistributionChannelRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
 import com.example.etl1.service.OrderService;
@@ -53,7 +53,7 @@ public class OrderController {
 
     @GetMapping("/manage")
     public ModelAndView manageOrders(@ModelAttribute("userRole") String role,
-                                   @ModelAttribute(name = "userId", binding = false) Long userId) {
+                                     @ModelAttribute(name = "userId", binding = false) Long userId) {
 
         ModelAndView mav = new ModelAndView("order_channel_table");
 
