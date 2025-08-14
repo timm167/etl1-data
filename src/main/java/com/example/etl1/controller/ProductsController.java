@@ -5,6 +5,7 @@ import com.example.etl1.model.Product;
 import com.example.etl1.repository.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,15 @@ import java.util.stream.Collectors;
 public class ProductsController {
 
     @Autowired
-    ProductRepository productRepository;
+    ProductRepository productRepository;  // Now works with model.Product
+
+    @Autowired
+    ReviewRepository reviewRepository;
 
     @GetMapping("/products")
     public ModelAndView viewProducts(String sortBy, String order, String filterBy, String filterOp, Double numberFilter) {
         ModelAndView modelAndView = new ModelAndView("/products");
+
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
@@ -36,6 +41,24 @@ public class ProductsController {
         } else {
             modelAndView.addObject("products", productRepository.findAll());
         }
+
+
+        Sort reviewSort = Sort.by(Sort.Direction.DESC, "createdAt");
+        java.util.Map<Integer, java.util.List<com.example.etl1.model.Review>> reviewsByProductId = new java.util.HashMap<>();
+
+        Iterable<Product> productsForReviews;
+
+        if (sort != null) {
+            productsForReviews = productRepository.findAll(sort);
+        } else {
+            productsForReviews = productRepository.findAll();
+        }
+
+        for (Product p : productsForReviews) {
+            reviewsByProductId.put(p.getId(), reviewRepository.findByProductId(p.getId(), reviewSort));
+        }
+        modelAndView.addObject("reviewsByProductId", reviewsByProductId);
+
 
         return modelAndView;
     }
@@ -113,5 +136,11 @@ public class ProductsController {
         }
 
         return products.stream().filter(filterFunction).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @GetMapping("/basket")
+    public ModelAndView viewBasket() {
+        ModelAndView modelAndView = new ModelAndView("/basket");
+        return modelAndView;
     }
 }
