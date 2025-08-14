@@ -29,12 +29,8 @@ public class OrderController {
     @Autowired
     OrderRepository orderRepository;
 
-    private final ProductService productService;
-    private final OrderService orderService;
-    private ProductService productService;
-
-    @Autowired
     private OrderService orderService;
+    private ProductService productService;
 
     @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
