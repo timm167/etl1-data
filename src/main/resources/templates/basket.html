@@ -1,35 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Basket</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Basket - PC Store</title>
+
+    <!-- CSS paths -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/basket.css}">
 </head>
-<body>
+<body class="basket-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<div class="basket-container">
+    <!-- Back Button -->
+    <a href="/products" class="back-button">
+        ← Back to Products
+    </a>
 
-<h1>Your Shopping Basket</h1>
-<p>This is the basket page!</p>
-<a href="/products">Back to Products</a>
+    <!-- Basket Header -->
+    <div class="basket-header">
+        <h1>🛒 Your Shopping Basket</h1>
+        <p>Review your selected items and proceed to checkout when ready</p>
+
+        <!-- Stats -->
+        <div class="basket-stats">
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">£0.00</div>
+                <div class="stat-label">Subtotal</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Basket Content -->
+    <div class="basket-main">
+        <!-- Basket Items -->
+        <div class="basket-items">
+            <!-- Empty Basket State -->
+            <div class="empty-basket">
+                <div class="empty-basket-icon">🛒</div>
+                <h3>Your basket is empty</h3>
+                <p>Discover our amazing selection of PC components, pre-built systems, and accessories. Start building your dream setup today!</p>
+                <a href="/products" class="continue-shopping">
+                    🛍️ Start Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
-
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
-</script>
 </html>

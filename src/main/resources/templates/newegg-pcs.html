@@ -1,62 +1,91 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
-<head lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8">
-    <title>Newegg Price Comparison</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newegg Price Comparison - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+
+    <style>
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-lg);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .price-table th {
+            background: linear-gradient(45deg, var(--dark-blue), #3A5A6D);
+            color: var(--white);
+            padding: var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .price-table td {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .price-table tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        .price-cell {
+            color: var(--primary-orange);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="section">
+        <h1>Newegg Pre-built PC Prices</h1>
+        <p>Compare our competitive pricing with Newegg's latest offerings</p>
 
-    <h1>Newegg Pre-built PC Prices</h1>
-    <table>
-      <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>GPU</th>
-              <th>CPU</th>
-              <th>Memory</th>
-              <th>SSD</th>
-              <th>Model #</th>
-              <th>Origin</th>
-            <th>Accurate as of</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr th:each="pc : ${pcs}">
-            <td th:text="${pc.name}">Name</td>
-            <td th:text="'£' + ${pc.price}">Price</td>
-            <td th:text="${pc.gpu}"></td>
-              <td th:text="${pc.cpu}"></td>
-              <td th:text="${pc.memory}"></td>
-              <td th:text="${pc.ssd}"></td>
-              <td th:text="${pc.modelNumber}"></td>
-              <td th:text="${pc.origin}"></td>
-              <td th:text="${#temporals.format(pc.scrapeDate, 'yyyy-MM-dd - HH:mm:ss')}">Accurate as of</td>
-          </tr>
-      </tbody>
-    </table>
-
+        <div class="card">
+            <div class="card-body">
+                <table class="price-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>GPU</th>
+                        <th>CPU</th>
+                        <th>Memory</th>
+                        <th>SSD</th>
+                        <th>Model #</th>
+                        <th>Origin</th>
+                        <th>Accurate as of</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pc : ${pcs}">
+                        <td th:text="${pc.name}">Name</td>
+                        <td class="price-cell" th:text="'£' + ${pc.price}">Price</td>
+                        <td th:text="${pc.gpu}"></td>
+                        <td th:text="${pc.cpu}"></td>
+                        <td th:text="${pc.memory}"></td>
+                        <td th:text="${pc.ssd}"></td>
+                        <td th:text="${pc.modelNumber}"></td>
+                        <td th:text="${pc.origin}"></td>
+                        <td th:text="${#temporals.format(pc.scrapeDate, 'yyyy-MM-dd - HH:mm:ss')}">Accurate as of</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
-
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
-</script>
 </html>
