@@ -44,6 +44,33 @@
         <p th:text="'Memory: ' + (${product.memory != null ? product.memory.name : 'N/A'})"></p>
         <p th:text="'Motherboard: ' + (${product.motherboard != null ? product.motherboard.name : 'N/A'})"></p>
         <p th:text="'Power Supply: ' + (${product.powerSupply != null ? product.powerSupply.name : 'N/A'})"></p>
+
+        <!-- Reviews section -->
+        <div class="reviews">
+            <h3>Reviews</h3>
+
+            <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
+            <div th:if="${reviewsByProductId != null}">
+                <ul>
+                    <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
+                    <li th:each="r : ${reviewsByProductId[product.id]}">
+                        <strong th:text="${r.email}">email</strong>:
+                        <span th:text="${r.content}">content</span>
+                        <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                    </li>
+                </ul>
+            </div>
+
+            <h4>Add a review</h4>
+            <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
+                <label>
+                    Review
+                    <textarea name="content" rows="3" cols="40" required></textarea>
+                </label>
+                <br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </li>
 </ul>
 </body>

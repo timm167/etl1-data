@@ -20,9 +20,13 @@ public class ProductsController {
     @Autowired
     ProductRepository productRepository;  // Now works with model.Product
 
+    @Autowired
+    ReviewRepository reviewRepository;
+
     @GetMapping("/products")
     public ModelAndView viewProducts(String sortBy, String order) {
         ModelAndView modelAndView = new ModelAndView("/products");
+
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
@@ -30,6 +34,24 @@ public class ProductsController {
         } else {
             modelAndView.addObject("products", productRepository.findAll());
         }
+
+
+        Sort reviewSort = Sort.by(Sort.Direction.DESC, "createdAt");
+        java.util.Map<Integer, java.util.List<com.example.etl1.model.Review>> reviewsByProductId = new java.util.HashMap<>();
+
+        Iterable<Product> productsForReviews;
+
+        if (sort != null) {
+            productsForReviews = productRepository.findAll(sort);
+        } else {
+            productsForReviews = productRepository.findAll();
+        }
+
+        for (Product p : productsForReviews) {
+            reviewsByProductId.put(p.getId(), reviewRepository.findByProductId(p.getId(), reviewSort));
+        }
+        modelAndView.addObject("reviewsByProductId", reviewsByProductId);
+
 
         return modelAndView;
     }
