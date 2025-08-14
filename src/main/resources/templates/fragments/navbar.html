@@ -7,6 +7,9 @@
 <body>
 <div th:fragment="navbar">
     <nav>
+        <a href="/" class="navbar-logo-link">
+            <img th:src="@{/images/logo.png}" alt="Home" class="navbar-logo">
+        </a>
         <form th:action="@{/orders/order_form}" method="get">
             <button type="submit">📋 Order</button>
         </form>
