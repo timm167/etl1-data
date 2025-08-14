@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Orders</title>
+  <link rel="stylesheet" href="/css/order_table.css">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+
+</head>
+<body>
+<div th:replace="navbar :: navbar"></div>
+
+<h1>Order Channels</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Order ID</th>
+    <th>Product</th>
+    <th>Order Status</th>
+    <th>Warehouse</th>
+    <th>Distribution Facility</th>
+    <th>Start Shipper</th>
+    <th>End Shipper</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="order : ${orders}">
+    <td th:text="${order.id}">1</td>
+    <td th:text="${order.product.name}">Product Name</td>
+    <td th:text="${order.distributionChannel.warehouse.locationName}">Warehouse</td>
+    <td th:text="${order.distributionChannel.distributionFacility.locationName}">Facility</td>
+    <td>
+      <a th:href="@{/shipper/{id}(id=${order.distributionChannel.startShipper.id})}"
+         th:text="${order.distributionChannel.startShipper.facility_name}">
+        Start Shipper
+      </a>
+    </td>
+    <td>
+      <a th:href="@{/shipper/{id}(id=${order.distributionChannel.endShipper.id})}"
+         th:text="${order.distributionChannel.endShipper.facility_name}">
+        End Shipper
+      </a>
+    </td>
+    <td th:text="${order.isOpen} ? 'Pending' : 'Delivered'"
+        th:classappend="${order.isOpen} ? 'status-pending' : 'status-delivered'">
+    </td>
+
+
+  </tr>
+  </tbody>
+</table>
+
+</body>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.querySelector('.dropdown-toggle');
+    const dropdown = document.getElementById('componentsDropdown');
+
+    toggleButton.addEventListener('click', () => {
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  });
+
+</script>
+</html>

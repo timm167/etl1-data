@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <title>Order Success</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+
 </head>
 <body>
-
 <div th:replace="~{navbar :: navbar}"></div>
 
 <h1>Order Status</h1>
@@ -13,6 +14,7 @@
 
 <p><a th:href="@{/create_order}" onclick="history.back(); return false;">Place another order</a></p>
 </body>
+
 <script>
 
     document.addEventListener('DOMContentLoaded', () => {
