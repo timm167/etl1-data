@@ -185,3 +185,16 @@ nav .dropdown-toggle:hover {
         min-width: 200px;
     }
 }
+
+/* ================================
+   Logo
+   ================================ */
+
+.navbar-logo {
+    height: 60px;
+    width: auto;
+}
+.navbar-logo-link {
+    display: flex;
+    align-items: center;
+}
