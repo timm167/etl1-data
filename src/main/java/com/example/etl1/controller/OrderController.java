@@ -1,40 +1,32 @@
 package com.example.etl1.controller;
 
 import com.example.etl1.model.Product;
-import com.example.etl1.model.users.User;
+import com.example.etl1.model.logistics.DistributionChannel;
+import com.example.etl1.repository.logistics.DistributionChannelRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
-import com.example.etl1.repository.users.UserRepository;
 import com.example.etl1.service.OrderService;
 import com.example.etl1.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.stereotype.Controller;
-import com.example.etl1.service.ProductService;
-import com.example.etl1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
-
-    @Autowired
-    UserRepository UserRepository;
 
     @Autowired
     OrderRepository orderRepository;
 
-    private final ProductService productService;
-    private final OrderService orderService;
-    private ProductService productService;
+    @Autowired
+    ProductService productService;
 
     @Autowired
-    private OrderService orderService;
+    OrderService orderService;
+
+    @Autowired
+    DistributionChannelRepository distributionChannelRepository;
 
     @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
@@ -63,15 +55,15 @@ public class OrderController {
     public ModelAndView manageOrders(@ModelAttribute("userRole") String role,
                                    @ModelAttribute(name = "userId", binding = false) Long userId) {
 
-        ModelAndView orders_mav = new ModelAndView("manage_order_table");
+        ModelAndView mav = new ModelAndView("order_channel_table");
 
         if ("STAFF".equals(role)) {
-            orders_mav.addObject("orders", orderRepository.findAll());
-        } else if ("CUSTOMER".equals(role)) {
-            orders_mav.addObject("orders", orderRepository.findByUserId(userId.intValue()));
+            mav.addObject("orders", orderRepository.findAllWithDistribution());
+        } else {
+            return mav;
         }
 
-        return orders_mav;
+        return mav;
     }
 
     @PostMapping("/create_order")
