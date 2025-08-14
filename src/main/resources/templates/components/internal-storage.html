@@ -23,31 +23,33 @@
     <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
       <option>(No filter)</option>
       <option>Price</option>
+      <option>Capacity</option>
     </select>
     <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
       <option>at least</option>
       <option>at most</option>
     </select>
-    <label id="priceFilterLabel" for="numberFilter">£</label>
+    <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
     <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+    <label id="storageCapacityFilterLabel" class="filterLabel" for="numberFilter">GB</label>
   </p>
   <p>
     <button type="submit">Go</button>
   </p>
 </form>
 <ul>
-  <li th:each="internal_storage : ${internal_storages}" th:if="${internal_storage.price > 0.0}">
-    <p th:text="'Name: ' + ${internal_storage.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(internal_storage.price, 0, 'COMMA', 2, 'POINT')}"></p>
+  <li th:each="storage : ${internal_storage}" th:if="${storage.price > 0.0}">
+    <p th:text="'Name: ' + ${storage.name}"></p>
+    <p th:text="'Price: £' + ${#numbers.formatDecimal(storage.price, 0, 'COMMA', 2, 'POINT')}"></p>
 
-    <p>Capacity: <span th:text=" ${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'"></span></p>
+    <p>Capacity: <span th:text=" ${storage.capacity/1000 < 1} ? ${storage.capacity} + 'GB' : ${storage.capacity/1000} + 'TB'"></span></p>
 
-    <p>Price per GB: <span th:text="${internal_storage.price_per_gb > 0.0} ? '£' + ${internal_storage.price_per_gb} : 'Unavailable'"></span></p>
-    <p th:text="'Type: ' + ${internal_storage.type}"></p>
-    <p>Cache: <span th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"></span></p>
-    <p th:text="'Form Factor: ' + ${internal_storage.form_factor}"></p>
+    <p>Price per GB: <span th:text="${storage.price_per_gb > 0.0} ? '£' + ${storage.price_per_gb} : 'Unavailable'"></span></p>
+    <p th:text="'Type: ' + ${storage.type}"></p>
+    <p>Cache: <span th:text="${storage.cache > 0} ? ${storage.cache} + 'MB' : 'Unavailable'"></span></p>
+    <p th:text="'Form Factor: ' + ${storage.form_factor}"></p>
     <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${internal_storage.id}" name="internalStorageId">
+      <input type="hidden" th:value="${storage.id}" name="internalStorageId">
       <button>Select</button>
     </form>
   </li>

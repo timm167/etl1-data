@@ -47,8 +47,9 @@ public class ComponentsController {
     PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/components/{type}")
-    public ModelAndView viewCases(@PathVariable(value="type") String type, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
+    public ModelAndView viewComponents(@PathVariable(value="type") String type, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
         ModelAndView modelAndView = new ModelAndView("/components/" + type);
+
         ComponentRepository<? extends Component> componentRepository = switch (type) {
             case "case" -> caseRepository;
             case "cpus" -> cpuRepository;
@@ -62,38 +63,10 @@ public class ComponentsController {
         };
 
         if (componentRepository != null) {
-            return getModelAndViewForComponent(modelAndView, componentRepository, type, sortBy, order, session, filterBy, filterOp, numberFilter);
+            return getModelAndViewForComponent(modelAndView, componentRepository, type.replace("-", "_"), sortBy, order, session, filterBy, filterOp, numberFilter);
         } else {
             return new ModelAndView(new RedirectView("/"));
         }
-    }
-
-    @GetMapping("/components/graphics-cards/nvidia")
-    public ModelAndView viewNvidiaGraphicsCards() {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("GeForce"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/graphics-cards/amd")
-    public ModelAndView viewAmdGraphicsCards() {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("Radeon"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus/intel")
-    public ModelAndView viewIntelCpus() {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("Intel"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus/amd")
-    public ModelAndView viewAmdCpus() {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("AMD"));
-        return modelAndView;
     }
 
     @PostMapping("/components/add-to-product")
@@ -143,7 +116,7 @@ public class ComponentsController {
             List<? extends Component> sortedComponents = componentRepository.findAll(sort);
             modelAndView.addObject(componentAttributeName, getFilteredComponents(sortedComponents, filterBy, filterOp, numberFilter));
         } else {
-            modelAndView.addObject(componentAttributeName, cpuRepository.findAll());
+            modelAndView.addObject(componentAttributeName, componentRepository.findAll());
         }
 
         modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
@@ -172,6 +145,19 @@ public class ComponentsController {
             case "GPU clock speed":
                 filterFunction = component -> compareForFilter.test((double) ((GraphicsCard) component).getCoreClock());
                 break;
+            case "Volume":
+                filterFunction = component -> compareForFilter.test(((Case) component).getExternalVolume());
+                break;
+            case "Wattage":
+                filterFunction = component -> compareForFilter.test((double) ((PowerSupply) component).getWattage());
+                break;
+            case "Memory speed":
+                filterFunction = component -> compareForFilter.test(Double.valueOf(((Memory) component).getSpeed().getLast().getSpeed()));
+                break;
+            case "CPU brand":
+                return cpuRepository.findByNameContaining(filterOp);
+            case "GPU brand":
+                return graphicsCardRepository.findByChipsetContaining((filterOp.equals("NVIDIA")) ? "GeForce" : "Radeon");
             default:
                 return components;
         }

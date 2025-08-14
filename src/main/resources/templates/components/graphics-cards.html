@@ -24,14 +24,17 @@
       <option>(No filter)</option>
       <option>Price</option>
       <option value="GPU clock speed">Core clock speed</option>
+      <option value="GPU brand">Brand</option>
     </select>
     <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
-      <option>at least</option>
-      <option>at most</option>
+      <option class="numberFilterOption">at least</option>
+      <option class="numberFilterOption">at most</option>
+      <option class="brandFilterOption">NVIDIA</option>
+      <option class="brandFilterOption">AMD</option>
     </select>
-    <label id="priceFilterLabel" for="numberFilter">£</label>
+    <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
     <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-    <label id="gpuClockFilterLabel" for="numberFilter">MHz</label>
+    <label id="gpuClockFilterLabel" class="filterLabel" for="numberFilter">MHz</label>
   </p>
   <p>
     <button type="submit">Go</button>
