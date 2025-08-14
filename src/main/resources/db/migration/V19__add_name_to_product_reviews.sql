@@ -1,2 +1,0 @@
-ALTER TABLE product_reviews ADD COLUMN name TEXT NOT NULL DEFAULT '';
-
