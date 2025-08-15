@@ -64,12 +64,12 @@
   </div>
 
   <!-- Components Grid -->
-  <div class="components-grid" th:if="${internal_storages != null and !internal_storages.empty}">
-    <div th:each="internal_storage : ${internal_storages}" th:if="${internal_storage.price > 0.0}" class="component-card">
+  <div class="components-grid" th:if="${internal_storage != null and !internal_storage.empty}">
+    <div th:each="storage : ${internal_storage}" th:if="${storage.price > 0.0}" class="component-card">
       <!-- Card Header -->
       <div class="component-card-header">
-        <h3 class="component-name" th:text="${internal_storage.name}">Storage Name</h3>
-        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(internal_storage.price, 0, 2)}">£0.00</p>
+        <h3 class="component-name" th:text="${storage.name}">Storage Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(storage.price, 0, 2)}">£0.00</p>
       </div>
 
       <!-- Card Body -->
@@ -78,31 +78,31 @@
           <div class="spec-item">
             <span class="spec-label">Capacity:</span>
             <span class="storage-capacity"
-                  th:text="${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'">
+                  th:text="${storage.capacity/1000 < 1} ? ${storage.capacity} + 'GB' : ${storage.capacity/1000} + 'TB'">
                                 0GB
                             </span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Type:</span>
-            <span class="spec-value highlight" th:text="${internal_storage.type}">N/A</span>
+            <span class="spec-value highlight" th:text="${storage.type}">N/A</span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Form Factor:</span>
-            <span class="spec-value" th:text="${internal_storage.form_factor}">N/A</span>
+            <span class="spec-value" th:text="${storage.form_factor}">N/A</span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Cache:</span>
             <span class="spec-value"
-                  th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"
-                  th:class="${internal_storage.cache > 0} ? 'spec-value' : 'spec-value unavailable'">
+                  th:text="${storage.cache > 0} ? ${storage.cache} + 'MB' : 'Unavailable'"
+                  th:class="${storage.cache > 0} ? 'spec-value' : 'spec-value unavailable'">
                                 Unavailable
                             </span>
           </div>
           <div class="spec-item">
             <span class="spec-label">Price per GB:</span>
             <span class="spec-value"
-                  th:text="${internal_storage.price_per_gb > 0.0} ? '£' + ${internal_storage.price_per_gb} : 'Unavailable'"
-                  th:class="${internal_storage.price_per_gb > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                  th:text="${storage.price_per_gb > 0.0} ? '£' + ${storage.price_per_gb} : 'Unavailable'"
+                  th:class="${storage.price_per_gb > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
                                 Unavailable
                             </span>
           </div>
@@ -112,7 +112,7 @@
       <!-- Card Footer -->
       <div class="component-card-footer" th:if="${componentIds != null}">
         <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
-          <input type="hidden" th:value="${internal_storage.id}" name="internalStorageId">
+          <input type="hidden" th:value="${storage.id}" name="internalStorageId">
           <button type="submit" class="select-button">
             ✓ Select This Storage
           </button>
@@ -122,7 +122,7 @@
   </div>
 
   <!-- Empty State -->
-  <div th:if="${internal_storages == null or internal_storages.empty}" class="empty-components">
+  <div th:if="${internal_storage == null or internal_storage.empty}" class="empty-components">
     <div class="empty-components-icon">💾</div>
     <h3>No Storage Devices Found</h3>
     <p>Sorry, we couldn't find any storage devices matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
