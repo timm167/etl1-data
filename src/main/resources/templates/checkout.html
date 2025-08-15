@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="section">
+        <h1>Checkout</h1>
+        <p>Review your order and enter delivery details to complete your purchase</p>
+
+        <!-- Basket Items -->
+        <div class="card" style="max-width: 600px; margin: 0 auto; margin-bottom: var(--spacing-lg);">
+            <div class="card-header">
+                <h3>Your Basket</h3>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li th:each="item : ${basket.items}">
+                        <strong th:text="${item.product.name}">Product Name</strong>
+                        × <span th:text="${item.quantity}">1</span>
+                        — £<span th:text="${item.totalPrice}">0.00</span>
+                    </li>
+                </ul>
+                <p style="font-weight: bold; margin-top: var(--spacing-md);">
+                    Total: £<span th:text="${totalPrice}">0.00</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <div class="card-header">
+                <h3>Delivery Information</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/orders/create_from_basket}" method="post">
+                    <div class="form-group">
+                        <label for="address" class="form-label">Delivery Address:</label>
+                        <input type="text" id="address" name="address" class="form-input" required
+                               placeholder="Enter your full delivery address">
+                    </div>
+
+                    <div style="margin-top: var(--spacing-xl);">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                            ✅ Confirm Checkout
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

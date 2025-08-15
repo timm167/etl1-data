@@ -1,7 +1,7 @@
 package com.example.etl1.repository;
 
-import com.example.etl1.entity.Basket;
-import com.example.etl1.entity.BasketItem;
+import com.example.etl1.model.Basket;
+import com.example.etl1.model.BasketItem;
 import com.example.etl1.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

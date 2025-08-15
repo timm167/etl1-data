@@ -90,7 +90,7 @@ public class ProductsController {
     }
 
     @PostMapping("/products")
-    public String postCustomPc(HttpSession session, String productName) {
+    public ModelAndView postCustomPc(HttpSession session, String productName) {
         Product customPc = (Product) session.getAttribute("customPc");
 
         BigDecimal cost = BigDecimal.ZERO;
@@ -114,7 +114,10 @@ public class ProductsController {
         session.setAttribute("customPc", null);
         session.setAttribute("componentIds", null);
 
-        return "redirect:/";
+        ModelAndView mav = new ModelAndView("customPcSuccess");
+        mav.addObject("productId", customPc.getId());
+        mav.addObject("productName", customPc.getName());
+        return mav;
     }
 
     // BASKET FUNCTIONALITY
