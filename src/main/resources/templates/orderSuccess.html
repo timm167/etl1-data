@@ -8,7 +8,6 @@
     <!-- CSS Files -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
-    <meta charset="utf-8" />
 </head>
 <body>
 <!-- Include navbar -->
@@ -16,26 +15,32 @@
 
 <div class="container">
     <div class="section text-center">
-        <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
             <div class="card-body">
-                <div style="font-size: 4rem; color: var(--success-green); margin-bottom: var(--spacing-lg);">
+                <div style="font-size: 5rem; color: var(--success-green); margin-bottom: var(--spacing-lg);">
                     ✅
                 </div>
-                <h1>Order Status</h1>
-                <p th:text="${message}" style="font-size: 1.2rem; color: var(--dark-blue);">
+                <h1 style="color: var(--dark-blue); margin-bottom: var(--spacing-md);">Order Confirmed!</h1>
+                <p th:text="${message}" style="font-size: var(--font-size-lg); color: var(--text-gray); margin-bottom: var(--spacing-xl);">
                     Order placed successfully!
                 </p>
-<div th:replace="~{navbar :: navbar}"></div>
 
-<h1>Order Status</h1>
-<p th:text="${message}">Order placed successfully!</p>
+                <div style="background: var(--light-gray); padding: var(--spacing-lg); border-radius: var(--radius-md); margin-bottom: var(--spacing-xl);">
+                    <h3 style="color: var(--dark-blue); margin-bottom: var(--spacing-sm);">What's Next?</h3>
+                    <p style="color: var(--text-gray); margin: 0;">
+                        🚚 Your order is being processed and you'll receive a confirmation email shortly.
+                    </p>
+                </div>
 
-                <div style="margin-top: var(--spacing-xl);">
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md); max-width: 300px; margin: 0 auto;">
                     <a th:href="@{/orders/order_form}" class="btn btn-primary">
                         📋 Place Another Order
                     </a>
-                    <a href="/products" class="btn btn-secondary" style="margin-left: var(--spacing-sm);">
-                        🖥️ View Products
+                    <a href="/products" class="btn btn-secondary">
+                        🖥️ Continue Shopping
+                    </a>
+                    <a href="/" class="btn btn-outline">
+                        🏠 Back to Home
                     </a>
                 </div>
             </div>
