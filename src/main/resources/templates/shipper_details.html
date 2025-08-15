@@ -1,66 +1,127 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-  <link rel="stylesheet" href="/css/order_table.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shipper Details - PC Store</title>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
   <link rel="stylesheet" th:href="@{/css/navbar.css}">
   <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<h1 th:text="${shipper.facility_name}">Shipper Name</h1>
 
-<table>
-  <tr>
-    <th>Phone</th>
-    <td th:text="${shipper.contact_phone}">N/A</td>
-  </tr>
-  <tr>
-    <th>Website</th>
-    <td>
-      <a th:href="${shipper.contact_url}" th:text="${shipper.contact_url}">Website</a>
-    </td>
-  </tr>
-  <tr>
-    <th>Address</th>
-    <td th:text="${shipper.formatted_address}">Address</td>
-  </tr>
-  <tr>
-    <th>Coordinates</th>
-    <td>
-      <span th:text="${shipper.lat}">Lat</span>, <span th:text="${shipper.lon}">Lon</span>
-    </td>
-  </tr>
-  <tr>
-    <th>Operating Hours</th>
-    <td th:text="${shipper.operating_hours}">Hours</td>
-  </tr>
-  <tr>
-    <th>Category</th>
-    <td th:text="${shipper.place_category}">Category</td>
-  </tr>
-</table>
+<div class="container">
+  <div class="section">
+    <!-- Back Button -->
+    <a href="javascript:history.back()" class="btn btn-secondary" style="margin-bottom: var(--spacing-lg);">
+      ← Back
+    </a>
 
-</body>
+    <div class="card">
+      <div class="card-header">
+        <h1 th:text="${shipper.facility_name}" style="margin: 0; display: flex; align-items: center; gap: var(--spacing-sm);">
+          🚚 Shipper Details
+        </h1>
+      </div>
+      <div class="card-body">
+        <div class="grid grid-2" style="gap: var(--spacing-xl);">
+          <!-- Contact Information -->
+          <div>
+            <h3 style="color: var(--primary-orange); margin-bottom: var(--spacing-md); border-bottom: 2px solid var(--primary-orange); padding-bottom: var(--spacing-xs);">
+              📞 Contact Information
+            </h3>
+            <div class="spec-item">
+              <span class="spec-label">Phone:</span>
+              <span class="spec-value" th:text="${shipper.contact_phone}">N/A</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Website:</span>
+              <span class="spec-value">
+                                    <a th:href="${shipper.contact_url}" th:text="${shipper.contact_url}" target="_blank"
+                                       style="color: var(--primary-orange); text-decoration: none;">Website</a>
+                                </span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Category:</span>
+              <span class="spec-value" th:text="${shipper.place_category}">Category</span>
+            </div>
+          </div>
+
+          <!-- Location Information -->
+          <div>
+            <h3 style="color: var(--primary-orange); margin-bottom: var(--spacing-md); border-bottom: 2px solid var(--primary-orange); padding-bottom: var(--spacing-xs);">
+              📍 Location Details
+            </h3>
+            <div class="spec-item">
+              <span class="spec-label">Address:</span>
+              <span class="spec-value" th:text="${shipper.formatted_address}">Address</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Coordinates:</span>
+              <span class="spec-value">
+                                    <span th:text="${shipper.lat}">Lat</span>, <span th:text="${shipper.lon}">Lon</span>
+                                </span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Operating Hours:</span>
+              <span class="spec-value" th:text="${shipper.operating_hours}">Hours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-
   document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.querySelector('.dropdown-toggle');
-    const dropdown = document.getElementById('componentsDropdown');
+      const toggleButton = document.querySelector('.dropdown-toggle');
+      const dropdown = document.getElementById('componentsDropdown');
 
-    toggleButton.addEventListener('click', () => {
-      const isVisible = dropdown.style.display === 'block';
-      dropdown.style.display = isVisible ? 'none' : 'block';
-    });
+      if (toggleButton && dropdown) {
+          toggleButton.addEventListener('click', () => {
+              const isVisible = dropdown.style.display === 'block';
+              dropdown.style.display = isVisible ? 'none' : 'block';
+          });
 
-    window.addEventListener('click', (event) => {
-      if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = 'none';
+          window.addEventListener('click', (event) => {
+              if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                  dropdown.style.display = 'none';
+              }
+          });
       }
-    });
   });
-
 </script>
+
+<style>
+  .spec-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--border-gray);
+      font-size: var(--font-size-base);
+  }
+
+  .spec-item:last-child {
+      border-bottom: none;
+  }
+
+  .spec-label {
+      font-weight: 600;
+      color: var(--dark-blue);
+      flex-shrink: 0;
+      margin-right: var(--spacing-md);
+  }
+
+  .spec-value {
+      color: var(--text-gray);
+      text-align: right;
+      font-weight: 500;
+  }
+</style>
+</body>
 </html>

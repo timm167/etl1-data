@@ -1,47 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Orders</title>
-  <link rel="stylesheet" href="/css/order_table.css">
-  <link rel="stylesheet" th:href="@{/css/navbar.css}">
-  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Orders - PC Store</title>
 
+  <!-- CSS Files -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/order_table.css}">
 </head>
 <body>
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h1>Orders</h1>
+<div class="table-container">
+  <h1>📦 Your Orders</h1>
 
-<table>
-  <thead>
-  <tr>
-    <th>Order ID</th>
-    <th>Product</th>
-    <th>Order Time</th>
-    <th>Expected Delivery</th>
-    <th>Quantity</th>
-    <th>Status</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="order : ${orders}">
-    <td th:text="${order.id}"></td>
-    <td th:text="${order.product.name}"></td>
-    <td th:text="${order.orderTime}"></td>
-    <td th:text="${order.expectedDeliveryTime}"></td>
-    <td th:text="${order.quantity}"></td>
-    <td th:text="${order.isOpen} ? 'Pending' : 'Delivered'"
-        th:classappend="${order.isOpen} ? 'status-pending' : 'status-delivered'">
-    </td>
+  <div style="text-align: center; margin-bottom: var(--spacing-xl);">
+    <p style="color: var(--text-gray); font-size: var(--font-size-lg);">
+      Track the progress of your purchases
+    </p>
+  </div>
 
-  </tr>
-  </tbody>
-</table>
+  <table>
+    <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Product</th>
+      <th>Order Time</th>
+      <th>Expected Delivery</th>
+      <th>Quantity</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+      <td>
+        <strong style="color: var(--primary-orange);" th:text="${order.id}">#001</strong>
+      </td>
+      <td th:text="${order.product.name}">Product Name</td>
+      <td th:text="${order.orderTime}">2025-08-15</td>
+      <td th:text="${order.expectedDeliveryTime}">2025-08-20</td>
+      <td>
+                <span style="background: var(--light-gray); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-weight: 600;"
+                      th:text="${order.quantity}">1</span>
+      </td>
+      <td>
+                <span th:text="${order.isOpen} ? 'Pending' : 'Delivered'"
+                      th:classappend="${order.isOpen} ? 'status-pending' : 'status-delivered'">
+                    Status
+                </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
-</body>
+  <!-- Empty state -->
+  <div th:if="${#lists.isEmpty(orders)}" class="empty-table">
+    <div class="empty-table-icon">📦</div>
+    <h3>No Orders Found</h3>
+    <p>You haven’t placed any orders yet. Visit the store to start shopping!</p>
+    <a href="/products" class="btn btn-primary">🛍️ Browse Products</a>
+  </div>
+</div>
+
 <script>
-
   document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.querySelector('.dropdown-toggle');
     const dropdown = document.getElementById('componentsDropdown');
@@ -57,6 +81,6 @@
       }
     });
   });
-
 </script>
+</body>
 </html>

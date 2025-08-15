@@ -1,36 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Customer Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <title>Customer Dashboard - PC Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <h1>Welcome to your Dashboard</h1>
-    <p>Logged in as: <span th:text="${userName}"></span></p>
-    <div th:replace="~{fragments/login-logout :: login-logout}"></div>
-</body>
+<div class="container">
+    <div class="section">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <div class="card-header text-center">
+                <h1>👤 Welcome to Your Dashboard</h1>
+            </div>
+            <div class="card-body text-center">
+                <div style="font-size: 4rem; margin-bottom: var(--spacing-lg); color: var(--primary-orange);">
+                    🏠
+                </div>
+                <h2 style="color: var(--dark-blue); margin-bottom: var(--spacing-md);">
+                    Hello, <span th:text="${userName}" style="color: var(--primary-orange);">User</span>!
+                </h2>
+                <p style="font-size: var(--font-size-lg); color: var(--text-gray); margin-bottom: var(--spacing-xl);">
+                    What would you like to do today?
+                </p>
+
+                <div class="grid grid-2" style="gap: var(--spacing-lg); margin-top: var(--spacing-xl);">
+                    <a href="/products" class="card dashboard-card" style="text-decoration: none;">
+                        <div class="card-body">
+                            <div class="dashboard-icon">🖥️</div>
+                            <h3>Browse Products</h3>
+                            <p>Explore our full range of PC components and systems</p>
+                        </div>
+                    </a>
+
+                    <a href="/basket" class="card dashboard-card" style="text-decoration: none;">
+                        <div class="card-body">
+                            <div class="dashboard-icon">🛒</div>
+                            <h3>View Basket</h3>
+                            <p>Check your current items and proceed to checkout</p>
+                        </div>
+                    </a>
+
+                    <a href="/products/create" class="card dashboard-card" style="text-decoration: none;">
+                        <div class="card-body">
+                            <div class="dashboard-icon">⚙️</div>
+                            <h3>Custom PC Builder</h3>
+                            <p>Build your perfect custom PC configuration</p>
+                        </div>
+                    </a>
+
+                    <a href="/orders/view" class="card dashboard-card" style="text-decoration: none;">
+                        <div class="card-body">
+                            <div class="dashboard-icon">📋</div>
+                            <h3>Your Orders</h3>
+                            <p>Track and manage your order history</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', () => {
         const toggleButton = document.querySelector('.dropdown-toggle');
         const dropdown = document.getElementById('componentsDropdown');
 
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
+        if (toggleButton && dropdown) {
+            toggleButton.addEventListener('click', () => {
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            });
 
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
+            window.addEventListener('click', (event) => {
+                if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
     });
-
 </script>
+</body>
 </html>

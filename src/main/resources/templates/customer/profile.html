@@ -2,34 +2,71 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - PC Store</title>
+
+    <!-- CSS Files -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<p>Logged in as: <span th:text="${userName}"></span></p>
-<div th:replace="~{fragments/login-logout :: login-logout}"></div>
-</body>
-<script>
+<div class="container">
+    <div class="section">
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+            <div class="card-header text-center">
+                <h1>👤 Your Profile</h1>
+            </div>
+            <div class="card-body text-center">
+                <div style="font-size: 4rem; margin-bottom: var(--spacing-lg); color: var(--primary-orange);">
+                    👨‍💻
+                </div>
+                <h2 style="color: var(--dark-blue); margin-bottom: var(--spacing-md);">
+                    Welcome Back!
+                </h2>
+                <p style="font-size: var(--font-size-lg); margin-bottom: var(--spacing-xl);">
+                    Logged in as: <br>
+                    <strong th:text="${userName}" style="color: var(--primary-orange); font-size: var(--font-size-xl);">User</strong>
+                </p>
 
+                <div style="margin-top: var(--spacing-xl); display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <a href="/products" class="btn btn-primary">
+                        🖥️ Browse Products
+                    </a>
+                    <a href="/basket" class="btn btn-secondary">
+                        🛒 View Basket
+                    </a>
+                    <a href="/products/create" class="btn btn-outline">
+                        ⚙️ Build Custom PC
+                    </a>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         const toggleButton = document.querySelector('.dropdown-toggle');
         const dropdown = document.getElementById('componentsDropdown');
 
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
+        if (toggleButton && dropdown) {
+            toggleButton.addEventListener('click', () => {
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            });
 
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
+            window.addEventListener('click', (event) => {
+                if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                });
+            });
+        }
     });
-
 </script>
+</body>
 </html>

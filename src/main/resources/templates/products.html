@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - PC Store</title>
+    <title>Products - EZPC</title>
 
     <!-- CSS paths -->
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
     <link rel="stylesheet" th:href="@{/css/basket.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
 
     <style>
-        /* Additional styles for message positioning */
+        /* Additional styles for products page */
         .notification-message {
             position: fixed;
             top: 100px;
@@ -58,9 +59,84 @@
             font-weight: 700;
         }
 
-        /* Ensure buttons take full width in card footer */
-        .card-footer .btn {
+        /* Reviews section */
+        .reviews {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--border-gray);
+            background: var(--light-gray);
+        }
+
+        .reviews h3 {
+            color: var(--dark-blue);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .reviews h4 {
+            color: var(--dark-blue);
+            margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
+        }
+
+        .reviews ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reviews li {
+            background: var(--white);
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--primary-orange);
+        }
+
+        .reviews textarea {
             width: 100%;
+            padding: var(--spacing-sm);
+            border: 2px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .reviews textarea:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(254, 119, 67, 0.1);
+        }
+
+        .reviews button[type="submit"] {
+            background: linear-gradient(45deg, var(--primary-orange), #FF8A5C);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: var(--spacing-sm);
+        }
+
+        .reviews button[type="submit"]:hover {
+            background: linear-gradient(45deg, #E5632A, var(--primary-orange));
+            transform: translateY(-1px);
+        }
+
+        /* Filter input styling for products page */
+        input[type="number"] {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 2px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--dark-blue);
+            background: var(--white);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            width: 100px;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(254, 119, 67, 0.1);
         }
     </style>
 </head>
@@ -92,7 +168,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="filterBy" class="form-label">Filter</label>
+                        <label for="filterBy" class="form-label">Advanced Filters</label>
                         <select th:value="${filterBy}" name="filterBy" id="filterBy" class="form-select" size="1" onchange="checkFilterBy(this);">
                             <option>(No filter)</option>
                             <option>Price</option>
@@ -103,13 +179,15 @@
                             <option>at least</option>
                             <option>at most</option>
                         </select>
-                        <label id="priceFilterLabel" for="numberFilter" class="form-label filterLabel">£</label>
-                        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-                        <label id="cpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">GHz</label>
-                        <label id="gpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">MHz</label>
+                        <div style="display: flex; align-items: center; gap: var(--spacing-xs); margin-top: var(--spacing-xs);">
+                            <label id="priceFilterLabel" for="numberFilter" class="filterLabel">£</label>
+                            <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any" placeholder="Enter value">
+                            <label id="cpuClockFilterLabel" for="numberFilter" class="filterLabel">GHz</label>
+                            <label id="gpuClockFilterLabel" for="numberFilter" class="filterLabel">MHz</label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Go</button>
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
                     </div>
                 </form>
             </div>
@@ -163,7 +241,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <!-- Add to Basket Button using btn classes -->
+                    <!-- Add to Basket Button -->
                     <button
                             type="button"
                             class="btn btn-primary btn-lg"
@@ -178,7 +256,7 @@
                 <div class="reviews">
                     <h3>Reviews</h3>
 
-                    <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
+                    <!-- Display reviews if available -->
                     <div th:if="${reviewsByProductId != null}">
                         <ul>
                             <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
@@ -192,12 +270,8 @@
 
                     <h4>Add a review</h4>
                     <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
-                        <label>
-                            Review
-                            <textarea name="content" rows="3" cols="40" required></textarea>
-                        </label>
-                        <br>
-                        <button type="submit">Submit</button>
+                        <textarea name="content" placeholder="Write your review here..." required rows="3"></textarea>
+                        <button type="submit">Submit Review</button>
                     </form>
                 </div>
             </div>

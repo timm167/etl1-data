@@ -1,5 +1,19 @@
-console.log('Products page JavaScript loaded');
+function checkFilterBy(selectElement) {
+    // Hide all filter labels first
+    document.getElementById('priceFilterLabel').style.display = 'none';
+    document.getElementById('cpuClockFilterLabel').style.display = 'none';
+    document.getElementById('gpuClockFilterLabel').style.display = 'none';
 
+    // Show the appropriate label based on selection
+    const selectedValue = selectElement.value;
+    if (selectedValue === 'Price') {
+        document.getElementById('priceFilterLabel').style.display = 'inline';
+    } else if (selectedValue === 'CPU clock speed') {
+        document.getElementById('cpuClockFilterLabel').style.display = 'inline';
+    } else if (selectedValue === 'GPU clock speed') {
+        document.getElementById('gpuClockFilterLabel').style.display = 'inline';
+    }
+}
 // Add to Basket function
 function addToBasket(productId, quantity = 1) {
     console.log('Adding product to basket:', productId);

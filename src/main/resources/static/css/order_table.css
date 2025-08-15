@@ -1,57 +1,238 @@
+/* order_table.css - Enhanced styles matching your brand */
+
+/* ================================
+   PAGE LAYOUT
+   ================================ */
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
-    background-color: #f0f2f7;
+    background: linear-gradient(135deg, var(--background-cream) 0%, #E8E7E3 100%);
+    color: var(--dark-blue);
+    padding-top: 80px; /* Account for fixed navbar */
+    min-height: 100vh;
 }
 
-/* Add spacing below the nav */
-main {
-    padding-top: 80px; /* space between nav and page content */
-}
-
+/* ================================
+   PAGE HEADER
+   ================================ */
 h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    color: var(--dark-blue);
     text-align: center;
-    color: #333;
-    margin-top: 40px; /* space between heading and table */
+    margin: var(--spacing-2xl) 0 var(--spacing-xl) 0;
+    position: relative;
 }
 
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(45deg, var(--primary-orange), #FF8A5C);
+    border-radius: var(--radius-sm);
+}
+
+/* ================================
+   TABLE CONTAINER
+   ================================ */
+.table-container {
+    max-width: 1400px;
+    margin: 0 auto var(--spacing-2xl) auto;
+    padding: 0 var(--spacing-lg);
+}
+
+/* ================================
+   TABLE STYLES
+   ================================ */
 table {
-    width: 80%;
-    margin: 0 auto; /* center horizontally */
+    width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border-radius: 6px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
     overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    margin: 0;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-th, td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0; /* Soft border */
-}
-
+/* ================================
+   TABLE HEADER
+   ================================ */
 thead {
-    background-color: #3182ce; /* Medium blue — distinct from nav */
-    color: white;
-    font-weight: bold;
+    background: linear-gradient(135deg, var(--dark-blue) 0%, #1A2B35 100%);
 }
 
-tr:hover {
-    background-color: #edf2f7; /* Light gray-blue hover */
+th {
+    color: var(--white);
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid var(--primary-orange);
 }
 
+/* ================================
+   TABLE BODY
+   ================================ */
+tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-gray);
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(254, 119, 67, 0.02);
+}
+
+tbody tr:hover {
+    background-color: rgba(254, 119, 67, 0.08);
+    transform: translateY(-1px);
+}
+
+td {
+    padding: var(--spacing-md);
+    text-align: left;
+    color: var(--dark-blue);
+    font-size: var(--font-size-base);
+    vertical-align: middle;
+}
+
+/* ================================
+   LINKS IN TABLES
+   ================================ */
+table a {
+    color: var(--primary-orange);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+table a:hover {
+    color: var(--white);
+    background: var(--primary-orange);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* ================================
+   STATUS BADGES
+   ================================ */
 .status-pending {
-    background-color: #fef3c7; /* Light amber */
-    color: #92400e;            /* Dark amber text */
-    font-weight: bold;
-    text-align: center;         /* Center text */
+    background: linear-gradient(45deg, var(--warning-yellow), #FBBF24);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
+    box-shadow: var(--shadow-sm);
 }
 
 .status-delivered {
-    background-color: #d1fae5; /* Light green */
-    color: #065f46;            /* Dark green text */
-    font-weight: bold;
-    text-align: center;         /* Center text */
+    background: linear-gradient(45deg, var(--success-green), #34D399);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-block;
+    min-width: 80px;
+    box-shadow: var(--shadow-sm);
 }
 
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 1200px) {
+    .table-container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    table {
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+    
+    .table-container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    h1 {
+        font-size: var(--font-size-3xl);
+        margin: var(--spacing-lg) 0;
+    }
+    
+    th, td {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+    
+    /* Make table horizontally scrollable on mobile */
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-container {
+        padding: 0 var(--spacing-xs);
+    }
+    
+    h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    th, td {
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-xs);
+    }
+}
+
+/* ================================
+   LOADING AND EMPTY STATES
+   ================================ */
+.empty-table {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-gray);
+}
+
+.empty-table-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-orange);
+    opacity: 0.3;
+}
+
+.empty-table h3 {
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--dark-blue);
+}
+
+.empty-table p {
+    font-size: var(--font-size-base);
+    margin: 0;
+    line-height: 1.6;
+}
