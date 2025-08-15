@@ -47,7 +47,7 @@ public class ComponentsController {
     PowerSupplyRepository powerSupplyRepository;
 
     @GetMapping("/components/{type}")
-    public ModelAndView viewComponents(@PathVariable(value="type") String type, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
+    public ModelAndView viewComponents(@PathVariable(value="type") String type, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter, String brand) {
         ModelAndView modelAndView = new ModelAndView("/components/" + type);
 
         ComponentRepository<? extends Component> componentRepository = switch (type) {
@@ -63,7 +63,7 @@ public class ComponentsController {
         };
 
         if (componentRepository != null) {
-            return getModelAndViewForComponent(modelAndView, componentRepository, type.replace("-", "_"), sortBy, order, session, filterBy, filterOp, numberFilter);
+            return getModelAndViewForComponent(modelAndView, componentRepository, type.replace("-", "_"), sortBy, order, session, filterBy, filterOp, numberFilter, brand);
         } else {
             return new ModelAndView(new RedirectView("/"));
         }
@@ -109,12 +109,12 @@ public class ComponentsController {
         return "redirect:/products/create";
     }
 
-    private ModelAndView getModelAndViewForComponent(ModelAndView modelAndView, ComponentRepository<? extends Component> componentRepository, String componentAttributeName, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
+    private ModelAndView getModelAndViewForComponent(ModelAndView modelAndView, ComponentRepository<? extends Component> componentRepository, String componentAttributeName, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter, String brand) {
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
             List<? extends Component> sortedComponents = componentRepository.findAll(sort);
-            modelAndView.addObject(componentAttributeName, getFilteredComponents(sortedComponents, filterBy, filterOp, numberFilter));
+            modelAndView.addObject(componentAttributeName, getFilteredComponents(sortedComponents, filterBy, filterOp, numberFilter, brand));
         } else {
             modelAndView.addObject(componentAttributeName, componentRepository.findAll());
         }
@@ -124,10 +124,10 @@ public class ComponentsController {
         return modelAndView;
     }
 
-    private List<? extends Component> getFilteredComponents(List<? extends Component> components, String filterBy, String filterOp, Double numberFilter) {
+    private List<? extends Component> getFilteredComponents(List<? extends Component> components, String filterBy, String filterOp, Double numberFilter, String brand) {
         Predicate<Double> compareForFilter;
 
-        if (filterOp.equals("at least")) {
+        if (filterOp != null && filterOp.equals("at least")) {
             compareForFilter = value -> value >= numberFilter;
         } else {
             compareForFilter = value -> value <= numberFilter;
@@ -155,9 +155,13 @@ public class ComponentsController {
                 filterFunction = component -> compareForFilter.test(Double.valueOf(((Memory) component).getSpeed().getLast().getSpeed()));
                 break;
             case "CPU brand":
-                return cpuRepository.findByNameContaining(filterOp);
+                return cpuRepository.findByNameContaining(brand != null ? brand : filterOp);
             case "GPU brand":
-                return graphicsCardRepository.findByChipsetContaining((filterOp.equals("NVIDIA")) ? "GeForce" : "Radeon");
+                if (brand != null) {
+                    return graphicsCardRepository.findByChipsetContaining(brand.equals("NVIDIA") ? "GeForce" : "Radeon");
+                } else {
+                    return graphicsCardRepository.findByChipsetContaining(filterOp.equals("NVIDIA") ? "GeForce" : "Radeon");
+                }
             default:
                 return components;
         }

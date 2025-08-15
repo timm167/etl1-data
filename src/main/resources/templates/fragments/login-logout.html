@@ -2,20 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<div th:fragment="login-logout" style="position: absolute; top: 10px; right: 10px;">
+<div th:fragment="login-logout" style="display: flex; align-items: center; gap: 0.5em; position: static;">
     <!-- Login button when not authenticated -->
     <a th:href="@{/oauth2/authorization/auth0}"
        sec:authorize="!isAuthenticated()"
-       style="text-decoration: none;">
-        <button type="button">Login</button>
+       style="text-decoration: none; align-self: center;">
+        <button type="button" style="padding: 0.5em 1em;">Login</button>
     </a>
 
     <!-- Logout button when authenticated -->
     <form sec:authorize="isAuthenticated()"
           method="post"
           action="/logout"
-          style="display: inline;">
-        <button type="submit">Logout</button>
+          style="display: inline; margin: 0; align-self: center;">
+        <button type="submit" style="padding: 0.5em 1em; margin-top: 2px;">Logout</button>
     </form>
 </div>
 

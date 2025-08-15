@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>CPU Coolers</title>
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<form th:action="@{/components/cpu-coolers}" method="get">
+<main class="container mt-5">
+<form th:action="@{/components/cpu-coolers}" method="get" class="mb-4">
   <p>
     <label for="sortBy">Sort By</label>
     <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
@@ -38,32 +40,35 @@
 </form>
 <ul>
   <li th:each="cpu_cooler : ${cpu_coolers}" th:if="${cpu_cooler.price > 0.0}">
-    <p th:text="'Name: ' + ${cpu_cooler.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(cpu_cooler.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p>RPM:
-      <th:block th:each="rpm : ${cpu_cooler.rpm}" th:if="${!cpu_cooler.rpm.isEmpty()}">
-        <span th:text="${rpm.rpm}"></span>
-        <span th:if="${rpm != cpu_cooler.rpm.getLast()}"> - </span>
-      </th:block>
-      <span th:if="${cpu_cooler.rpm.isEmpty()}">N/A</span>
-    </p>
-    <p>Noise Level:
-      <th:block th:each="noise_level : ${cpu_cooler.noise_level}">
-        <span th:text="${noise_level.noise_level}"></span>
-        <span th:if="${noise_level != cpu_cooler.noise_level.getLast()}"> - </span>
-      </th:block>
-      <span th:text="${cpu_cooler.noise_level.isEmpty()} ? 'Silent' : 'dB'"></span>
-    </p>
-    <p th:text="'Colour: ' + ${cpu_cooler.color}"></p>
-    <p>Radiator Size:
-      <span th:text="${cpu_cooler.size == 0} ? 'N/A' : ${cpu_cooler.size} + 'mm'"></span>
-    </p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${cpu_cooler.id}" name="cpuCoolerId">
-      <button>Select</button>
-    </form>
+    <div class="product-card">
+      <p th:text="'Name: ' + ${cpu_cooler.name}"></p>
+      <p th:text="'Price: £' + ${#numbers.formatDecimal(cpu_cooler.price, 0, 'COMMA', 2, 'POINT')}"></p>
+      <p>RPM:
+        <th:block th:each="rpm : ${cpu_cooler.rpm}" th:if="${!cpu_cooler.rpm.isEmpty()}">
+          <span th:text="${rpm.rpm}"></span>
+          <span th:if="${rpm != cpu_cooler.rpm.getLast()}"> - </span>
+        </th:block>
+        <span th:if="${cpu_cooler.rpm.isEmpty()}">N/A</span>
+      </p>
+      <p>Noise Level:
+        <th:block th:each="noise_level : ${cpu_cooler.noise_level}">
+          <span th:text="${noise_level.noise_level}"></span>
+          <span th:if="${noise_level != cpu_cooler.noise_level.getLast()}"> - </span>
+        </th:block>
+        <span th:text="${cpu_cooler.noise_level.isEmpty()} ? 'Silent' : 'dB'"></span>
+      </p>
+      <p th:text="'Colour: ' + ${cpu_cooler.color}"></p>
+      <p>Radiator Size:
+        <span th:text="${cpu_cooler.size == 0} ? 'N/A' : ${cpu_cooler.size} + 'mm'"></span>
+      </p>
+      <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
+        <input type="hidden" th:value="${cpu_cooler.id}" name="cpuCoolerId">
+        <button>Select</button>
+      </form>
+    </div>
   </li>
 </ul>
+</main>
 </body>
 <script th:src="@{/js/filterDisplay.js}"></script>
 </html>

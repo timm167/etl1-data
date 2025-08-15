@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8" />
     <title>Navbar</title>
@@ -75,14 +75,12 @@
         </div>
 
         <!-- User section -->
-        <div class="user-section">
-            <div sec:authorize="isAuthenticated()">
-                <p>Logged in as: <span th:text="${userName}"></span></p>
+        <div class="user-section" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 1em;">
+            <div>
+                <span sec:authorize="isAuthenticated()">Logged in as: <span th:text="${userName}"></span></span>
+                <span sec:authorize="!isAuthenticated()">Welcome, Guest</span>
             </div>
-            <div sec:authorize="!isAuthenticated()">
-                <span>Welcome, Guest</span>
-            </div>
-            <div th:replace="~{fragments/login-logout :: login-logout}"></div>
+            <div th:replace="~{fragments/login-logout :: login-logout}" style="margin-left: auto;"></div>
         </div>
     </nav>
 
