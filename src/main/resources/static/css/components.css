@@ -1,0 +1,413 @@
+/* components.css - Component Pages Specific Styles */
+
+/* ================================
+   COMPONENT PAGE LAYOUT
+   ================================ */
+.components-page {
+    background: linear-gradient(135deg, var(--background-cream) 0%, #E8E7E3 100%);
+    min-height: 100vh;
+    padding-top: 80px; /* Account for fixed navbar */
+}
+
+.components-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+/* ================================
+   COMPONENT PAGE HEADER
+   ================================ */
+.components-header {
+    background: var(--white);
+    padding: var(--spacing-2xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    border-left: 5px solid var(--primary-orange);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.components-header h1 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--dark-blue);
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.components-header p {
+    margin: 0;
+    color: var(--text-gray);
+    font-size: var(--font-size-lg);
+}
+
+/* ================================
+   SORTING CONTROLS
+   ================================ */
+.sorting-controls {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-gray);
+}
+
+.sorting-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: var(--spacing-md);
+    align-items: end;
+}
+
+@media (max-width: 768px) {
+    .sorting-form {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+}
+
+.sort-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.sort-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sort-select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border-gray);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    color: var(--dark-blue);
+    background: var(--white);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(254, 119, 67, 0.1);
+}
+
+.sort-button {
+    background: linear-gradient(45deg, var(--primary-orange), #FF8A5C);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.sort-button:hover {
+    background: linear-gradient(45deg, #E5632A, var(--primary-orange));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ================================
+   COMPONENT GRID
+   ================================ */
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+@media (max-width: 768px) {
+    .components-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+/* ================================
+   COMPONENT CARD
+   ================================ */
+.component-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-gray);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.component-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-orange);
+}
+
+.component-card-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-gray);
+    background: linear-gradient(135deg, var(--light-gray) 0%, #F8F9FA 100%);
+}
+
+.component-name {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--dark-blue);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.3;
+}
+
+.component-price {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--primary-orange);
+    margin: 0;
+}
+
+.component-card-body {
+    padding: var(--spacing-lg);
+}
+
+.component-specs {
+    display: grid;
+    gap: var(--spacing-sm);
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: var(--font-size-sm);
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    font-weight: 600;
+    color: var(--dark-blue);
+    flex-shrink: 0;
+    margin-right: var(--spacing-sm);
+}
+
+.spec-value {
+    color: var(--text-gray);
+    text-align: right;
+    font-weight: 500;
+}
+
+.spec-value.highlight {
+    color: var(--primary-orange);
+    font-weight: 600;
+}
+
+.spec-value.unavailable {
+    color: var(--text-gray);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* ================================
+   COMPONENT CARD FOOTER
+   ================================ */
+.component-card-footer {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--border-gray);
+    background: var(--light-gray);
+}
+
+.select-button {
+    background: linear-gradient(45deg, var(--dark-blue), #3A5A6D);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.select-button:hover {
+    background: linear-gradient(45deg, #1A2B35, var(--dark-blue));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.select-button:active {
+    transform: translateY(0);
+}
+
+/* ================================
+   SPECIAL STYLING FOR DIFFERENT SPECS
+   ================================ */
+
+/* CPU Specific */
+.cpu-cores {
+    background: linear-gradient(90deg, var(--primary-orange), #FF8A5C);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* Graphics Card Specific */
+.gpu-memory {
+    background: linear-gradient(90deg, #10B981, #34D399);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* Memory Specific */
+.memory-speed {
+    background: linear-gradient(90deg, #8B5CF6, #A78BFA);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Storage Specific */
+.storage-capacity {
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* Power Supply Specific */
+.psu-wattage {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* ================================
+   BACK BUTTON
+   ================================ */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: linear-gradient(45deg, var(--dark-blue), #3A5A6D);
+    color: var(--white);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+}
+
+.back-button:hover {
+    background: linear-gradient(45deg, #1A2B35, var(--dark-blue));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: var(--white);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 480px) {
+    .components-container {
+        padding: var(--spacing-sm);
+    }
+
+    .components-header {
+        padding: var(--spacing-lg);
+    }
+
+    .components-header h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .component-card {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .spec-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .spec-value {
+        text-align: left;
+    }
+}
+
+/* ================================
+   LOADING AND EMPTY STATES
+   ================================ */
+.empty-components {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-gray);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.empty-components-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-orange);
+    opacity: 0.3;
+}
+
+.empty-components h3 {
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--dark-blue);
+}
+
+.empty-components p {
+    font-size: var(--font-size-base);
+    margin: 0;
+    line-height: 1.6;
+}

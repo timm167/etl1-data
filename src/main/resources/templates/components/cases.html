@@ -1,61 +1,126 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Cases</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Cases - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
-<div th:replace="~{navbar :: navbar}"></div>
-<form th:action="@{/components/cases}" method="get">
-  <p>
-    <label for="sortBy">Sort By</label>
-    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-      <option>Name</option>
-      <option>Price</option>
-      <option>Volume</option>
-    </select>
-    <select th:value="${order}" name="order" id="order" size="1">
-      <option>Ascending</option>
-      <option>Descending</option>
-    </select>
-  </p>
-  <p>
-    <label for="filterBy">Filter</label>
-    <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
-      <option>(No filter)</option>
-      <option>Price</option>
-      <option>Volume</option>
-    </select>
-    <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
-      <option>at least</option>
-      <option>at most</option>
-    </select>
-    <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
-    <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-    <label id="caseSizeFilterLabel" class="filterLabel" for="numberFilter">L</label>
-  </p>
-  <p>
-    <button type="submit">Go</button>
-  </p>
-</form>
-<ul>
-  <li th:each="case : ${cases}" th:if="${case.price > 0.0}">
-    <p th:text="'Name: ' + ${case.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(case.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Type: ' + ${case.type}"></p>
-    <p th:text="'Colour: ' + ${case.color}"></p>
-    <p th:text="'Side Panel: ' + ${case.side_panel}"></p>
-    <p>External Volume:
-      <span th:text="${case.externalVolume > 0.0} ? ${case.externalVolume} + 'L' : 'Unavailable'"></span>
-    </p>
-    <p th:text="'Internal 3.5-inch Bays: ' + ${case.internal_35_bays}"></p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${case.id}" name="caseId">
-      <button>Select</button>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
+
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>🖥️ PC Cases</h1>
+    <p>Choose the perfect case for your build - from compact Mini-ITX to full tower cases</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/cases}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+          <option value="Size">Size</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+          <option>(No filter)</option>
+          <option>Price</option>
+          <option>Volume</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+          <option>at least</option>
+          <option>at most</option>
+        </select>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+        <label id="caseSizeFilterLabel" class="filterLabel" for="numberFilter">L</label>
+      </div>
+      <button type="submit" class="sort-button">Sort Cases</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${cases != null and !cases.empty}">
+    <div th:each="case : ${cases}" th:if="${case.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${case.name}">Case Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(case.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Type:</span>
+            <span class="spec-value" th:text="${case.type}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Color:</span>
+            <span class="spec-value" th:text="${case.color ?: 'N/A'}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Side Panel:</span>
+            <span class="spec-value" th:text="${case.side_panel ?: 'N/A'}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">External Volume:</span>
+            <span class="spec-value"
+                  th:text="${case.externalVolume > 0.0} ? ${case.externalVolume} + 'L' : 'Unavailable'"
+                  th:class="${case.externalVolume > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">3.5" Bays:</span>
+            <span class="spec-value highlight" th:text="${case.internal_35_bays}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${case.id}" name="caseId">
+          <button type="submit" class="select-button">
+            ✓ Select This Case
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${cases == null or cases.empty}" class="empty-components">
+    <div class="empty-components-icon">🖥️</div>
+    <h3>No Cases Found</h3>
+    <p>Sorry, we couldn't find any PC cases matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
 <script th:src="@{/js/filterDisplay.js}"></script>
 </html>

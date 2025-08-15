@@ -1,56 +1,119 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Motherboards</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motherboards - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
-<div th:replace="~{navbar :: navbar}"></div>
-<form th:action="@{/components/motherboards}" method="get">
-  <p>
-    <label for="sortBy">Sort By</label>
-    <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-      <option>Name</option>
-      <option>Price</option>
-    </select>
-    <select th:value="${order}" name="order" id="order" size="1">
-      <option>Ascending</option>
-      <option>Descending</option>
-    </select>
-  </p>
-  <p>
-    <label for="filterBy">Filter</label>
-    <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
-      <option>(No filter)</option>
-      <option>Price</option>
-    </select>
-    <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
-      <option>at least</option>
-      <option>at most</option>
-    </select>
-    <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
-    <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-  </p>
-  <p>
-    <button type="submit">Go</button>
-  </p>
-</form>
-<ul>
-  <li th:each="motherboard : ${motherboards}" th:if="${motherboard.price > 0.0}">
-    <p th:text="'Name: ' + ${motherboard.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(motherboard.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Socket: ' + ${motherboard.socket}"></p>
-    <p th:text="'Form Factor: ' + ${motherboard.form_factor}"></p>
-    <p th:text="'Max Memory: ' + ${motherboard.max_memory} + 'GB'"></p>
-    <p th:text="'Memory Slots: ' + ${motherboard.memory_slots}"></p>
-    <p>Colour: <span th:text="${motherboard.color != null} ? ${motherboard.color} : 'N/A'"></span></p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${motherboard.id}" name="motherboardId">
-      <button>Select</button>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
+
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>🔌 Motherboards</h1>
+    <p>The foundation of your build - choose the perfect motherboard to connect all your components</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/motherboards}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+          <option>(No filter)</option>
+          <option>Price</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+          <option>at least</option>
+          <option>at most</option>
+        </select>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+      </div>
+      <button type="submit" class="sort-button">Sort Motherboards</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${motherboards != null and !motherboards.empty}">
+    <div th:each="motherboard : ${motherboards}" th:if="${motherboard.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${motherboard.name}">Motherboard Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(motherboard.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Socket:</span>
+            <span class="spec-value highlight" th:text="${motherboard.socket}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Form Factor:</span>
+            <span class="spec-value highlight" th:text="${motherboard.form_factor}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Max Memory:</span>
+            <span class="spec-value" th:text="${motherboard.max_memory} + 'GB'">0GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Memory Slots:</span>
+            <span class="spec-value" th:text="${motherboard.memory_slots}">0</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Color:</span>
+            <span class="spec-value" th:text="${motherboard.color ?: 'N/A'}">N/A</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${motherboard.id}" name="motherboardId">
+          <button type="submit" class="select-button">
+            ✓ Select This Motherboard
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${motherboards == null or motherboards.empty}" class="empty-components">
+    <div class="empty-components-icon">🔌</div>
+    <h3>No Motherboards Found</h3>
+    <p>Sorry, we couldn't find any motherboards matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
 <script th:src="@{/js/filterDisplay.js}"></script>
 </html>
