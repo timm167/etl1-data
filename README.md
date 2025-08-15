@@ -15,5 +15,5 @@
 - Open the codebase in an IDE and install the Lombok plugin:
   - If using IntelliJ, for example, accept the prompt to install the Lombok plugin, or if you don't get prompted, open the settings, go to `Plugins` and search for "Lombok", made by Jetbrains)
 - If you intend to make changes to the project, navigate to the project directory in your console application, then run the git command `git update-index --skip-worktree src/main/resources/application.properties` to prevent your Auth0 details appearing in the repository
-- Run the Maven command `mvn spring-boot:run`, or run `Etl1Application.main()` from your IDE
+- Either run the Maven command `mvn spring-boot:run`, or run `Etl1Application.main()` from your IDE
 - Navigate to `http://localhost:8080/` in your web browser
