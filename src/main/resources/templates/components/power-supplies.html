@@ -1,37 +1,114 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Power Supplies</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Supplies - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
-<form th:action="@{/components/power-supplies}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Wattage</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
-</form>
-<ul>
-  <li th:each="power_supply : ${power_supplies}" th:if="${power_supply.price > 0.0}">
-    <p th:text="'Name: ' + ${power_supply.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(power_supply.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Type: ' + ${power_supply.type}"></p>
-    <p>Efficiency: <span th:text="${power_supply.efficiency != null} ? '80+ ' + ${#strings.capitalize(power_supply.efficiency)} : 'Unavailable'"></span></p>
-    <p th:text="'Wattage: ' + ${power_supply.wattage} + 'W'"></p>
-    <p th:text="'Modular: ' + ${power_supply.modular}"></p>
-    <p>Colour: <span th:text="${power_supply.color != null} ? ${power_supply.color} : 'N/A'"></span></p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${power_supply.id}" name="powerSupplyId">
-      <button>Select</button>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
+
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>⚡ Power Supplies</h1>
+    <p>Reliable power for your system - choose from efficient and modular PSUs to power your build</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/power-supplies}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+          <option value="Wattage">Wattage</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <button type="submit" class="sort-button">Sort Power Supplies</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${power_supplies != null and !power_supplies.empty}">
+    <div th:each="power_supply : ${power_supplies}" th:if="${power_supply.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${power_supply.name}">Power Supply Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(power_supply.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Wattage:</span>
+            <span class="psu-wattage" th:text="${power_supply.wattage} + 'W'">0W</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Type:</span>
+            <span class="spec-value highlight" th:text="${power_supply.type}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Efficiency:</span>
+            <span class="spec-value"
+                  th:text="${power_supply.efficiency != null} ? '80+ ' + ${#strings.capitalize(power_supply.efficiency)} : 'Unavailable'"
+                  th:class="${power_supply.efficiency != null} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Modular:</span>
+            <span class="spec-value"
+                  th:text="${power_supply.modular}"
+                  th:class="${#strings.toLowerCase(power_supply.modular)} == 'yes' or ${#strings.toLowerCase(power_supply.modular)} == 'full' ? 'spec-value highlight' : 'spec-value'">
+                                No
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Color:</span>
+            <span class="spec-value" th:text="${power_supply.color ?: 'N/A'}">N/A</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${power_supply.id}" name="powerSupplyId">
+          <button type="submit" class="select-button">
+            ✓ Select This PSU
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${power_supplies == null or power_supplies.empty}" class="empty-components">
+    <div class="empty-components-icon">⚡</div>
+    <h3>No Power Supplies Found</h3>
+    <p>Sorry, we couldn't find any power supplies matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
 </html>

@@ -1,46 +1,122 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Graphics Cards</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graphics Cards - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
-<form th:action="@{/components/graphics-cards}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Core Clock</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
-</form>
-<ul>
-  <li th:each="graphics_card : ${graphics_cards}" th:if="${graphics_card.price > 0.0}">
-    <p th:text="'Name: ' + ${graphics_card.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(graphics_card.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Chipset: ' + ${graphics_card.chipset}"></p>
-    <p th:text="'Memory: ' + ${graphics_card.memory} + 'GB'"></p>
-    <p>Core Clock Speed:
-      <span th:text="${graphics_card.coreClock > 0.0} ? ${graphics_card.coreClock} + 'MHz' : 'Unavailable'"></span>
-    </p>
-    <p>Boosted Clock Speed:
-      <span th:text="${graphics_card.boost_clock > 0.0} ? ${graphics_card.boost_clock} + 'MHz' : 'N/A'"></span>
-    </p>
-    <p>Colour:
-      <span th:text="${graphics_card.color != null} ? ${graphics_card.color} : 'N/A'"></span>
-    </p>
-    <p>Length:
-      <span th:text="${graphics_card.length > 0} ? ${graphics_card.length} + 'mm' : 'Unavailable'"></span>
-    </p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${graphics_card.id}" name="graphicsCardId">
-      <button>Select</button>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
+
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>🎮 Graphics Cards</h1>
+    <p>Power your gaming and creative workflows with high-performance graphics cards</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/graphics-cards}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+          <option value="Core Clock">Core Clock</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <button type="submit" class="sort-button">Sort Graphics Cards</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${graphics_cards != null and !graphics_cards.empty}">
+    <div th:each="graphics_card : ${graphics_cards}" th:if="${graphics_card.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${graphics_card.name}">Graphics Card Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(graphics_card.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Chipset:</span>
+            <span class="spec-value highlight" th:text="${graphics_card.chipset}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Memory:</span>
+            <span class="gpu-memory" th:text="${graphics_card.memory} + 'GB'">0GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Core Clock:</span>
+            <span class="spec-value"
+                  th:text="${graphics_card.coreClock > 0.0} ? ${graphics_card.coreClock} + 'MHz' : 'Unavailable'"
+                  th:class="${graphics_card.coreClock > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Boost Clock:</span>
+            <span class="spec-value"
+                  th:text="${graphics_card.boost_clock > 0.0} ? ${graphics_card.boost_clock} + 'MHz' : 'N/A'"
+                  th:class="${graphics_card.boost_clock > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                N/A
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Color:</span>
+            <span class="spec-value" th:text="${graphics_card.color ?: 'N/A'}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Length:</span>
+            <span class="spec-value"
+                  th:text="${graphics_card.length > 0} ? ${graphics_card.length} + 'mm' : 'Unavailable'"
+                  th:class="${graphics_card.length > 0} ? 'spec-value' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${graphics_card.id}" name="graphicsCardId">
+          <button type="submit" class="select-button">
+            ✓ Select This GPU
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${graphics_cards == null or graphics_cards.empty}" class="empty-components">
+    <div class="empty-components-icon">🎮</div>
+    <h3>No Graphics Cards Found</h3>
+    <p>Sorry, we couldn't find any graphics cards matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
 </html>

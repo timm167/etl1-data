@@ -1,39 +1,117 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Internal Storage Devices</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internal Storage - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
-<form th:action="@{/components/internal-storage}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Capacity</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
-</form>
-<ul>
-  <li th:each="internal_storage : ${internal_storages}" th:if="${internal_storage.price > 0.0}">
-    <p th:text="'Name: ' + ${internal_storage.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(internal_storage.price, 0, 'COMMA', 2, 'POINT')}"></p>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <p>Capacity: <span th:text=" ${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'"></span></p>
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
 
-    <p>Price per GB: <span th:text="${internal_storage.price_per_gb > 0.0} ? '£' + ${internal_storage.price_per_gb} : 'Unavailable'"></span></p>
-    <p th:text="'Type: ' + ${internal_storage.type}"></p>
-    <p>Cache: <span th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"></span></p>
-    <p th:text="'Form Factor: ' + ${internal_storage.form_factor}"></p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${internal_storage.id}" name="internalStorageId">
-      <button>Select</button>
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>💾 Internal Storage</h1>
+    <p>Store your data with fast SSDs and high-capacity HDDs for all your storage needs</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/internal-storage}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+          <option value="Capacity">Capacity</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <button type="submit" class="sort-button">Sort Storage</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${internal_storages != null and !internal_storages.empty}">
+    <div th:each="internal_storage : ${internal_storages}" th:if="${internal_storage.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${internal_storage.name}">Storage Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(internal_storage.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Capacity:</span>
+            <span class="storage-capacity"
+                  th:text="${internal_storage.capacity/1000 < 1} ? ${internal_storage.capacity} + 'GB' : ${internal_storage.capacity/1000} + 'TB'">
+                                0GB
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Type:</span>
+            <span class="spec-value highlight" th:text="${internal_storage.type}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Form Factor:</span>
+            <span class="spec-value" th:text="${internal_storage.form_factor}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Cache:</span>
+            <span class="spec-value"
+                  th:text="${internal_storage.cache > 0} ? ${internal_storage.cache} + 'MB' : 'Unavailable'"
+                  th:class="${internal_storage.cache > 0} ? 'spec-value' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Price per GB:</span>
+            <span class="spec-value"
+                  th:text="${internal_storage.price_per_gb > 0.0} ? '£' + ${internal_storage.price_per_gb} : 'Unavailable'"
+                  th:class="${internal_storage.price_per_gb > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${internal_storage.id}" name="internalStorageId">
+          <button type="submit" class="select-button">
+            ✓ Select This Storage
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${internal_storages == null or internal_storages.empty}" class="empty-components">
+    <div class="empty-components-icon">💾</div>
+    <h3>No Storage Devices Found</h3>
+    <p>Sorry, we couldn't find any storage devices matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
 </html>
