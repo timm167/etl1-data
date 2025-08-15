@@ -20,15 +20,15 @@
             <button type="submit">⚙️ Custom PC</button>
         </form>
         <form th:if="${userRole} != 'STAFF'" th:action="@{/orders/view}" method="get">
-            <button type="submit">View Orders</button>
+            <button type="submit">🏷️ View Orders</button>
         </form>
 
         <form th:if="${userRole} == 'STAFF'" th:action="@{/orders/manage}" method="get">
-            <button type="submit">Manage Orders</button>
+            <button type="submit">🗂️ Manage Orders</button>
         </form>
 
-        <form th:action="@{/pricecomparison}" method="get">
-            <button type="submit">Compare Market Rates</button>
+        <form th:if="${userRole} == 'STAFF'" th:action="@{/pricecomparison}" method="get">
+            <button type="submit">🧮 Compare Market Rates</button>
         </form>
 
         <!-- Basket Button -->
