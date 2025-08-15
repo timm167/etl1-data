@@ -23,6 +23,7 @@ public class WebsiteController {
 
     @PostMapping("/toggle-staff")
     public String toggleStaffRole(@ModelAttribute("userEmail") String email) {
+        System.out.println("hello");
         userRepository.findByEmail(email).ifPresent(user -> {
             if (user.getRole() == User.Role.STAFF) {
                 user.setRole(User.Role.CUSTOMER);
@@ -31,6 +32,7 @@ public class WebsiteController {
             }
             userRepository.save(user);
         });
+
         return "redirect:/";
     }
 

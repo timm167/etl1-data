@@ -6,10 +6,7 @@ import com.example.etl1.model.users.User;
 import com.example.etl1.repository.logistics.LocationRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
 import com.example.etl1.repository.users.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
-import com.example.etl1.repository.users.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,8 +35,10 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    public void createOrder(String address, Integer productId, Integer quantity) {
-        // Get the custom PC product (model.Product with all components)
+    public void createOrder(String address, Integer productId, Integer quantity, User user) {
+
+        System.out.println("hello");
+
         Product product = productService.getProductById(productId.longValue())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
@@ -69,8 +68,9 @@ public class OrderService {
                 channelName, closestWarehouse, closestDistributionFacility, closestStartShipper, closestEndShipper);
 
         Order order = new Order();
-        order.setProduct(product);  // Now using model.Product directly
+        order.setProduct(product);
         order.setQuantity(quantity);
+        order.setAddress(address);
 
         BigDecimal value = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         order.setValue(value);
@@ -80,16 +80,10 @@ public class OrderService {
         order.setOrderTime(LocalDateTime.now());
         order.setExpectedDeliveryTime(order.getOrderTime().plusDays(15));
         order.setIsOpen(true);
+        order.setUser(user);
 
-        DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        String email = (String) principal.getAttributes().get("email");
+        System.out.println(order);
 
-        Optional<User> user = userRepository.findByEmail(email);
-
-        order.setUser(user.orElse(null));
 
         orderRepository.save(order);
     }
