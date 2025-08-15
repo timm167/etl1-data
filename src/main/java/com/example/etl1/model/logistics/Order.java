@@ -45,4 +45,7 @@ public class Order {
 
     @Column(name = "is_open")
     private Boolean isOpen = true;
+
+    @Column(name = "address")
+    private String address;
 }
