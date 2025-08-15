@@ -2,14 +2,22 @@ package com.example.etl1.controller;
 
 import com.example.etl1.model.ComponentIdCarrier;
 import com.example.etl1.model.Product;
+import com.example.etl1.model.components.*;
 import com.example.etl1.repository.components.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Controller
 public class ComponentsController {
@@ -38,160 +46,27 @@ public class ComponentsController {
     @Autowired
     PowerSupplyRepository powerSupplyRepository;
 
-    @GetMapping("/components/cases")
-    public ModelAndView viewCases(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/cases");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+    @GetMapping("/components/{type}")
+    public ModelAndView viewComponents(@PathVariable(value="type") String type, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
+        ModelAndView modelAndView = new ModelAndView("/components/" + type);
 
-        if (sort != null) {
-            modelAndView.addObject("cases", caseRepository.findAll(sort));
+        ComponentRepository<? extends Component> componentRepository = switch (type) {
+            case "cases" -> caseRepository;
+            case "cpus" -> cpuRepository;
+            case "cpu-coolers" -> cpuCoolerRepository;
+            case "graphics-cards" -> graphicsCardRepository;
+            case "internal-storage" -> internalStorageRepository;
+            case "memory" -> memoryRepository;
+            case "motherboards" -> motherboardRepository;
+            case "power-supplies" -> powerSupplyRepository;
+            default -> null;
+        };
+
+        if (componentRepository != null) {
+            return getModelAndViewForComponent(modelAndView, componentRepository, type.replace("-", "_"), sortBy, order, session, filterBy, filterOp, numberFilter);
         } else {
-            modelAndView.addObject("cases", caseRepository.findAll());
+            return new ModelAndView(new RedirectView("/"));
         }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus")
-    public ModelAndView viewCpus(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("cpus", cpuRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("cpus", cpuRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpu-coolers")
-    public ModelAndView viewCpuCoolers(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/cpu-coolers");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("cpu_coolers", cpuCoolerRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/graphics-cards")
-    public ModelAndView viewGraphicsCards(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("graphics_cards", graphicsCardRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/internal-storage")
-    public ModelAndView viewInternalStorage(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/internal-storage");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("internal_storages", internalStorageRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("internal_storages", internalStorageRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/memory")
-    public ModelAndView viewMemory(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/memory");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("memory", memoryRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("memory", memoryRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/motherboards")
-    public ModelAndView viewMotherboards(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/motherboards");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("motherboards", motherboardRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("motherboards", motherboardRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/power-supplies")
-    public ModelAndView viewPowerSupplies(String sortBy, String order, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView("/components/power-supplies");
-        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
-
-        if (sort != null) {
-            modelAndView.addObject("power_supplies", powerSupplyRepository.findAll(sort));
-        } else {
-            modelAndView.addObject("power_supplies", powerSupplyRepository.findAll());
-        }
-
-        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
-
-        return modelAndView;
-    }
-
-    @GetMapping("/components/graphics-cards/nvidia")
-    public ModelAndView viewNvidiaGraphicsCards() {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("GeForce"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/graphics-cards/amd")
-    public ModelAndView viewAmdGraphicsCards() {
-        ModelAndView modelAndView = new ModelAndView("/components/graphics-cards");
-        modelAndView.addObject("graphics_cards", graphicsCardRepository.findByChipsetContaining("Radeon"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus/intel")
-    public ModelAndView viewIntelCpus() {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("Intel"));
-        return modelAndView;
-    }
-
-    @GetMapping("/components/cpus/amd")
-    public ModelAndView viewAmdCpus() {
-        ModelAndView modelAndView = new ModelAndView("/components/cpus");
-        modelAndView.addObject("cpus", cpuRepository.findByNameContaining("AMD"));
-        return modelAndView;
     }
 
     @PostMapping("/components/add-to-product")
@@ -232,5 +107,61 @@ public class ComponentsController {
         }
 
         return "redirect:/products/create";
+    }
+
+    private ModelAndView getModelAndViewForComponent(ModelAndView modelAndView, ComponentRepository<? extends Component> componentRepository, String componentAttributeName, String sortBy, String order, HttpSession session, String filterBy, String filterOp, Double numberFilter) {
+        Sort sort = DataSortHelper.getSortMethod(sortBy, order);
+
+        if (sort != null) {
+            List<? extends Component> sortedComponents = componentRepository.findAll(sort);
+            modelAndView.addObject(componentAttributeName, getFilteredComponents(sortedComponents, filterBy, filterOp, numberFilter));
+        } else {
+            modelAndView.addObject(componentAttributeName, componentRepository.findAll());
+        }
+
+        modelAndView.addObject("componentIds", session.getAttribute("componentIds"));
+
+        return modelAndView;
+    }
+
+    private List<? extends Component> getFilteredComponents(List<? extends Component> components, String filterBy, String filterOp, Double numberFilter) {
+        Predicate<Double> compareForFilter;
+
+        if (filterOp.equals("at least")) {
+            compareForFilter = value -> value >= numberFilter;
+        } else {
+            compareForFilter = value -> value <= numberFilter;
+        }
+
+        Predicate<Component> filterFunction;
+
+        switch (filterBy) {
+            case "Price":
+                filterFunction = component -> compareForFilter.test(component.getPrice());
+                break;
+            case "CPU clock speed":
+                filterFunction = component -> compareForFilter.test(((Cpu) component).getCoreClock());
+                break;
+            case "GPU clock speed":
+                filterFunction = component -> compareForFilter.test((double) ((GraphicsCard) component).getCoreClock());
+                break;
+            case "Volume":
+                filterFunction = component -> compareForFilter.test(((Case) component).getExternalVolume());
+                break;
+            case "Wattage":
+                filterFunction = component -> compareForFilter.test((double) ((PowerSupply) component).getWattage());
+                break;
+            case "Memory speed":
+                filterFunction = component -> compareForFilter.test(Double.valueOf(((Memory) component).getSpeed().getLast().getSpeed()));
+                break;
+            case "CPU brand":
+                return cpuRepository.findByNameContaining(filterOp);
+            case "GPU brand":
+                return graphicsCardRepository.findByChipsetContaining((filterOp.equals("NVIDIA")) ? "GeForce" : "Radeon");
+            default:
+                return components;
+        }
+
+        return components.stream().filter(filterFunction).collect(Collectors.toCollection(ArrayList::new));
     }
 }

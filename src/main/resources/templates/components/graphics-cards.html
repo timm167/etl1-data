@@ -44,6 +44,24 @@
           <option value="Descending">Descending</option>
         </select>
       </div>
+      <div>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+          <option>(No filter)</option>
+          <option>Price</option>
+          <option value="GPU clock speed">Core clock speed</option>
+          <option value="GPU brand">Brand</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+          <option class="numberFilterOption">at least</option>
+          <option class="numberFilterOption">at most</option>
+          <option class="brandFilterOption">NVIDIA</option>
+          <option class="brandFilterOption">AMD</option>
+        </select>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+        <label id="gpuClockFilterLabel" class="filterLabel" for="numberFilter">MHz</label>
+      </div>
       <button type="submit" class="sort-button">Sort Graphics Cards</button>
     </form>
   </div>
@@ -119,4 +137,5 @@
   </div>
 </div>
 </body>
+<script th:src="@{/js/filterDisplay.js}"></script>
 </html>

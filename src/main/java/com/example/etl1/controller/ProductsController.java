@@ -17,6 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductsController {
@@ -27,16 +31,41 @@ public class ProductsController {
     @Autowired
     BasketService basketService;
 
+    @Autowired
+    ReviewRepository reviewRepository;
+
     @GetMapping("/products")
-    public ModelAndView viewProducts(String sortBy, String order) {
+    public ModelAndView viewProducts(String sortBy, String order, String filterBy, String filterOp, Double numberFilter) {
         ModelAndView modelAndView = new ModelAndView("/products");
+
         Sort sort = DataSortHelper.getSortMethod(sortBy, order);
 
         if (sort != null) {
-            modelAndView.addObject("products", productRepository.findAll(sort));
+            List<Product> sortedProducts = productRepository.findAll(sort);
+            List<Product> filteredProducts = getFilteredProducts(sortedProducts, filterBy, filterOp, numberFilter);
+
+            modelAndView.addObject("products", filteredProducts);
         } else {
             modelAndView.addObject("products", productRepository.findAll());
         }
+
+
+        Sort reviewSort = Sort.by(Sort.Direction.DESC, "createdAt");
+        java.util.Map<Integer, java.util.List<com.example.etl1.model.Review>> reviewsByProductId = new java.util.HashMap<>();
+
+        Iterable<Product> productsForReviews;
+
+        if (sort != null) {
+            productsForReviews = productRepository.findAll(sort);
+        } else {
+            productsForReviews = productRepository.findAll();
+        }
+
+        for (Product p : productsForReviews) {
+            reviewsByProductId.put(p.getId(), reviewRepository.findByProductId(p.getId(), reviewSort));
+        }
+        modelAndView.addObject("reviewsByProductId", reviewsByProductId);
+
 
         return modelAndView;
     }
@@ -89,6 +118,35 @@ public class ProductsController {
     }
 
     // BASKET FUNCTIONALITY
+
+    private List<Product> getFilteredProducts(List<Product> products, String filterBy, String filterOp, Double numberFilter) {
+        Predicate<Double> compareForFilter;
+
+        if (filterOp.equals("at least")) {
+            compareForFilter = value -> value >= numberFilter;
+        } else {
+            compareForFilter = value -> value <= numberFilter;
+        }
+
+        Predicate<Product> filterFunction;
+
+        switch (filterBy) {
+            case "Price":
+                filterFunction = product -> compareForFilter.test(product.getPrice().doubleValue());
+                break;
+            case "CPU clock speed":
+                filterFunction = product -> compareForFilter.test(product.getCpu().getCoreClock());
+                break;
+            case "GPU clock speed":
+                filterFunction = product -> compareForFilter.test((double) product.getGraphicsCard().getCoreClock());
+                break;
+            default:
+                return products;
+        }
+
+        return products.stream().filter(filterFunction).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     @GetMapping("/basket")
     public String viewBasket(Model model, HttpSession session) {
         try {
@@ -116,6 +174,13 @@ public class ProductsController {
             model.addAttribute("error", "Unable to load basket: " + e.getMessage());
             return "basket";
         }
+
+
+    }
+
+    public ModelAndView viewBasket() {
+        ModelAndView modelAndView = new ModelAndView("/basket");
+        return modelAndView;
     }
 
     // Add to basket endpoint

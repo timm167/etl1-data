@@ -24,7 +24,6 @@ public class UserController {
     @Autowired
     private StaffRepository staffRepository;
 
-    // Customer dashboard - GlobalControllerAdvice handles user data
     @GetMapping("/customer/dashboard")
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public String customerDashboard() {
@@ -41,8 +40,6 @@ public class UserController {
     @GetMapping("/after-login")
     public String afterLogin(@AuthenticationPrincipal OAuth2User oauth2User) {
         if (oauth2User != null) {
-            // User is already created/updated by CustomOAuth2UserService
-            // Just get the user from database and redirect based on role
 
             String email = (String) oauth2User.getAttributes().get("email");
             String username = oauth2User.getName();
