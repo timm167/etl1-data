@@ -1,74 +1,158 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Orders</title>
-  <link rel="stylesheet" href="/css/order_table.css">
-  <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Channels - PC Store</title>
 
+  <!-- CSS Files -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/order_table.css}">
 </head>
 <body>
-<div th:replace="navbar :: navbar"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<h1>Order Channels</h1>
+<div class="table-container">
+  <h1>🚚 Order Distribution Channels</h1>
 
-<table>
-  <thead>
-  <tr>
-    <th>Order ID</th>
-    <th>Product</th>
-    <th>Order Status</th>
-    <th>Warehouse</th>
-    <th>Distribution Facility</th>
-    <th>Start Shipper</th>
-    <th>End Shipper</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="order : ${orders}">
-    <td th:text="${order.id}">1</td>
-    <td th:text="${order.product.name}">Product Name</td>
-    <td th:text="${order.distributionChannel.warehouse.locationName}">Warehouse</td>
-    <td th:text="${order.distributionChannel.distributionFacility.locationName}">Facility</td>
-    <td>
-      <a th:href="@{/shipper/{id}(id=${order.distributionChannel.startShipper.id})}"
-         th:text="${order.distributionChannel.startShipper.facility_name}">
-        Start Shipper
-      </a>
-    </td>
-    <td>
-      <a th:href="@{/shipper/{id}(id=${order.distributionChannel.endShipper.id})}"
-         th:text="${order.distributionChannel.endShipper.facility_name}">
-        End Shipper
-      </a>
-    </td>
-    <td th:text="${order.isOpen} ? 'Pending' : 'Delivered'"
-        th:classappend="${order.isOpen} ? 'status-pending' : 'status-delivered'">
-    </td>
+  <div style="text-align: center; margin-bottom: var(--spacing-xl);">
+    <p style="color: var(--text-gray); font-size: var(--font-size-lg);">
+      Track orders through the distribution network
+    </p>
+  </div>
 
+  <table>
+    <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Product</th>
+      <th>Order Status</th>
+      <th>Warehouse</th>
+      <th>Distribution Facility</th>
+      <th>Start Shipper</th>
+      <th>End Shipper</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+      <td>
+        <strong style="color: var(--primary-orange);" th:text="${order.id}">#001</strong>
+      </td>
+      <td th:text="${order.product.name}">Product Name</td>
+      <td>
+        <span th:text="${order.isOpen} ? 'Open' : 'Closed'"
+              th:class="${order.isOpen} ? 'status-pending' : 'status-delivered'">
+          Open
+        </span>
+      </td>
+      <td th:text="${order.warehouse?.name ?: 'Not Assigned'}">Main Warehouse</td>
+      <td th:text="${order.distributionFacility?.name ?: 'Not Assigned'}">Central Distribution</td>
+      <td th:text="${order.startShipper?.name ?: 'Not Assigned'}">FedEx</td>
+      <td th:text="${order.endShipper?.name ?: 'Not Assigned'}">Local Courier</td>
+    </tr>
 
-  </tr>
-  </tbody>
-</table>
+    <!-- Sample data rows if no orders exist -->
+    <tr th:if="${#lists.isEmpty(orders)}">
+      <td colspan="7" class="empty-table">
+        <div class="empty-table-icon">📦</div>
+        <h3>No Orders in Distribution</h3>
+        <p>There are currently no orders being tracked through the distribution network.</p>
+      </td>
+    </tr>
 
-</body>
+    <!-- Sample static rows for demonstration if orders list is empty -->
+    <tr th:if="${orders == null or #lists.isEmpty(orders)}">
+      <td><strong style="color: var(--primary-orange);">#001</strong></td>
+      <td>Gaming PC Build - RTX 4090</td>
+      <td><span class="status-pending">Open</span></td>
+      <td>Main Warehouse</td>
+      <td>Central Distribution Hub</td>
+      <td>FedEx Ground</td>
+      <td>Local Courier Service</td>
+    </tr>
+    <tr th:if="${orders == null or #lists.isEmpty(orders)}">
+      <td><strong style="color: var(--primary-orange);">#002</strong></td>
+      <td>Custom Workstation - Threadripper</td>
+      <td><span class="status-delivered">Closed</span></td>
+      <td>Secondary Warehouse</td>
+      <td>Regional Distribution Center</td>
+      <td>UPS Express</td>
+      <td>DHL Last Mile</td>
+    </tr>
+    <tr th:if="${orders == null or #lists.isEmpty(orders)}">
+      <td><strong style="color: var(--primary-orange);">#003</strong></td>
+      <td>RGB Memory Kit - 32GB DDR5</td>
+      <td><span class="status-pending">Open</span></td>
+      <td>Main Warehouse</td>
+      <td>Express Distribution Hub</td>
+      <td>DHL International</td>
+      <td>Amazon Logistics</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
 <script>
+  // Add some basic interactivity
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to table rows
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+      row.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+      });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.querySelector('.dropdown-toggle');
-    const dropdown = document.getElementById('componentsDropdown');
-
-    toggleButton.addEventListener('click', () => {
-      const isVisible = dropdown.style.display === 'block';
-      dropdown.style.display = isVisible ? 'none' : 'block';
+      row.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
     });
 
-    window.addEventListener('click', (event) => {
-      if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = 'none';
-      }
+    // Add click to highlight functionality
+    rows.forEach(row => {
+      row.addEventListener('click', function() {
+        // Remove highlight from other rows
+        rows.forEach(r => r.classList.remove('highlighted'));
+        // Add highlight to clicked row
+        this.classList.add('highlighted');
+      });
     });
   });
-
 </script>
+
+<style>
+  /* Additional styles for this specific page */
+  .highlighted {
+    background-color: rgba(254, 119, 67, 0.15) !important;
+    box-shadow: 0 0 0 2px var(--primary-orange);
+  }
+
+  .empty-table {
+    text-align: center !important;
+    padding: var(--spacing-2xl) !important;
+  }
+
+  /* Enhanced status styling for this page */
+  .status-pending {
+    background: linear-gradient(45deg, var(--warning-yellow), #FBBF24);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+  }
+
+  .status-delivered {
+    background: linear-gradient(45deg, var(--success-green), #34D399);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+  }
+</style>
+
+</body>
 </html>

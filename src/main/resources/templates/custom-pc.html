@@ -38,12 +38,11 @@
             transform: translateY(-1px);
         }
     </style>
-    <title>Custom PC</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
 <body>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<!-- Fixed navbar reference -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container">
     <div class="section">

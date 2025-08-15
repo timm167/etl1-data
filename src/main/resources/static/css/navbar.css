@@ -46,6 +46,10 @@ nav .dropdown-toggle:hover {
 /* ================================
    DROPDOWN STYLES
    ================================ */
+.dropdown-container {
+    position: relative;
+}
+
 .dropdown-toggle {
     position: relative;
 }
@@ -62,6 +66,7 @@ nav .dropdown-toggle:hover {
     z-index: 1100;
     min-width: 220px;
     box-shadow: var(--shadow-xl);
+    margin-top: 2px;
 }
 
 #componentsDropdown form {
@@ -143,15 +148,15 @@ nav .dropdown-toggle:hover {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: var(--spacing-xl); /* Increased gap between username and logout */
+    gap: var(--spacing-xl);
     color: var(--white);
-    min-width: 250px; /* Ensure enough space */
+    min-width: 250px;
 }
 
 .user-section span {
     color: var(--background-cream);
     font-weight: 500;
-    white-space: nowrap; /* Prevent username from wrapping */
+    white-space: nowrap;
 }
 
 .user-section strong {
