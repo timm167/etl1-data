@@ -200,10 +200,10 @@
                     <h3 th:text="${product.name}" class="mb-0">Product Name</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <span class="text-gray">Cost:</span>
-                        <strong th:text="'£' + ${product.cost}">£0.00</strong>
-                    </div>
+<!--                    <div class="mb-3">-->
+<!--                        <span class="text-gray">Cost:</span>-->
+<!--                        <strong th:text="'£' + ${product.cost}">£0.00</strong>-->
+<!--                    </div>-->
                     <div class="mb-3">
                         <span class="text-gray">Price:</span>
                         <strong th:text="'£' + ${product.price}" class="product-price">£0.00</strong>
@@ -211,9 +211,9 @@
 
                     <!-- Product Specifications -->
                     <div class="specifications">
-                        <p th:if="${product.color != null}">
-                            <strong>Color:</strong> <span th:text="${product.color.hex}">N/A</span>
-                        </p>
+<!--                        <p th:if="${product.color != null}">-->
+<!--                            <strong>Color:</strong> <span th:text="${product.color.hex}">N/A</span>-->
+<!--                        </p>-->
                         <p th:if="${product.caseEntity != null}">
                             <strong>Case:</strong> <span th:text="${product.caseEntity.name}">N/A</span>
                         </p>
