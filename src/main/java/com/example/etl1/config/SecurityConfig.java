@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/products", "/newegg-pcs", "/components/**",
+                        .requestMatchers("/", "/products", "/pricecomparison", "/components/**",
                                        "/images/**", "/css/**", "/js/**", "/login", "/oauth2/**").permitAll()
                         .requestMatchers("/users/after-login", "/users/check/**", "/users/has-staff", "/users/{name}").permitAll()
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")

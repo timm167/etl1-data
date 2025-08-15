@@ -24,6 +24,9 @@
     <form th:if="${userRole} == 'STAFF'" th:action="@{/orders/manage}" method="get">
         <button type="submit">Manage Orders</button>
     </form>
+    <form th:if="${userRole} == 'STAFF'" th:action="@{/pricecomparison}" method="get">
+        <button type="submit">Compare Market Rates</button>
+    </form>
 
     <form th:action="@{/toggle-staff}" method="post">
         <button type="submit"

@@ -10,34 +10,46 @@
 <div th:replace="~{navbar :: navbar}"></div>
 
     <h1>Newegg Pre-built PC Prices</h1>
-    <table>
-      <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>GPU</th>
-              <th>CPU</th>
-              <th>Memory</th>
-              <th>SSD</th>
-              <th>Model #</th>
-              <th>Origin</th>
-            <th>Accurate as of</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr th:each="pc : ${pcs}">
-            <td th:text="${pc.name}">Name</td>
-            <td th:text="'£' + ${pc.price}">Price</td>
-            <td th:text="${pc.gpu}"></td>
-              <td th:text="${pc.cpu}"></td>
-              <td th:text="${pc.memory}"></td>
-              <td th:text="${pc.ssd}"></td>
-              <td th:text="${pc.modelNumber}"></td>
-              <td th:text="${pc.origin}"></td>
-              <td th:text="${#temporals.format(pc.scrapeDate, 'yyyy-MM-dd - HH:mm:ss')}">Accurate as of</td>
-          </tr>
-      </tbody>
-    </table>
+
+<form action="/pricecomparison" method="get">
+    <input type="text" name="search" placeholder="Search by GPU, CPU, etc...">
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<table>
+    <thead>
+    <tr>
+        <th>PC Name</th>
+        <th>CPU</th>
+        <th>CPU Price</th>
+        <th>Graphics Card</th>
+        <th>Graphics Card Price</th>
+        <th>Memory</th>
+        <th>Memory Price</th>
+        <th>Internal Storage</th>
+        <th>Internal Storage Price</th>
+        <th>Total Price</th>
+        <th>Newegg Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pcData : ${pcComparisonData}">
+        <td th:text="${pcData.pcName}"></td>
+        <td th:text="${pcData.cpuName}?:''"></td>
+        <td th:text="${pcData.cpuPrice}?:''"></td>
+        <td th:text="${pcData.graphicsCardName}?:''"></td>
+        <td th:text="${pcData.graphicsCardPrice}?:''"></td>
+        <td th:text="${pcData.memoryName}?:''"></td>
+        <td th:text="${pcData.memoryPrice}?:''"></td>
+        <td th:text="${pcData.internalStorageName}?:''"></td>
+        <td th:text="${pcData.internalStoragePrice}?:''"></td>
+        <td th:text="${pcData.totalComponentPrice}"></td>
+        <td th:text="${pcData.neweggPrice}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 <script>
