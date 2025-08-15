@@ -48,6 +48,7 @@ public class StaffDashboardController {
         return "redirect:/access-denied";
     }
 
+
     @PostMapping("/create-account")
     public ResponseEntity<?> createStaffAccount(
             @RequestParam String name,
