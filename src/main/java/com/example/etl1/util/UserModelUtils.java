@@ -19,7 +19,7 @@ public class UserModelUtils {
                     .ifPresentOrElse(
                             u -> {
                                 model.addAttribute("userRole", u.getRole().name());
-                                model.addAttribute("userId", u.getId()); // always set userId
+                                model.addAttribute("userId", u.getId());
                             },
                             () -> {
                                 model.addAttribute("userRole", "");

@@ -24,14 +24,14 @@
         <h1>🛒 Your Shopping Basket</h1>
         <p>Review your selected items and proceed to checkout when ready</p>
 
-        <!-- Stats -->
+        <!-- Stats - Now using actual data -->
         <div class="basket-stats">
             <div class="stat-item">
-                <div class="stat-number">0</div>
+                <div class="stat-number" th:text="${itemCount ?: 0}">0</div>
                 <div class="stat-label">Items</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">£0.00</div>
+                <div class="stat-number" th:text="'£' + ${#numbers.formatDecimal(subtotal ?: 0, 0, 2)}">£0.00</div>
                 <div class="stat-label">Subtotal</div>
             </div>
         </div>
@@ -41,8 +41,34 @@
     <div class="basket-main">
         <!-- Basket Items -->
         <div class="basket-items">
+            <!-- Check if basket has items -->
+            <div th:if="${basketItems != null and !basketItems.empty}">
+                <!-- Display each basket item -->
+                <div th:each="item : ${basketItems}" class="basket-item">
+                    <!-- Product details -->
+                    <div class="item-details">
+                        <h4 th:text="${item.productName}">Product Name</h4>
+                        <p th:text="'Unit Price: £' + ${#numbers.formatDecimal(item.productPrice, 0, 2)}">Unit Price</p>
+                        <p th:text="'Quantity: ' + ${item.quantity}">Quantity</p>
+                    </div>
+
+                    <!-- Item price -->
+                    <div class="item-price" th:text="'£' + ${#numbers.formatDecimal(item.totalPrice, 0, 2)}">£0.00</div>
+
+                    <!-- Item controls -->
+                    <div class="item-controls">
+                        <div class="quantity-controls">
+                            <button class="qty-btn" th:onclick="'updateQuantity(' + ${item.productId} + ', ' + (${item.quantity} - 1) + ')'">-</button>
+                            <input type="number" class="qty-input" th:value="${item.quantity}" readonly>
+                            <button class="qty-btn" th:onclick="'updateQuantity(' + ${item.productId} + ', ' + (${item.quantity} + 1) + ')'">+</button>
+                        </div>
+                        <button class="remove-btn" th:onclick="'removeItem(' + ${item.productId} + ')'">Remove</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Empty Basket State -->
-            <div class="empty-basket">
+            <div th:if="${basketItems == null or basketItems.empty}" class="empty-basket">
                 <div class="empty-basket-icon">🛒</div>
                 <h3>Your basket is empty</h3>
                 <p>Discover our amazing selection of PC components, pre-built systems, and accessories. Start building your dream setup today!</p>
@@ -51,7 +77,88 @@
                 </a>
             </div>
         </div>
+
+        <!-- Basket Summary (only show if items exist) -->
+        <div th:if="${basketItems != null and !basketItems.empty}" class="basket-summary">
+            <h3 class="summary-title">Order Summary</h3>
+
+            <div class="summary-row">
+                <span class="label">Subtotal:</span>
+                <span class="value" th:text="'£' + ${#numbers.formatDecimal(subtotal ?: 0, 0, 2)}">£0.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span class="label">Tax (20%):</span>
+                <span class="value" th:text="'£' + ${#numbers.formatDecimal(tax ?: 0, 0, 2)}">£0.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span class="label">Shipping:</span>
+                <span class="value" th:text="'£' + ${#numbers.formatDecimal(shipping ?: 0, 0, 2)}">£0.00</span>
+            </div>
+
+            <div class="summary-row total">
+                <span class="label">Total:</span>
+                <span class="value" th:text="'£' + ${#numbers.formatDecimal(total ?: 0, 0, 2)}">£0.00</span>
+            </div>
+
+            <div class="action-buttons">
+                <a href="#" class="continue-shopping">
+                    Proceed to Checkout
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- JavaScript for basket operations -->
+<script>
+    function updateQuantity(productId, newQuantity) {
+        if (newQuantity < 1) {
+            removeItem(productId);
+            return;
+        }
+
+        fetch(`/basket/update/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `quantity=${newQuantity}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Reload page to show updated basket
+            } else {
+                alert('Failed to update quantity: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            alert('Failed to update quantity');
+        });
+    }
+
+    function removeItem(productId) {
+        if (confirm('Are you sure you want to remove this item?')) {
+            fetch(`/basket/remove/${productId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload(); // Reload page to show updated basket
+                } else {
+                    alert('Failed to remove item: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error removing item:', error);
+                alert('Failed to remove item');
+            });
+        }
+    }
+</script>
 </body>
 </html>

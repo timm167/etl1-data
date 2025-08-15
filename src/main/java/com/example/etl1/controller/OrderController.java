@@ -2,11 +2,16 @@ package com.example.etl1.controller;
 
 import com.example.etl1.model.Product;
 
+import com.example.etl1.model.users.User;
 import com.example.etl1.repository.logistics.DistributionChannelRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
+import com.example.etl1.repository.users.UserRepository;
 import com.example.etl1.service.OrderService;
 import com.example.etl1.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,6 +32,9 @@ public class OrderController {
 
     @Autowired
     DistributionChannelRepository distributionChannelRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
@@ -70,9 +78,17 @@ public class OrderController {
     public ModelAndView submitOrder(
             @RequestParam String address,
             @RequestParam Integer productId,
-            @RequestParam Integer quantity
+            @RequestParam Integer quantity,
+            @ModelAttribute(name = "userId", binding = false) Long userId
     ) {
-        orderService.createOrder(address, productId, quantity);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = ((OAuth2User) auth.getPrincipal()).getAttribute("email");
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        orderService.createOrder(address, productId, quantity, user);
 
         ModelAndView mav = new ModelAndView("orderSuccess");
         mav.addObject("message", "Order placed successfully!");

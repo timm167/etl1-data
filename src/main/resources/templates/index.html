@@ -45,9 +45,11 @@
     </div>
     <form th:action="@{/toggle-staff}" method="post">
         <button type="submit"
-                th:text="${userRole} == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'">
+                th:text="${userRole == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'}"
         </button>
     </form>
+    <p>[[${userRole}]]</p>
+
 </div>
 </body>
 </html>

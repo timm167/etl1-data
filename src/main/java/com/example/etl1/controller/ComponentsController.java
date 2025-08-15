@@ -51,7 +51,7 @@ public class ComponentsController {
         ModelAndView modelAndView = new ModelAndView("/components/" + type);
 
         ComponentRepository<? extends Component> componentRepository = switch (type) {
-            case "case" -> caseRepository;
+            case "cases" -> caseRepository;
             case "cpus" -> cpuRepository;
             case "cpu-coolers" -> cpuCoolerRepository;
             case "graphics-cards" -> graphicsCardRepository;

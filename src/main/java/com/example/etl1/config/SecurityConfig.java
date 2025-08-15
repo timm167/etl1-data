@@ -21,7 +21,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         // Pages
-                        .requestMatchers("/", "/products", "/newegg-pcs", "/basket", "/components/**").permitAll()
+                        .requestMatchers("/", "/products", "/pricecomparison", "/basket", "/components/**").permitAll()
+                        // Basket API endpoints - ADD THESE LINES
+                        .requestMatchers("/basket/add/**", "/basket/update/**", "/basket/remove/**", "/basket/count").permitAll()
                         // Static resources - CRITICAL: Add /static/**
                         .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                         // Auth related
