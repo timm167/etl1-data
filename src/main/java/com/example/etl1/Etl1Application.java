@@ -12,11 +12,11 @@ public class Etl1Application {
 		SpringApplication.run(Etl1Application.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner runScrape(Scraping scrape) {
-		return args -> {
-			scrape.runNeweggProcess();
-		};
-	}
+//	@Bean
+//	public CommandLineRunner runScrape(Scraping scrape) {
+//		return args -> {
+//			scrape.runNeweggProcess();
+//		};
+//	}
 
 }
