@@ -178,7 +178,7 @@ input[id="numberFilter"]:focus,
 }
 
 /* Hide all filter labels by default (controlled by JavaScript) */
-#priceFilterLabel,
+/*#priceFilterLabel,
 #caseSizeFilterLabel,
 #cpuClockFilterLabel,
 #gpuClockFilterLabel,
@@ -186,7 +186,7 @@ input[id="numberFilter"]:focus,
 #memorySpeedFilterLabel,
 #psuWattageFilterLabel {
     display: none;
-}
+}*/
 
 .filter-input-group {
     display: flex;

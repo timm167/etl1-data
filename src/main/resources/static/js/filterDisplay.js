@@ -7,6 +7,7 @@ function checkFilterBy(filterBySelect) {
     const numberFilter = document.getElementById("numberFilter");
 
     filterOp.style.display = "";
+    filterOp.value = "at least";
     numberFilter.style.display = "";
     numberFilter.required = true;
 
