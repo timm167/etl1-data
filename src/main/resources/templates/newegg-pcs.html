@@ -42,21 +42,58 @@
             font-weight: 700;
             font-size: 1.1rem;
         }
+        .comparison-form {
+        display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.comparison-form input[type="text"] {
+    flex-grow: 1; /* Allows the input to take up available space */
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-gray);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.comparison-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.comparison-form button[type="submit"] {
+    background-color: var(--primary-orange);
+    color: var(--white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.comparison-form button[type="submit"]:hover {
+    background-color: #d97706; /* A slightly darker orange for hover effect */
+}
     </style>
 </head>
 <body>
 <!-- Include navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<form action="/pricecomparison" method="get">
-    <input type="text" name="search" placeholder="Search by GPU, CPU, etc...">
-    <button type="submit">Search</button>
-</form>
-
 <div class="container">
     <div class="section">
         <h1>Newegg Pre-built PC Prices</h1>
         <p>Compare our competitive pricing with Newegg's latest offerings</p>
+
+        <form action="/pricecomparison" method="get" class="comparison-form">
+            <input type="text" name="search" placeholder="Search by GPU, CPU, etc...">
+            <button type="submit">Search</button>
+        </form>
+
 
         <div class="card">
             <div class="card-body">
