@@ -143,17 +143,44 @@ nav .dropdown-toggle:hover {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xl); /* Increased gap between username and logout */
     color: var(--white);
+    min-width: 250px; /* Ensure enough space */
 }
 
 .user-section span {
     color: var(--background-cream);
     font-weight: 500;
+    white-space: nowrap; /* Prevent username from wrapping */
 }
 
 .user-section strong {
     color: var(--primary-orange);
+}
+
+/* ================================
+   LOGIN/LOGOUT BUTTON STYLES
+   ================================ */
+.login-btn,
+.logout-btn {
+    background: linear-gradient(45deg, var(--primary-orange), #FF8A5C);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.login-btn:hover,
+.logout-btn:hover {
+    background: linear-gradient(45deg, #E5632A, var(--primary-orange));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 /* ================================
@@ -176,9 +203,11 @@ nav .dropdown-toggle:hover {
     .user-section {
         margin-left: 0;
         width: 100%;
-        justify-content: center;
+        justify-content: space-between;
         padding-top: var(--spacing-sm);
         border-top: 1px solid rgba(254, 119, 67, 0.3);
+        min-width: unset;
+        gap: var(--spacing-md);
     }
 
     #componentsDropdown {
