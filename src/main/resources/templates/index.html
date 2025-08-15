@@ -49,7 +49,11 @@
                 th:text="${userRole == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'}"
         </button>
     </form>
+    <form th:if="${userRole} == 'STAFF'" th:action="@{/go-to-staff-dashboard}" method="get">
+        <button type="submit">📋 Staff Dashboard</button>
+    </form>
     <p>[[${userRole}]]</p>
+
 
 </div>
 </body>

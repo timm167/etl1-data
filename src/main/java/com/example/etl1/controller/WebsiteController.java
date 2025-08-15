@@ -36,4 +36,9 @@ public class WebsiteController {
         return "redirect:/";
     }
 
+    @GetMapping("/go-to-staff-dashboard")
+    public String redirectToStaffDashboard() {
+        return "redirect:/users/staff/dashboard";
+    }
+
 }
