@@ -20,7 +20,6 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-
                         // Pages
                         .requestMatchers("/", "/products", "/pricecomparison", "/basket", "/components/**").permitAll()
                         // Basket API endpoints - ADD THESE LINES

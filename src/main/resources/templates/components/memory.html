@@ -1,61 +1,130 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Memory</title>
-  <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory (RAM) - Component Store</title>
+
+  <!-- CSS paths -->
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" th:href="@{/css/components.css}">
 </head>
-<body>
+<body class="components-page">
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<div class="components-container">
+  <!-- Back Button -->
+  <a href="/products" class="back-button">
+    ← Back to Products
+  </a>
 
-<form th:action="@{/components/memory}" method="get">
-  <label for="sortBy">Sort By</label>
-  <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Speed</option>
-  </select>
-  <select th:value="${order}" name="order" id="order" size="1">
-    <option>Ascending</option>
-    <option>Descending</option>
-  </select>
-  <button type="submit">Sort</button>
-</form>
-<ul>
-  <li th:each="mem : ${memory}" th:if="${mem.price > 0.0}">
-    <p th:text="'Name: ' + ${mem.name}"></p>
-    <p th:text="'Price: £' + ${#numbers.formatDecimal(mem.price, 0, 'COMMA', 2, 'POINT')}"></p>
-    <p th:text="'Speed: DDR' + ${mem.speed.getFirst().speed} + ' ' + ${mem.speed.getLast().speed} + 'MHz'"></p>
-    <p th:text="'Modules: ' + ${mem.modules.getFirst().module} + ' x ' + ${mem.modules.getLast().module} + 'GB'"></p>
-    <p>Price per GB: <span th:text="${mem.price_per_gb > 0.0} ? '£' + ${mem.price_per_gb} : 'Unavailable'"></span></p>
-    <p>Colour: <span th:text="${mem.color != null} ? ${mem.color} : 'N/A'"></span></p>
-    <p th:text="'First Word Latency: ' + ${mem.first_word_latency} + 'ns'"></p>
-    <p th:text="'CAS Latency: ' + ${mem.cas_latency} + ' cycles'"></p>
-    <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}" th:if="${componentIds != null}">
-      <input type="hidden" th:value="${mem.id}" name="memoryId">
-      <button>Select</button>
+  <!-- Page Header -->
+  <div class="components-header">
+    <h1>🧮 Memory (RAM)</h1>
+    <p>Boost your system performance with high-speed DDR4 and DDR5 memory modules</p>
+  </div>
+
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <form th:action="@{/components/memory}" method="get" class="sorting-form">
+      <div class="sort-group">
+        <label for="sortBy" class="sort-label">Sort By</label>
+        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
+          <option value="Name">Name</option>
+          <option value="Price">Price</option>
+          <option value="Speed">Speed</option>
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="order" class="sort-label">Order</label>
+        <select th:value="${order}" name="order" id="order" class="sort-select">
+          <option value="Ascending">Ascending</option>
+          <option value="Descending">Descending</option>
+        </select>
+      </div>
+      <div>
+        <label for="filterBy">Filter</label>
+        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
+          <option>(No filter)</option>
+          <option>Price</option>
+          <option value="Memory speed">Speed</option>
+        </select>
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+          <option>at least</option>
+          <option>at most</option>
+        </select>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+        <label id="memorySpeedFilterLabel" class="filterLabel" for="numberFilter">MHz</label>
+      </div>
+      <button type="submit" class="sort-button">Sort Memory</button>
     </form>
-  </li>
-</ul>
+  </div>
+
+  <!-- Components Grid -->
+  <div class="components-grid" th:if="${memory != null and !memory.empty}">
+    <div th:each="mem : ${memory}" th:if="${mem.price > 0.0}" class="component-card">
+      <!-- Card Header -->
+      <div class="component-card-header">
+        <h3 class="component-name" th:text="${mem.name}">Memory Name</h3>
+        <p class="component-price" th:text="'£' + ${#numbers.formatDecimal(mem.price, 0, 2)}">£0.00</p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="component-card-body">
+        <div class="component-specs">
+          <div class="spec-item">
+            <span class="spec-label">Speed:</span>
+            <span class="memory-speed" th:text="'DDR' + ${mem.speed.getFirst().speed} + ' ' + ${mem.speed.getLast().speed} + 'MHz'">DDR4 3200MHz</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Modules:</span>
+            <span class="spec-value highlight" th:text="${mem.modules.getFirst().module} + ' x ' + ${mem.modules.getLast().module} + 'GB'">2 x 8GB</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Color:</span>
+            <span class="spec-value" th:text="${mem.color ?: 'N/A'}">N/A</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">CAS Latency:</span>
+            <span class="spec-value" th:text="${mem.cas_latency} + ' cycles'">0 cycles</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">First Word Latency:</span>
+            <span class="spec-value" th:text="${mem.first_word_latency} + 'ns'">0ns</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Price per GB:</span>
+            <span class="spec-value"
+                  th:text="${mem.price_per_gb > 0.0} ? '£' + ${mem.price_per_gb} : 'Unavailable'"
+                  th:class="${mem.price_per_gb > 0.0} ? 'spec-value highlight' : 'spec-value unavailable'">
+                                Unavailable
+                            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="component-card-footer" th:if="${componentIds != null}">
+        <form th:action="@{/components/add-to-product}" method="post" th:object="${componentIds}">
+          <input type="hidden" th:value="${mem.id}" name="memoryId">
+          <button type="submit" class="select-button">
+            ✓ Select This Memory
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div th:if="${memory == null or memory.empty}" class="empty-components">
+    <div class="empty-components-icon">🧮</div>
+    <h3>No Memory Found</h3>
+    <p>Sorry, we couldn't find any memory modules matching your criteria. Try adjusting your sort options or check back later for new arrivals.</p>
+  </div>
+</div>
 </body>
-<script>
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.querySelector('.dropdown-toggle');
-    const dropdown = document.getElementById('componentsDropdown');
-
-    toggleButton.addEventListener('click', () => {
-      const isVisible = dropdown.style.display === 'block';
-      dropdown.style.display = isVisible ? 'none' : 'block';
-    });
-
-    window.addEventListener('click', (event) => {
-      if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = 'none';
-      }
-    });
-  });
-
-</script>
+<script th:src="@{/js/filterDisplay.js}"></script>
 </html>

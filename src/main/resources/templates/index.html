@@ -2,36 +2,53 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - PC Store</title>
 
+    <!-- Correct CSS paths -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="text-center section">
+        <h1>CPU Company ERP</h1>
+        <p class="mb-4">We put the 'you' in CPU</p>
 
-<h1>CPU company ERP</h1>
-<p>We put the 'you' in CPU</p>
+        <div class="grid grid-3 mt-5">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>🖥️ Pre-built PCs</h3>
+                    <p>High-performance systems ready to ship</p>
+                    <a href="/products" class="btn btn-primary">View Products</a>
+                </div>
+            </div>
 
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>⚙️ Custom Builds</h3>
+                    <p>Design your perfect PC with our components</p>
+                    <a href="/products/create" class="btn btn-primary">Build Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>🔧 Components</h3>
+                    <p>Individual parts for enthusiasts</p>
+                    <a href="/components/cpus" class="btn btn-primary">Browse Parts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form th:action="@{/toggle-staff}" method="post">
+        <button type="submit"
+                th:text="${userRole} == 'STAFF' ? 'Currently Staff — Toggle to Customer' : 'Currently Customer — Toggle to Staff'">
+        </button>
+    </form>
+</div>
 </body>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
-
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
-</script>
 </html>

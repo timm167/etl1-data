@@ -2,118 +2,338 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Products</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - PC Store</title>
 
+    <!-- CSS paths -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/basket.css}">
+
+    <style>
+        /* Additional styles for message positioning */
+        .notification-message {
+            position: fixed;
+            top: 100px;
+            right: var(--spacing-lg);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            max-width: 300px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .notification-message.success {
+            background-color: rgba(254, 119, 67, 0.1);
+            color: var(--dark-blue);
+            border: 1px solid var(--primary-orange);
+        }
+
+        .notification-message.error {
+            background-color: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+        }
+
+        /* Product specifications styling */
+        .specifications {
+            font-size: var(--font-size-sm);
+            color: var(--text-gray);
+        }
+
+        .specifications p {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .specifications strong {
+            color: var(--dark-blue);
+        }
+
+        /* Price highlighting */
+        .product-price {
+            color: var(--primary-orange);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+        }
+
+        /* Ensure buttons take full width in card footer */
+        .card-footer .btn {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<!-- Basket button at top right -->
-<div style="text-align: right; margin: 10px;">
-    <a href="/basket" style="background: #007bff; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">
-        🛒 View Basket
-    </a>
-</div>
-  
-<div th:replace="navbar :: navbar"></div>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<form th:action="@{/products}" method="get">
-    <p>
-        <label for="sortBy">Sort By</label>
-        <select th:value="${sortBy}" name="sortBy" id="sortBy" size="1">
-            <option>Name</option>
-            <option>Price</option>
-        </select>
-        <select th:value="${order}" name="order" id="order" size="1">
-            <option>Ascending</option>
-            <option>Descending</option>
-        </select>
-    </p>
-    <p>
-        <label for="filterBy">Filter</label>
-        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
-            <option>(No filter)</option>
-            <option>Price</option>
-            <option>CPU clock speed</option>
-            <option>GPU clock speed</option>
-        </select>
-        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
-            <option>at least</option>
-            <option>at most</option>
-        </select>
-        <label id="priceFilterLabel" for="numberFilter">£</label>
-        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-        <label id="cpuClockFilterLabel" for="numberFilter">GHz</label>
-        <label id="gpuClockFilterLabel" for="numberFilter">MHz</label>
-    </p>
-    <p>
-        <button type="submit">Go</button>
-    </p>
-</form>
-<ul>
-    <li th:each="product : ${products}" th:if="${product.price > 0.0}">
-        <h2 th:text="${product.name}">Product Name</h2>
+<div class="container">
+    <!-- Page Header -->
+    <div class="section">
+        <h1>Our Products</h1>
 
-        <p th:text="'Cost: £' + ${product.cost}"></p>
-        <p th:text="'Price: £' + ${product.price}"></p>
-
-        <p th:text="'Color: ' + (${product.color != null ? product.color.hex : 'N/A'})"></p>
-        <p th:text="'Case: ' + (${product.caseEntity != null ? product.caseEntity.name : 'N/A'})"></p>
-        <p th:text="'CPU: ' + (${product.cpu != null ? product.cpu.name : 'N/A'})"></p>
-        <p th:text="'CPU Cooler: ' + (${product.cpuCooler != null ? product.cpuCooler.name : 'N/A'})"></p>
-        <p th:text="'Graphics Card: ' + (${product.graphicsCard != null ? product.graphicsCard.name : 'N/A'})"></p>
-        <p th:text="'Internal Storage: ' + (${product.internalStorage != null ? product.internalStorage.name : 'N/A'})"></p>
-        <p th:text="'Memory: ' + (${product.memory != null ? product.memory.name : 'N/A'})"></p>
-        <p th:text="'Motherboard: ' + (${product.motherboard != null ? product.motherboard.name : 'N/A'})"></p>
-        <p th:text="'Power Supply: ' + (${product.powerSupply != null ? product.powerSupply.name : 'N/A'})"></p>
-
-        <!-- Reviews section -->
-        <div class="reviews">
-            <h3>Reviews</h3>
-
-            <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
-            <div th:if="${reviewsByProductId != null}">
-                <ul>
-                    <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
-                    <li th:each="r : ${reviewsByProductId[product.id]}">
-                        <strong th:text="${r.email}">email</strong>:
-                        <span th:text="${r.content}">content</span>
-                        <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
-                    </li>
-                </ul>
+        <!-- Sorting Controls -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/products}" method="get" class="grid grid-3" style="align-items: end;">
+                    <div class="form-group">
+                        <label for="sortBy" class="form-label">Sort By</label>
+                        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="form-select">
+                            <option>Name</option>
+                            <option>Price</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order" class="form-label">Order</label>
+                        <select th:value="${order}" name="order" id="order" class="form-select">
+                            <option>Ascending</option>
+                            <option>Descending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterBy" class="form-label">Filter</label>
+                        <select th:value="${filterBy}" name="filterBy" id="filterBy" class="form-select" size="1" onchange="checkFilterBy(this);">
+                            <option>(No filter)</option>
+                            <option>Price</option>
+                            <option>CPU clock speed</option>
+                            <option>GPU clock speed</option>
+                        </select>
+                        <select th:value="${filterOp}" name="filterOp" id="filterOp" class="form-select" size="1">
+                            <option>at least</option>
+                            <option>at most</option>
+                        </select>
+                        <label id="priceFilterLabel" for="numberFilter" class="form-label filterLabel">£</label>
+                        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
+                        <label id="cpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">GHz</label>
+                        <label id="gpuClockFilterLabel" for="numberFilter" class="form-label filterLabel">MHz</label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Go</button>
+                    </div>
+                </form>
             </div>
-
-            <h4>Add a review</h4>
-            <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
-                <label>
-                    Review
-                    <textarea name="content" rows="3" cols="40" required></textarea>
-                </label>
-                <br>
-                <button type="submit">Submit</button>
-            </form>
         </div>
-    </li>
-</ul>
+
+        <!-- Products Grid -->
+        <div class="grid grid-2">
+            <div th:each="product : ${products}" th:if="${product.price > 0.0}" class="card">
+                <div class="card-header">
+                    <h3 th:text="${product.name}" class="mb-0">Product Name</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="text-gray">Cost:</span>
+                        <strong th:text="'£' + ${product.cost}">£0.00</strong>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-gray">Price:</span>
+                        <strong th:text="'£' + ${product.price}" class="product-price">£0.00</strong>
+                    </div>
+
+                    <!-- Product Specifications -->
+                    <div class="specifications">
+                        <p th:if="${product.color != null}">
+                            <strong>Color:</strong> <span th:text="${product.color.hex}">N/A</span>
+                        </p>
+                        <p th:if="${product.caseEntity != null}">
+                            <strong>Case:</strong> <span th:text="${product.caseEntity.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.cpu != null}">
+                            <strong>CPU:</strong> <span th:text="${product.cpu.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.cpuCooler != null}">
+                            <strong>CPU Cooler:</strong> <span th:text="${product.cpuCooler.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.graphicsCard != null}">
+                            <strong>Graphics Card:</strong> <span th:text="${product.graphicsCard.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.internalStorage != null}">
+                            <strong>Storage:</strong> <span th:text="${product.internalStorage.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.memory != null}">
+                            <strong>Memory:</strong> <span th:text="${product.memory.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.motherboard != null}">
+                            <strong>Motherboard:</strong> <span th:text="${product.motherboard.name}">N/A</span>
+                        </p>
+                        <p th:if="${product.powerSupply != null}">
+                            <strong>Power Supply:</strong> <span th:text="${product.powerSupply.name}">N/A</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <!-- Add to Basket Button using btn classes -->
+                    <button
+                            type="button"
+                            class="btn btn-primary btn-lg"
+                            th:data-product-id="${product.id}"
+                            th:onclick="'addToBasket(' + ${product.id} + ')'"
+                    >
+                        🛒 Add to Basket
+                    </button>
+                </div>
+
+                <!-- Reviews section -->
+                <div class="reviews">
+                    <h3>Reviews</h3>
+
+                    <!-- Optional display if you provide a Map<Integer, List<Review>> named 'reviewsByProductId' -->
+                    <div th:if="${reviewsByProductId != null}">
+                        <ul>
+                            <li th:if="${#lists.isEmpty(reviewsByProductId[product.id])}">No reviews yet.</li>
+                            <li th:each="r : ${reviewsByProductId[product.id]}">
+                                <strong th:text="${r.email}">email</strong>:
+                                <span th:text="${r.content}">content</span>
+                                <small th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h4>Add a review</h4>
+                    <form th:action="@{/products/{id}/reviews(id=${product.id})}" method="post">
+                        <label>
+                            Review
+                            <textarea name="content" rows="3" cols="40" required></textarea>
+                        </label>
+                        <br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 
+<!-- JavaScript for Add to Basket functionality -->
 <script>
+    console.log('Products page JavaScript loaded');
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
+    // Add to Basket function
+    function addToBasket(productId, quantity = 1) {
+        console.log('Adding product to basket:', productId);
 
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
+        // Find the button and show loading state
+        const button = document.querySelector(`[data-product-id="${productId}"]`);
+        const originalText = button ? button.innerHTML : '';
 
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '⏳ Adding...';
+        }
+
+        // Make the request to your backend
+        fetch(`/basket/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `quantity=${quantity}`
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+
+            if (data.success) {
+                showNotification('✅ Item added to basket successfully!', 'success');
+                updateBasketCount(data.basketCount);
+            } else {
+                throw new Error(data.message || 'Failed to add item to basket');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding to basket:', error);
+            showNotification('❌ Failed to add item: ' + error.message, 'error');
+        })
+        .finally(() => {
+            // Reset button state
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = originalText;
             }
         });
+    }
+
+    function showNotification(message, type) {
+        // Remove existing notification
+        const existingNotification = document.getElementById('basket-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // Create new notification using your message styles
+        const notificationEl = document.createElement('div');
+        notificationEl.id = 'basket-notification';
+        notificationEl.className = `notification-message ${type}`;
+        notificationEl.textContent = message;
+
+        document.body.appendChild(notificationEl);
+
+        // Auto-hide after 4 seconds
+        setTimeout(() => {
+            if (notificationEl.parentNode) {
+                notificationEl.remove();
+            }
+        }, 4000);
+    }
+
+    function updateBasketCount(count) {
+        console.log('Updating basket count to:', count);
+
+        // Find the basket button in navbar
+        const basketButton = document.querySelector('.basket-button');
+        if (!basketButton) {
+            console.log('Basket button not found in navbar');
+            return;
+        }
+
+        // Look for existing basket count element
+        let basketCountEl = basketButton.querySelector('.basket-count');
+
+        // Create basket count element if it doesn't exist
+        if (!basketCountEl) {
+            basketCountEl = document.createElement('span');
+            basketCountEl.className = 'basket-count';
+            basketButton.style.position = 'relative';
+            basketButton.appendChild(basketCountEl);
+        }
+
+        // Update the count
+        basketCountEl.textContent = count;
+        basketCountEl.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    // Load initial basket count when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, fetching basket count...');
+
+        fetch('/basket/count')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(count => {
+                console.log('Initial basket count:', count);
+                updateBasketCount(count);
+            })
+            .catch(error => {
+                console.log('Could not load basket count:', error);
+                // This is not critical, so we just log it
+            });
     });
 
 </script>
 <script th:src="@{/js/filterDisplay.js}"></script>
+
 </html>

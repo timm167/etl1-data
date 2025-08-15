@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div class="container">
+    <div class="section text-center">
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+            <div class="card-body">
+                <div style="font-size: 4rem; color: var(--error-red); margin-bottom: var(--spacing-lg);">
+                    🚫
+                </div>
+                <h1>Access Denied</h1>
+                <p style="font-size: 1.1rem; color: var(--text-gray);">
+                    You don't have permission to access this page.
+                </p>
+
+                <div style="margin-top: var(--spacing-xl);">
+                    <a href="/" class="btn btn-primary">
+                        🏠 Go Home
+                    </a>
+                    <a href="/products" class="btn btn-secondary" style="margin-left: var(--spacing-sm);">
+                        🖥️ View Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -2,6 +2,42 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom PC Builder - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+
+    <style>
+        .component-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .component-input {
+            flex: 1;
+            pointer-events: none;
+            background-color: var(--light-gray);
+        }
+
+        .choose-btn {
+            background: var(--primary-orange);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .choose-btn:hover {
+            background: #E5632A;
+            transform: translateY(-1px);
+        }
+    </style>
     <title>Custom PC</title>
     <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
 </head>
@@ -9,71 +45,121 @@
 
 <div th:replace="~{navbar :: navbar}"></div>
 
-    <form th:action="@{/products}" method="post" th:object="${customPc}">
-        <p>
-            <label for="cpuName">CPU:</label>
-            <input type="text" th:field="*{cpu.name}" id="cpuName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/cpus}">Choose</a></button>
-        </p>
-        <p>
-            <label for="graphicsCardName">Graphics Card:</label>
-            <input type="text" th:field="*{graphicsCard.name}" id="graphicsCardName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/graphics-cards}">Choose</a></button>
-        </p>
-        <p>
-            <label for="memoryName">Memory:</label>
-            <input type="text" th:field="*{memory.name}" id="memoryName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/memory}">Choose</a></button>
-        </p>
-        <p>
-            <label for="internalStorageName">Storage:</label>
-            <input type="text" th:field="*{internalStorage.name}" id="internalStorageName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/internal-storage}">Choose</a></button>
-        </p>
-        <p>
-            <label for="motherboardName">Motherboard:</label>
-            <input type="text" th:field="*{motherboard.name}" id="motherboardName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/motherboards}">Choose</a></button>
-        </p>
-        <p>
-            <label for="powerSupplyName">Power Supply:</label>
-            <input type="text" th:field="*{powerSupply.name}" id="powerSupplyName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/power-supplies}">Choose</a></button>
-        </p>
-        <p>
-            <label for="cpuCoolerName">CPU Cooler:</label>
-            <input type="text" th:field="*{cpuCooler.name}" id="cpuCoolerName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/cpu-coolers}">Choose</a></button>
-        </p>
-        <p>
-            <label for="caseName">Case:</label>
-            <input type="text" th:field="*{caseEntity.name}" id="caseName" autocomplete="off" style="caret-color: transparent !important;" onkeydown="event.preventDefault()" required>
-            <button><a th:href="@{/components/cases}">Choose</a></button>
-        </p>
-        <p>
-            <label th:for="productName">Name your build:</label>
-            <input type="text" th:value="${productName}" name="productName" id="productName" required>
-        </p>
-        <p><button type="submit">Submit</button></p>
-    </form>
+<div class="container">
+    <div class="section">
+        <h1>🔧 Custom PC Builder</h1>
+        <p>Select components to build your perfect custom PC</p>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Select Your Components</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/products}" method="post" th:object="${customPc}">
+
+                    <div class="form-group">
+                        <label for="cpuName" class="form-label">🧠 CPU:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{cpu.name}" id="cpuName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/cpus}" class="choose-btn">Choose CPU</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="graphicsCardName" class="form-label">🎮 Graphics Card:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{graphicsCard.name}" id="graphicsCardName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/graphics-cards}" class="choose-btn">Choose GPU</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memoryName" class="form-label">🧮 Memory:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{memory.name}" id="memoryName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/memory}" class="choose-btn">Choose RAM</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="internalStorageName" class="form-label">💾 Storage:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{internalStorage.name}" id="internalStorageName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/internal-storage}" class="choose-btn">Choose Storage</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motherboardName" class="form-label">🔌 Motherboard:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{motherboard.name}" id="motherboardName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/motherboards}" class="choose-btn">Choose Motherboard</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="powerSupplyName" class="form-label">⚡ Power Supply:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{powerSupply.name}" id="powerSupplyName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/power-supplies}" class="choose-btn">Choose PSU</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpuCoolerName" class="form-label">❄️ CPU Cooler:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{cpuCooler.name}" id="cpuCoolerName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/cpu-coolers}" class="choose-btn">Choose Cooler</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="caseName" class="form-label">💻 Case:</label>
+                        <div class="component-selector">
+                            <input type="text" th:field="*{caseEntity.name}" id="caseName"
+                                   class="form-input component-input" autocomplete="off"
+                                   style="caret-color: transparent !important;"
+                                   onkeydown="event.preventDefault()" required>
+                            <a th:href="@{/components/cases}" class="choose-btn">Choose Case</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productName" class="form-label">🏷️ Name your build:</label>
+                        <input type="text" th:value="${productName}" name="productName" id="productName"
+                               class="form-input" placeholder="Enter a name for your custom PC" required>
+                    </div>
+
+                    <div style="margin-top: var(--spacing-xl);">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                            🚀 Create Custom PC
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
-
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
-</script>
 </html>
