@@ -3,10 +3,11 @@
 <head>
     <title>Customer Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 
 </head>
 <body>
-    <div th:replace="~{navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <h1>Welcome to your Dashboard</h1>
     <p>Logged in as: <span th:text="${userName}"></span></p>

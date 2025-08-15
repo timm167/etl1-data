@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 
-<div th:replace="~{navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <p>Logged in as: <span th:text="${userName}"></span></p>
 <div th:replace="~{fragments/login-logout :: login-logout}"></div>
