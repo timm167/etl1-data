@@ -1,8 +1,8 @@
 package com.example.etl1.service;
 
 import com.example.etl1.dto.BasketResponseDto;
-import com.example.etl1.entity.Basket;
-import com.example.etl1.entity.BasketItem;
+import com.example.etl1.model.Basket;
+import com.example.etl1.model.BasketItem;
 import com.example.etl1.model.Product;  // Changed from entity to model
 import com.example.etl1.repository.BasketRepository;
 import com.example.etl1.repository.BasketItemRepository;
@@ -118,13 +118,10 @@ public class BasketService {
         return convertToResponseDto(basket);
     }
 
-    public void clearBasket(String sessionId) {
-        Optional<Basket> basket = basketRepository.findBySessionId(sessionId);
-        if (basket.isPresent()) {
-            basketItemRepository.deleteAll(basket.get().getItems());
-            basket.get().getItems().clear();
-            basketRepository.save(basket.get());
-        }
+    @Transactional
+    public void clearBasket(Basket basket) {
+        basket.getItems().clear();
+        basketRepository.save(basket);
     }
 
     /**

@@ -279,66 +279,9 @@
     </div>
 </div>
 
-<!-- JavaScript for filtering functionality -->
-<script>
-    function checkFilterBy(selectElement) {
-        // Hide all filter labels first
-        document.getElementById('priceFilterLabel').style.display = 'none';
-        document.getElementById('cpuClockFilterLabel').style.display = 'none';
-        document.getElementById('gpuClockFilterLabel').style.display = 'none';
-
-        // Show the appropriate label based on selection
-        const selectedValue = selectElement.value;
-        if (selectedValue === 'Price') {
-            document.getElementById('priceFilterLabel').style.display = 'inline';
-        } else if (selectedValue === 'CPU clock speed') {
-            document.getElementById('cpuClockFilterLabel').style.display = 'inline';
-        } else if (selectedValue === 'GPU clock speed') {
-            document.getElementById('gpuClockFilterLabel').style.display = 'inline';
-        }
-    }
-
-    // Basket functionality
-    function addToBasket(productId) {
-        fetch(`/basket/add/${productId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ quantity: 1 })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification('Item added to basket!', 'success');
-            } else {
-                showNotification('Failed to add item to basket', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error adding item to basket', 'error');
-        });
-    }
-
-    function showNotification(message, type) {
-        // Remove any existing notifications
-        const existingNotification = document.querySelector('.notification-message');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
-
-        // Create new notification
-        const notification = document.createElement('div');
-        notification.className = `notification-message ${type}`;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-
-        // Remove notification after 3 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
-</script>
 </body>
+
+<script th:src="@{/js/addToBasket.js}"></script>
+<script th:src="@{/js/filterDisplay.js}"></script>
+
 </html>

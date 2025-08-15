@@ -1,4 +1,4 @@
-package com.example.etl1.entity;
+package com.example.etl1.model;
 
 import jakarta.persistence.*;
 
