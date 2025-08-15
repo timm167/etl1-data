@@ -20,9 +20,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/products", "/pricecomparison", "/components/**",
-                                       "/images/**", "/css/**", "/js/**", "/login", "/oauth2/**").permitAll()
+
+                        // Pages
+                        .requestMatchers("/", "/products", "/pricecomparison", "/basket", "/components/**").permitAll()
+                        // Basket API endpoints - ADD THESE LINES
+                        .requestMatchers("/basket/add/**", "/basket/update/**", "/basket/remove/**", "/basket/count").permitAll()
+                        // Static resources - CRITICAL: Add /static/**
+                        .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        // Auth related
+                        .requestMatchers("/login", "/oauth2/**").permitAll()
                         .requestMatchers("/users/after-login", "/users/check/**", "/users/has-staff", "/users/{name}").permitAll()
+                        // Role-based access
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")
                         .requestMatchers("/staff/**").hasAuthority("STAFF")
                         .requestMatchers("/access-denied").permitAll()
@@ -37,12 +45,12 @@ public class SecurityConfig {
                         )
                 )
                 .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("https://dev-nkoakipmfm3rqyah.uk.auth0.com/v2/logout?client_id=Ow4xGShneGg3b6HtGSJcLbnnxKoFkM8N&returnTo=http://localhost:8080/")
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .deleteCookies("JSESSIONID")
-                    .permitAll()
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("https://dev-nkoakipmfm3rqyah.uk.auth0.com/v2/logout?client_id=Ow4xGShneGg3b6HtGSJcLbnnxKoFkM8N&returnTo=http://localhost:8080/")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedPage("/access-denied")

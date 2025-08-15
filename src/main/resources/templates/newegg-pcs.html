@@ -1,74 +1,100 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
-<head lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8">
-    <title>Newegg Price Comparison</title>
-    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="/navbar.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newegg Price Comparison - PC Store</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+
+    <style>
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-lg);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .price-table th {
+            background: linear-gradient(45deg, var(--dark-blue), #3A5A6D);
+            color: var(--white);
+            padding: var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .price-table td {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .price-table tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        .price-cell {
+            color: var(--primary-orange);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
-
-<div th:replace="~{navbar :: navbar}"></div>
-
-    <h1>Newegg Pre-built PC Prices</h1>
+<!-- Include navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <form action="/pricecomparison" method="get">
     <input type="text" name="search" placeholder="Search by GPU, CPU, etc...">
     <button type="submit">Search</button>
 </form>
 
-<hr>
+<div class="container">
+    <div class="section">
+        <h1>Newegg Pre-built PC Prices</h1>
+        <p>Compare our competitive pricing with Newegg's latest offerings</p>
 
-<table>
-    <thead>
-    <tr>
-        <th>PC Name</th>
-        <th>CPU</th>
-        <th>CPU Price</th>
-        <th>Graphics Card</th>
-        <th>Graphics Card Price</th>
-        <th>Memory</th>
-        <th>Memory Price</th>
-        <th>Internal Storage</th>
-        <th>Internal Storage Price</th>
-        <th>Total Price</th>
-        <th>Newegg Price</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="pcData : ${pcComparisonData}">
-        <td th:text="${pcData.pcName}"></td>
-        <td th:text="${pcData.cpuName}?:''"></td>
-        <td th:text="${pcData.cpuPrice}?:''"></td>
-        <td th:text="${pcData.graphicsCardName}?:''"></td>
-        <td th:text="${pcData.graphicsCardPrice}?:''"></td>
-        <td th:text="${pcData.memoryName}?:''"></td>
-        <td th:text="${pcData.memoryPrice}?:''"></td>
-        <td th:text="${pcData.internalStorageName}?:''"></td>
-        <td th:text="${pcData.internalStoragePrice}?:''"></td>
-        <td th:text="${pcData.totalComponentPrice}"></td>
-        <td th:text="${pcData.neweggPrice}"></td>
-    </tr>
-    </tbody>
-</table>
-
+        <div class="card">
+            <div class="card-body">
+                <table class="price-table">
+                    <thead>
+                    <tr>
+                        <th>PC Name</th>
+                        <th>CPU</th>
+                        <th>CPU Price</th>
+                        <th>Graphics Card</th>
+                        <th>Graphics Card Price</th>
+                        <th>Memory</th>
+                        <th>Memory Price</th>
+                        <th>Internal Storage</th>
+                        <th>Internal Storage Price</th>
+                        <th>Total Price</th>
+                        <th>Newegg Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pcData : ${pcComparisonData}">
+                        <td th:text="${pcData.pcName}"></td>
+                        <td th:text="${pcData.cpuName}?:''"></td>
+                        <td th:text="${pcData.cpuPrice}?:''"></td>
+                        <td th:text="${pcData.graphicsCardName}?:''"></td>
+                        <td th:text="${pcData.graphicsCardPrice}?:''"></td>
+                        <td th:text="${pcData.memoryName}?:''"></td>
+                        <td th:text="${pcData.memoryPrice}?:''"></td>
+                        <td th:text="${pcData.internalStorageName}?:''"></td>
+                        <td th:text="${pcData.internalStoragePrice}?:''"></td>
+                        <td th:text="${pcData.totalComponentPrice}"></td>
+                        <td th:text="${pcData.neweggPrice}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButton = document.querySelector('.dropdown-toggle');
-        const dropdown = document.getElementById('componentsDropdown');
-
-        toggleButton.addEventListener('click', () => {
-            const isVisible = dropdown.style.display === 'block';
-            dropdown.style.display = isVisible ? 'none' : 'block';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    });
-
-</script>
 </html>
