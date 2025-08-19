@@ -1,5 +1,6 @@
 package com.example.etl1.controller;
 
+import com.example.etl1.dto.OrderFormDto;
 import com.example.etl1.model.Basket;
 import com.example.etl1.model.BasketItem;
 import com.example.etl1.model.Product;
@@ -9,6 +10,7 @@ import com.example.etl1.repository.BasketRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
 import com.example.etl1.repository.users.UserRepository;
 import com.example.etl1.service.BasketService;
+import com.example.etl1.service.CountryService;
 import com.example.etl1.service.OrderService;
 import com.example.etl1.service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -44,11 +46,15 @@ public class OrderController {
     @Autowired
     BasketService basketService;
 
+    @Autowired
+    CountryService countryService;
+
     @GetMapping("/order_form")
     public ModelAndView showOrderForm() {
         List<Product> products = productService.getAllProducts();
         ModelAndView mav = new ModelAndView("order");
         mav.addObject("products", products);
+        mav.addObject("countries", countryService.getAll());
         return mav;
     }
 
@@ -88,8 +94,9 @@ public class OrderController {
 
         Basket basket = basketRepository.findBySessionId(session.getId()).orElse(null);
 
+        mav.addObject("countries", countryService.getAll());
+
         if (basket != null && !basket.getItems().isEmpty()) {
-            // Use BasketItem.getTotalPrice() to sum totals
             BigDecimal total = basket.getItems().stream()
                     .map(BasketItem::getTotalPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -107,11 +114,14 @@ public class OrderController {
 
     @PostMapping("/create_order")
     public ModelAndView submitOrder(
-            @RequestParam String address,
-            @RequestParam Integer productId,
-            @RequestParam Integer quantity,
+            @ModelAttribute OrderFormDto orderForm,
             @ModelAttribute(name = "userId", binding = false) Long userId
     ) {
+
+        String address = orderForm.getFullAddress();
+        Integer productId = orderForm.getProductId();
+        Integer quantity = orderForm.getQuantity();
+        String recipient = orderForm.getFullName();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = ((OAuth2User) auth.getPrincipal()).getAttribute("email");
@@ -119,7 +129,7 @@ public class OrderController {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        orderService.createOrder(address, productId, quantity, user);
+        orderService.createOrder(address, productId, quantity, user, recipient);
 
         ModelAndView mav = new ModelAndView("orderSuccess");
         mav.addObject("message", "Order placed successfully!");
@@ -128,7 +138,7 @@ public class OrderController {
 
     @PostMapping("/create_from_basket")
     public ModelAndView submitCheckout(
-            @RequestParam String address,
+            @ModelAttribute OrderFormDto orderForm,
             HttpSession session
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -139,21 +149,22 @@ public class OrderController {
 
         Basket basket = basketRepository.findBySessionId(session.getId()).orElse(null);
 
+        String address = orderForm.getFullAddress();
+        String recipient = orderForm.getFullName();
+
+
         if (basket == null || basket.getItems().isEmpty()) {
             throw new RuntimeException("Basket is empty");
         }
 
-        // Loop through each basket item and create an order line
         for (BasketItem item : basket.getItems()) {
             Integer productId = item.getProduct().getId();
             Integer quantity = item.getQuantity();
-            orderService.createOrder(address, productId, quantity, user);
+            orderService.createOrder(address, productId, quantity, user, recipient);
         }
 
-        // Clear basket after creating all orders
         basketService.clearBasket(basket);
 
-        // Redirect to confirmation page
         ModelAndView mav = new ModelAndView("orderSuccess");
         mav.addObject("message", "Order placed successfully!");
         return mav;

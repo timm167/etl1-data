@@ -48,4 +48,7 @@ public class Order {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "recipient")
+    private String recipient;
 }
