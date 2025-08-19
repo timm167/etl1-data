@@ -52,15 +52,15 @@
           <option value="GPU clock speed">Core clock speed</option>
           <option value="GPU brand">Brand</option>
         </select>
-        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1">
+        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1" style="display:none;">
           <option class="numberFilterOption">at least</option>
           <option class="numberFilterOption">at most</option>
           <option class="brandFilterOption">NVIDIA</option>
           <option class="brandFilterOption">AMD</option>
         </select>
-        <label id="priceFilterLabel" class="filterLabel" for="numberFilter">£</label>
-        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any">
-        <label id="gpuClockFilterLabel" class="filterLabel" for="numberFilter">MHz</label>
+        <label id="priceFilterLabel" class="filterLabel" for="numberFilter" style="display:none;">£</label>
+        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any" style="display:none;">
+        <label id="filterUnitLabel" class="filterLabel" for="numberFilter" style="display:none;"></label>
       </div>
       <button type="submit" class="sort-button">Sort Graphics Cards</button>
     </form>
