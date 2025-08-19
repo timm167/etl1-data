@@ -13,6 +13,17 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div id="confirm-modal" class="modal">
+    <div class="modal-content">
+        <h2>Mark as delivered?</h2>
+        <p>Are you sure you want to mark this order as delivered?</p>
+        <div class="modal-actions">
+            <button id="confirm-yes" class="btn btn-primary">Yes</button>
+            <button id="confirm-no" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <div class="table-container">
   <h1>🚚 Order Distribution Channels</h1>
 
@@ -27,6 +38,7 @@
   <tr>
     <th>Order ID</th>
     <th>Product</th>
+      <th>Quantity</th>
     <th>Warehouse</th>
     <th>Distribution Facility</th>
     <th>Start Shipper</th>
@@ -40,7 +52,9 @@
   <tr th:each="order : ${orders}">
       <td>
           <strong style="color: var(--primary-orange);" th:text="${order.id}">#001</strong>
-      </td>    <td th:text="${order.product.name}">Product Name</td>
+      </td>
+      <td th:text="${order.product.name}">Product Name</td>
+      <td th:text="${order.quantity}">Quantity</td>
     <td th:text="${order.distributionChannel.warehouse.locationName}">Warehouse</td>
     <td th:text="${order.distributionChannel.distributionFacility.locationName}">Facility</td>
     <td>
@@ -60,9 +74,14 @@
       <td th:text="${order.address}">Facility</td>
       <td>
         <span th:text="${order.isOpen} ? 'Open' : 'Closed'"
-              th:class="${order.isOpen} ? 'status-pending' : 'status-delivered'">
-          Open
+              th:class="'order-status ' + (${order.isOpen} ? 'clickable status-pending' : 'status-delivered')"
+              th:attr="data-order-id=${order.id}">
+            Status
         </span>
+
+          <form th:action="@{/orders/mark-delivered}" method="post" class="deliver-form" style="display:none;">
+              <input type="hidden" name="orderId" th:value="${order.id}">
+          </form>
       </td>
 
 
@@ -134,7 +153,40 @@
                 this.classList.add('highlighted');
             });
         });
+
+        const modal = document.getElementById("confirm-modal");
+        const yesBtn = document.getElementById("confirm-yes");
+        const noBtn = document.getElementById("confirm-no");
+        let pendingForm = null;
+
+        document.querySelectorAll(".order-status.clickable").forEach(el => {
+            el.addEventListener("click", e => {
+                e.stopPropagation();
+                pendingForm = el.closest("td").querySelector(".deliver-form");
+                modal.style.display = "flex";
+            });
+        });
+
+        yesBtn.addEventListener("click", () => {
+            if (pendingForm) pendingForm.submit();
+            modal.style.display = "none";
+            pendingForm = null;
+        });
+
+        noBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+            pendingForm = null;
+        });
+
+        // Close if clicking outside modal content
+        modal.addEventListener("click", e => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                pendingForm = null;
+            }
+        });
     });
+
 </script>
 <style>
     /* Additional styles for this specific page */
@@ -157,6 +209,14 @@
         font-weight: 600;
         font-size: var(--font-size-xs);
         text-transform: uppercase;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .status-pending:hover {
+        background: linear-gradient(45deg, #FFD54F, #FACC15); /* brighter yellow */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
     }
 
     .status-delivered {
@@ -167,7 +227,63 @@
         font-weight: 600;
         font-size: var(--font-size-xs);
         text-transform: uppercase;
+        transition: all 0.2s ease-in-out;
     }
+
+
+    .modal {
+        display: none; /* hidden by default */
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .modal-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .modal .btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: var(--primary-orange, #f97316);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: #fb923c;
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #111;
+    }
+
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+
+
 </style>
 
 </html>

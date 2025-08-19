@@ -40,8 +40,9 @@
         <strong style="color: var(--primary-orange);" th:text="${order.id}">#001</strong>
       </td>
       <td th:text="${order.product.name}">Product Name</td>
-      <td th:text="${order.orderTime}">2025-08-15</td>
-      <td th:text="${order.expectedDeliveryTime}">2025-08-20</td>
+      <td th:text="${#temporals.format(order.orderTime, 'dd MMM yyyy HH:mm', T(java.util.Locale).ENGLISH)}"></td>
+      <td th:text="${#temporals.format(order.expectedDeliveryTime, 'dd MMM yyyy HH:mm', T(java.util.Locale).ENGLISH)}"></td>
+
       <td>
                 <span style="background: var(--light-gray); padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--radius-sm); font-weight: 600;"
                       th:text="${order.quantity}">1</span>

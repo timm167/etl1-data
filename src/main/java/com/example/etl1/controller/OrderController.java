@@ -5,6 +5,7 @@ import com.example.etl1.model.Basket;
 import com.example.etl1.model.BasketItem;
 import com.example.etl1.model.Product;
 
+import com.example.etl1.model.logistics.Order;
 import com.example.etl1.model.users.User;
 import com.example.etl1.repository.BasketRepository;
 import com.example.etl1.repository.logistics.OrderRepository;
@@ -169,4 +170,25 @@ public class OrderController {
         mav.addObject("message", "Order placed successfully!");
         return mav;
     }
+
+
+    @PostMapping("/mark-delivered")
+    public ModelAndView submitMarkDelivered(Long orderId) {
+
+        ModelAndView mav = new ModelAndView("order_channel_table");
+
+        Order order = orderRepository.findById(orderId).orElse(null);
+
+        if (order == null) {
+            throw new RuntimeException("Order not found");
+        } else {
+            order.setIsOpen(Boolean.FALSE);
+            orderRepository.save(order);
+        }
+
+        mav.addObject("orders", orderRepository.findAllWithDistribution());
+
+        return mav;
+    }
+
 }
