@@ -103,7 +103,7 @@ public class ProductsController {
         if (customPc.getMotherboard() != null) cost = cost.add(BigDecimal.valueOf(customPc.getMotherboard().getPrice()));
         if (customPc.getPowerSupply() != null) cost = cost.add(BigDecimal.valueOf(customPc.getPowerSupply().getPrice()));
 
-        BigDecimal price = cost.multiply(BigDecimal.valueOf(1.5));
+        BigDecimal price = cost.multiply(BigDecimal.valueOf(1.1));
         customPc.setCost(cost);
         customPc.setPrice(price);
         customPc.setIsCustom(true);

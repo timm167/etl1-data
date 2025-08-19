@@ -4,66 +4,75 @@ window.onload = function() {
 
 function checkFilterBy(filterBySelect) {
     const filterOp = document.getElementById("filterOp");
+    const numberFilterOptions = document.querySelectorAll(".numberFilterOption");
+    const brandFilterOptions = document.querySelectorAll(".brandFilterOption");
+    const currencyLabel = document.getElementById("priceFilterLabel")
     const numberFilter = document.getElementById("numberFilter");
+    const unitLabel = document.getElementById("filterUnitLabel");
 
     filterOp.style.display = "";
     filterOp.value = "at least";
-    numberFilter.style.display = "";
-    numberFilter.required = true;
 
-    document.querySelectorAll(".numberFilterOption").forEach(function(option) {
+    numberFilterOptions.forEach(function(option) {
         option.style.display = "";
     });
 
-    document.querySelectorAll(".brandFilterOption").forEach(function(option) {
+    brandFilterOptions.forEach(function(option) {
         option.style.display = "none";
     });
 
-    document.querySelectorAll(".filterLabel").forEach(function(label) {
-        label.style.display = "none";
-    });
+//    document.querySelectorAll(".filterLabel").forEach(function(label) {
+//        label.style.display = "none";
+//    });
+    currencyLabel.style.display = "none";
+    numberFilter.style.display = "";
+    numberFilter.required = true;
+    unitLabel.style.display = "";
 
     switch (filterBySelect.value) {
         case "Price":
-            document.getElementById("priceFilterLabel").style.display = "";
+            currencyLabel.style.display = "";
+            unitLabel.style.display = "none";
             break;
         case "CPU clock speed":
-            document.getElementById("cpuClockFilterLabel").style.display = "";
+            unitLabel.innerHTML = "GHz";
             break;
         case "GPU clock speed":
-            document.getElementById("gpuClockFilterLabel").style.display = "";
+            unitLabel.innerHTML = "MHz";
             break;
         case "Volume":
-            document.getElementById("caseSizeFilterLabel").style.display = "";
+            unitLabel.innerHTML = "L";
             break;
         case "Wattage":
-            document.getElementById("psuWattageFilterLabel").style.display = "";
+            unitLabel.innerHTML = "W";
             break;
         case "Capacity":
-            document.getElementById("storageCapacityFilterLabel").style.display = "";
+            unitLabel.innerHTML = "GB";
             break;
         case "Memory speed":
-            document.getElementById("memorySpeedFilterLabel").style.display = "";
+            unitLabel.innerHTML = "MHz";
             break;
         case "CPU brand":
         case "GPU brand":
             filterOp.value = (filterBySelect.value === "CPU brand") ? "Intel" : "NVIDIA"
 
-            document.querySelectorAll(".brandFilterOption").forEach(function(option) {
+            brandFilterOptions.forEach(function(option) {
                 option.style.display = "";
             });
 
-            document.querySelectorAll(".numberFilterOption").forEach(function(option) {
+            numberFilterOptions.forEach(function(option) {
                 option.style.display = "none";
             });
 
             numberFilter.style.display = "none";
             numberFilter.required = false;
+            unitLabel.style.display = "none";
             break;
         default:
             filterOp.style.display = "none";
             numberFilter.style.display = "none";
             numberFilter.required = false;
+            unitLabel.style.display = "none";
             break;
     }
 }

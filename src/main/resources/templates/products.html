@@ -153,38 +153,37 @@
         <div class="card mb-4">
             <div class="card-body">
                 <form th:action="@{/products}" method="get" class="grid grid-3" style="align-items: end;">
-                    <div class="form-group">
+                    <div class="sort-group">
                         <label for="sortBy" class="form-label">Sort By</label>
-                        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="form-select">
+                        <select th:value="${sortBy}" name="sortBy" id="sortBy" class="sort-select">
                             <option>Name</option>
                             <option>Price</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="sort-group">
                         <label for="order" class="form-label">Order</label>
-                        <select th:value="${order}" name="order" id="order" class="form-select">
+                        <select th:value="${order}" name="order" id="order" class="sort-select">
                             <option>Ascending</option>
                             <option>Descending</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label for="filterBy" class="form-label">Advanced Filters</label>
-                        <select th:value="${filterBy}" name="filterBy" id="filterBy" class="form-select" size="1" onchange="checkFilterBy(this);">
+                        <select th:value="${filterBy}" name="filterBy" id="filterBy" size="1" onchange="checkFilterBy(this);">
                             <option>(No filter)</option>
                             <option>Price</option>
                             <option>CPU clock speed</option>
                             <option>GPU clock speed</option>
                         </select>
-                        <select th:value="${filterOp}" name="filterOp" id="filterOp" class="form-select" size="1">
+                        <select th:value="${filterOp}" name="filterOp" id="filterOp" size="1" style="display:none;">
                             <option>at least</option>
                             <option>at most</option>
                         </select>
-                        <div style="display: flex; align-items: center; gap: var(--spacing-xs); margin-top: var(--spacing-xs);">
-                            <label id="priceFilterLabel" for="numberFilter" class="filterLabel">£</label>
-                            <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any" placeholder="Enter value">
-                            <label id="cpuClockFilterLabel" for="numberFilter" class="filterLabel">GHz</label>
-                            <label id="gpuClockFilterLabel" for="numberFilter" class="filterLabel">MHz</label>
-                        </div>
+<!--                        <div style="display: flex; align-items: center; gap: var(&#45;&#45;spacing-xs); margin-top: var(&#45;&#45;spacing-xs);">-->
+                        <label id="priceFilterLabel" for="numberFilter" class="filterLabel" style="display:none;">£</label>
+                        <input type="number" th:value="${numberFilter}" name="numberFilter" id="numberFilter" step="any" placeholder="Enter value" style="display:none;">
+                        <label id="filterUnitLabel" for="numberFilter" class="filterLabel" style="display:none;"></label>
+<!--                        </div>-->
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Apply Filters</button>

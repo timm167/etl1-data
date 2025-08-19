@@ -192,7 +192,7 @@ public class DataLoader implements CommandLineRunner {
             if (mobo != null) cost = cost.add(BigDecimal.valueOf(mobo.getPrice()));
             if (psu != null) cost = cost.add(BigDecimal.valueOf(psu.getPrice()));
 
-            BigDecimal price = cost.multiply(BigDecimal.valueOf(1.5));
+            BigDecimal price = cost.multiply(BigDecimal.valueOf(1.1));
 
             List<String> productNames = Arrays.asList(
                     "Carboniser 2000 CPU",
