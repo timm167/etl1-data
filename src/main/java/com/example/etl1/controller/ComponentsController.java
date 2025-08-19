@@ -155,9 +155,11 @@ public class ComponentsController {
                 filterFunction = component -> compareForFilter.test(Double.valueOf(((Memory) component).getSpeed().getLast().getSpeed()));
                 break;
             case "CPU brand":
-                return cpuRepository.findByNameContaining(filterOp);
+                filterFunction = component -> (component.getName().contains(filterOp));
+                break;
             case "GPU brand":
-                return graphicsCardRepository.findByChipsetContaining((filterOp.equals("NVIDIA")) ? "GeForce" : "Radeon");
+                filterFunction = component -> ((GraphicsCard) component).getChipset().contains((filterOp.equals("NVIDIA")) ? "GeForce" : "Radeon");
+                break;
             default:
                 return components;
         }
