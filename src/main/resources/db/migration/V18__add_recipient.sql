@@ -1,0 +1,2 @@
+ALTER TABLE orders
+ADD COLUMN recipient TEXT;

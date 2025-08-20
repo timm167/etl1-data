@@ -35,9 +35,7 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    public void createOrder(String address, Integer productId, Integer quantity, User user) {
-
-        System.out.println("hello");
+    public void createOrder(String address, Integer productId, Integer quantity, User user, String recipient) {
 
         Product product = productService.getProductById(productId.longValue())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
@@ -71,6 +69,7 @@ public class OrderService {
         order.setProduct(product);
         order.setQuantity(quantity);
         order.setAddress(address);
+        order.setRecipient(recipient);
 
         BigDecimal value = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         order.setValue(value);
@@ -81,8 +80,6 @@ public class OrderService {
         order.setExpectedDeliveryTime(order.getOrderTime().plusDays(15));
         order.setIsOpen(true);
         order.setUser(user);
-
-        System.out.println(order);
 
 
         orderRepository.save(order);
