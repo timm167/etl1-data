@@ -148,6 +148,9 @@ public class ComponentsController {
             case "Volume":
                 filterFunction = component -> compareForFilter.test(((Case) component).getExternalVolume());
                 break;
+            case "Capacity":
+                filterFunction = component -> compareForFilter.test((double) ((InternalStorage) component).getCapacity());
+                break;
             case "Wattage":
                 filterFunction = component -> compareForFilter.test((double) ((PowerSupply) component).getWattage());
                 break;
