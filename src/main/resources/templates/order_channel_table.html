@@ -73,11 +73,7 @@
 
       <td th:text="${order.address}">Facility</td>
       <td>
-        <span th:text="${order.isOpen} ? 'Open' : 'Closed'"
-              th:class="'order-status ' + (${order.isOpen} ? 'clickable status-pending' : 'status-delivered')"
-              th:attr="data-order-id=${order.id}">
-            Status
-        </span>
+         -
 
           <form th:action="@{/orders/mark-delivered}" method="post" class="deliver-form" style="display:none;">
               <input type="hidden" name="orderId" th:value="${order.id}">
